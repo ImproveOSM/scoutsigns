@@ -48,7 +48,7 @@ public class RoadSign {
     private String type;
     private Long tstamp;
     private Image image;
-    private Byte confidence;
+    private Short confidence;
     private CarPosition carPos;
     private SignPosition signPos;
     private Collection<LatLon> nearbyPos;
@@ -101,7 +101,7 @@ public class RoadSign {
      * comments posted by the users related to the road sign
      */
     public RoadSign(Long id, String type, Long tstamp, Image image,
-            Byte confidence, CarPosition carPos, SignPosition signPos,
+            Short confidence, CarPosition carPos, SignPosition signPos,
             Collection<LatLon> nearbyPos, Trip trip, Status status,
             Long duplicateOf, Collection<Comment> comments) {
         this(id, type, signPos, status);
@@ -134,7 +134,7 @@ public class RoadSign {
         return image;
     }
     
-    public Byte getConfidence() {
+    public Short getConfidence() {
         return confidence;
     }
     

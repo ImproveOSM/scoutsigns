@@ -47,7 +47,7 @@ import org.apache.commons.io.IOUtils;
  * @author Beata
  * @version $Revision$
  */
-final class HttpUtil {
+public final class HttpUtil {
     
     public static final String ENCODING = "utf-8";
     
@@ -82,13 +82,12 @@ final class HttpUtil {
      * @return the encoded parameter
      * @throws HttpException if the encoding failed
      */
-    static String utf8Encode(String param) throws HttpException {
+    public static String utf8Encode(String param) {
         String encodedParam = null;
         try {
             encodedParam = URLEncoder.encode(param, ENCODING);
         } catch (UnsupportedEncodingException ex) {
             /* should not appear since UTF-8 is a supported encoding */
-            throw new HttpException(ex);
         }
         return encodedParam;
     }
@@ -119,9 +118,9 @@ final class HttpUtil {
      * pairs
      * @throws HttpException if the encoding failed
      */
-    static String utf8Encode(Map<String, String> params) throws HttpException {
+    static String utf8Encode(Map<String, String> params) {
         StringBuilder result = new StringBuilder();
-        for (Map.Entry<String, String> param: params.entrySet()) {
+        for (Map.Entry<String, String> param : params.entrySet()) {
             try {
                 result.append(URLEncoder.encode(param.getKey(), ENCODING));
                 result.append("=");
@@ -129,11 +128,10 @@ final class HttpUtil {
                 result.append("&");
             } catch (UnsupportedEncodingException ex) {
                 /* should not appear since UTF-8 is a supported encoding */
-                throw new HttpException(ex);
             }
         }
         if (result.length() > 0) {
-            result.deleteCharAt(result.length()-1) ;
+            result.deleteCharAt(result.length() - 1);
         }
         return result.toString();
     }

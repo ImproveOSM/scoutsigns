@@ -29,81 +29,66 @@
  * Created on Jun 17, 2014 by Bea
  * Modified on $DateTime$ by $Author$
  */
-package org.openstreetmap.josm.plugins.skosigns.gui;
+package org.openstreetmap.josm.plugins.skosigns.gui.details;
 
-import java.awt.Graphics2D;
-import javax.swing.Action;
-import javax.swing.Icon;
-import org.openstreetmap.josm.data.Bounds;
-import org.openstreetmap.josm.data.osm.visitor.BoundingXYVisitor;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
-import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
-import org.openstreetmap.josm.gui.layer.Layer;
+import java.awt.BorderLayout;
+import java.awt.event.KeyEvent;
+import javax.swing.JPanel;
+import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
+import org.openstreetmap.josm.plugins.skosigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.skosigns.util.cnf.GuiCnf;
 import org.openstreetmap.josm.plugins.skosigns.util.cnf.IconCnf;
 import org.openstreetmap.josm.plugins.skosigns.util.cnf.TltCnf;
+import org.openstreetmap.josm.tools.Shortcut;
 
 
 /**
- * Defines the skosigns layer main functionality.
+ * Displays the details related to a selected road sign in a
+ * {@code ToggleDialog} window.
  * 
  * @author Bea
  * @version $Revision$
  */
-public class SkoSignsLayer extends Layer {
+public class SkoSignsDetailsDialog extends ToggleDialog {
+    
+    private static final long serialVersionUID = -4603746238296761716L;
+    
+    /** the toggle dialog window height */
+    private static final int DLG_HEIGHT = 200;
+    
+    /** the shortcut which will be shown on the left side of JOSM */
+    private static Shortcut sh = Shortcut.registerShortcut(GuiCnf.getInstance()
+            .getDlgTitle(), TltCnf.getInstance().getPluginTlt(), KeyEvent.VK_F,
+            Shortcut.ALT_SHIFT);
+    
+    private DetailsPanel pnlDetails;
     
     
     /**
-     * Builds a new {@code SkoSignsLayer} with default functionality.
+     * Builds a new {@code SkoSignsDetailsDialog} window with the default
+     * settings.
      */
-    public SkoSignsLayer() {
-        super(GuiCnf.getInstance().getDlgTitle());
-    }
-    
-    @Override
-    public Icon getIcon() {
-        return IconCnf.getInstance().getLayerIcon();
-    }
-    
-    @Override
-    public Object getInfoComponent() {
-        return TltCnf.getInstance().getLayerInfo();
-    }
-    
-    @Override
-    public Action[] getMenuEntries() {
-        LayerListDialog layerListDlg = LayerListDialog.getInstance();
-        return new Action[] { layerListDlg.createActivateLayerAction(this),
-                layerListDlg.createShowHideLayerAction(),
-                layerListDlg.createDeleteLayerAction(),
-                SeparatorLayerAction.INSTANCE,
-                new LayerListPopup.InfoAction(this) };
+    public SkoSignsDetailsDialog() {
+        super(GuiCnf.getInstance().getDlgTitle(), IconCnf.getInstance()
+                .getShcName(), TltCnf.getInstance().getPluginTlt(), sh,
+                DLG_HEIGHT);
+        
+        /* create & add components */
+        pnlDetails = new DetailsPanel();
+        JPanel pnlMain = new JPanel(new BorderLayout());
+        pnlMain.add(pnlDetails, BorderLayout.CENTER);
+        pnlMain.add(new ButtonPanel(), BorderLayout.SOUTH);
+        add(pnlMain);
     }
     
     
-    @Override
-    public String getToolTipText() {
-        return TltCnf.getInstance().getPluginTlt();
-    }
-    
-    @Override
-    public boolean isMergable(Layer layer) {
-        return false;
-    }
-    
-    @Override
-    public void mergeFrom(Layer layer) {
-        // merge operation is not supported
-    }
-    
-    @Override
-    public void paint(Graphics2D arg0, MapView arg1, Bounds arg2) {
-        // TODO add road sign drawing logic
-    }
-    
-    @Override
-    public void visitBoundingBox(BoundingXYVisitor arg0) {
-        // TODO Auto-generated method stub
+    /**
+     * Updates the details panel with the given road sign.
+     * 
+     * @param roadSign the currently selected {@code RoadSign}
+     */
+    public void updateData(RoadSign roadSign) {
+        pnlDetails.updateData(roadSign);
+        repaint();
     }
 }

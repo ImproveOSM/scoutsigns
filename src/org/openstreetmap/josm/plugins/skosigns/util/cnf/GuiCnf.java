@@ -48,9 +48,56 @@ public final class GuiCnf {
     
     private final String dlgTitle;
     
+    /* details panel tab titltes */
+    private final String roadSignTitle;
+    private final String carPosTitle;
+    private final String tripTitle;
+    private final String commentsTitle;
+    
+    /* details panel labels */
+    private final String idLbl;
+    private final String pointLbl;
+    private final String heightLbl;
+    private final String typeLbl;
+    private final String statusLbl;
+    private final String confLbl;
+    private final String createdLbl;
+    private final String duplLbl;
+    private final String headingLbl;
+    private final String accLbl;
+    private final String modeLbl;
+    private final String profileLbl;
+    private final String appLbl;
+    private final String deviceLbl;
+    private final String detailsDefLbl;
+    
+    
     private GuiCnf() {
         Properties properties = CnfUtil.load(CNF_FILE);
         dlgTitle = CnfUtil.readProperty(properties, "dialog.title");
+        
+        /* details panel tab titles */
+        roadSignTitle = CnfUtil.readProperty(properties, "details.roadSign");
+        carPosTitle = CnfUtil.readProperty(properties, "details.carPos");
+        tripTitle = CnfUtil.readProperty(properties, "details.trip");
+        commentsTitle = CnfUtil.readProperty(properties, "details.comments");
+        
+        /* details panel labels */
+        idLbl = CnfUtil.readProperty(properties, "details.id");
+        pointLbl = CnfUtil.readProperty(properties, "details.point");
+        heightLbl = CnfUtil.readProperty(properties, "details.height");
+        typeLbl = CnfUtil.readProperty(properties, "details.type");
+        statusLbl = CnfUtil.readProperty(properties, "details.status");
+        confLbl = CnfUtil.readProperty(properties, "details.conf");
+        createdLbl = CnfUtil.readProperty(properties, "details.created");
+        duplLbl = CnfUtil.readProperty(properties, "details.dupl");
+        headingLbl = CnfUtil.readProperty(properties, "details.heading");
+        accLbl = CnfUtil.readProperty(properties, "details.acc");
+        modeLbl = CnfUtil.readProperty(properties, "details.mode");
+        profileLbl = CnfUtil.readProperty(properties, "details.profile");
+        appLbl = CnfUtil.readProperty(properties, "details.app");
+        deviceLbl = CnfUtil.readProperty(properties, "details.device");
+        detailsDefLbl = CnfUtil.readProperty(properties, "details.def");
     }
     
     public static GuiCnf getInstance() {
@@ -59,5 +106,81 @@ public final class GuiCnf {
     
     public String getDlgTitle() {
         return dlgTitle;
+    }
+    
+    public String getRoadSignTitle() {
+        return roadSignTitle;
+    }
+    
+    public String getCarPosTitle() {
+        return carPosTitle;
+    }
+    
+    public String getTripTitle() {
+        return tripTitle;
+    }
+    
+    public String getCommentsTitle() {
+        return commentsTitle;
+    }
+    
+    public String getIdLbl() {
+        return idLbl;
+    }
+    
+    public String getPointLbl() {
+        return pointLbl;
+    }
+    
+    public String getHeightLbl() {
+        return heightLbl;
+    }
+    
+    public String getTypeLbl() {
+        return typeLbl;
+    }
+    
+    public String getStatusLbl() {
+        return statusLbl;
+    }
+    
+    public String getConfLbl() {
+        return confLbl;
+    }
+    
+    public String getCreatedLbl() {
+        return createdLbl;
+    }
+    
+    public String getDuplLbl() {
+        return duplLbl;
+    }
+    
+    public String getHeadingLbl() {
+        return headingLbl;
+    }
+    
+    public String getAccLbl() {
+        return accLbl;
+    }
+    
+    public String getModeLbl() {
+        return modeLbl;
+    }
+    
+    public String getProfileLbl() {
+        return profileLbl;
+    }
+    
+    public String getAppLbl() {
+        return appLbl;
+    }
+    
+    public String getDeviceLbl() {
+        return deviceLbl;
+    }
+    
+    public String getDetailsDefLbl() {
+        return detailsDefLbl;
     }
 }

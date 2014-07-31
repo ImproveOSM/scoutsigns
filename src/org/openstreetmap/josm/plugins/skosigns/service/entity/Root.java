@@ -26,45 +26,53 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Jun 17, 2014 by Bea
+ * Created on Jul 29, 2014 by Beata
  * Modified on $DateTime$ by $Author$
  */
-package org.openstreetmap.josm.plugins.skosigns.gui;
+package org.openstreetmap.josm.plugins.skosigns.service.entity;
 
-import java.awt.event.KeyEvent;
-import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
-import org.openstreetmap.josm.plugins.skosigns.util.cnf.GuiCnf;
-import org.openstreetmap.josm.plugins.skosigns.util.cnf.IconCnf;
-import org.openstreetmap.josm.plugins.skosigns.util.cnf.TltCnf;
-import org.openstreetmap.josm.tools.Shortcut;
+import java.util.Collection;
+import org.openstreetmap.josm.plugins.skosigns.entity.RoadSign;
 
 
 /**
- * Displays the details related to a selected road sign in a
- * {@code ToggleDialog} window.
+ * Represents the root of the response content returned by the FcdSignService.
  * 
- * @author Bea
+ * @author Beata
  * @version $Revision$
  */
-public class SkoSignsDetailsDialog extends ToggleDialog {
+public class Root {
     
-    private static final long serialVersionUID = -4603746238296761716L;
-    
-    /** the toggle dialog window height */
-    private static final int DLG_HEIGHT = 200;
-    /** the shortcut which will be shown on the left side of JOSM */
-    private static Shortcut sh = Shortcut.registerShortcut(GuiCnf.getInstance()
-            .getDlgTitle(), TltCnf.getInstance().getPluginTlt(), KeyEvent.VK_F,
-            Shortcut.ALT_SHIFT);
+    private Status status;
+    private Collection<RoadSign> roadSigns;
     
     
     /**
-     * Builds a new {@code SkoSignsDetailsDialog} window with the default
-     * settings.
+     * Builds a new {@code Root} with he given argument.
+     * 
+     * @param status represents the status information
      */
-    public SkoSignsDetailsDialog() {
-        super(GuiCnf.getInstance().getDlgTitle(), IconCnf.getInstance()
-                .getShcName(), TltCnf.getInstance().getPluginTlt(), sh,
-                DLG_HEIGHT);
+    public Root(Status status) {
+        this.status = status;
+    }
+    
+    /**
+     * Builds a new {@code Root} with he given arguments.
+     *  
+     * @param status represents the status information
+     * @param roadSigns a collection of {@code RoadSigns}
+     */
+    public Root(Status status, Collection<RoadSign> roadSigns) {
+        this(status);
+        this.roadSigns = roadSigns;
+    }
+    
+    
+    public Status getStatus() {
+        return status;
+    }
+    
+    public Collection<RoadSign> getRoadSigns() {
+        return roadSigns;
     }
 }

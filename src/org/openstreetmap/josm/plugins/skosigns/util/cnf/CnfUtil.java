@@ -34,6 +34,9 @@ package org.openstreetmap.josm.plugins.skosigns.util.cnf;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 
@@ -43,6 +46,8 @@ import java.util.Properties;
  * @version $Revision$
  */
 final class CnfUtil {
+    
+    private static final String SEPARATOR = ";";
     
     private CnfUtil() {}
     
@@ -83,4 +88,16 @@ final class CnfUtil {
     static String readProperty(Properties properties, String key) {
         return properties.getProperty(key);
     }
+    
+    static List<String> readPropertiesList(Properties properties, String key) {
+        String[] values = readPropertiesArray(properties, key);
+        return values != null ? Arrays.asList(values) : new ArrayList<String>();
+    }
+    
+    static String[] readPropertiesArray(Properties properties, String key) {
+        String values = properties.getProperty(key);
+        return (values != null && !values.isEmpty()) ? values.split(SEPARATOR)
+                : null;
+    }
+    
 }

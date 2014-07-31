@@ -63,4 +63,16 @@ public class Application {
     public String getVersion() {
         return version;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (name != null) {
+            sb.append(name);
+        }
+        if (version != null) {
+            sb.append(", ").append(version);
+        }
+        return sb.toString();
+    }
 }

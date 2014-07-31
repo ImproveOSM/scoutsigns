@@ -44,8 +44,8 @@ import org.openstreetmap.josm.data.coor.LatLon;
 public class CarPosition {
     
     private LatLon position;
-    private int heading;
-    private int accuracy;
+    private Integer heading;
+    private Integer accuracy;
     private String type;
     
     
@@ -58,7 +58,8 @@ public class CarPosition {
      * @param type the type of the position (the interpolated GPS position or
      * the last known GPS position)
      */
-    public CarPosition(LatLon position, int heading, int accuracy, String type) {
+    public CarPosition(LatLon position, Integer heading, Integer accuracy,
+            String type) {
         this.position = position;
         this.heading = heading;
         this.accuracy = accuracy;
@@ -70,11 +71,11 @@ public class CarPosition {
         return position;
     }
     
-    public int getHeading() {
+    public Integer getHeading() {
         return heading;
     }
     
-    public int getAccuracy() {
+    public Integer getAccuracy() {
         return accuracy;
     }
     

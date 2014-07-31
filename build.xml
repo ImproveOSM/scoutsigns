@@ -31,7 +31,9 @@
     -->
 	<target name="compile" depends="init">
 		<echo message="compiling sources for  ${plugin.jar} ... " />
-		<javac srcdir="src" classpathref="classpath" debug="true" destdir="${plugin.build.dir}" includeantruntime="true" excludes="**/package-info.java">
+		<javac srcdir="src" classpathref="classpath" debug="true" 
+			destdir="${plugin.build.dir}" includeantruntime="true" 
+			excludes="**/package-info.java">
 			<compilerarg value="-Xlint:deprecation" />
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
@@ -44,7 +46,8 @@
     -->
 	<target name="javadoc">
 		<mkdir dir="${plugin.apidoc.dir}" />
-		<javadoc destdir="${plugin.apidoc.dir}" source="1.7" classpathref="classpath" windowtitle="skosigns plugin API">
+		<javadoc destdir="${plugin.apidoc.dir}" source="1.7" 
+			classpathref="classpath" windowtitle="skosigns plugin API">
 			<link href="http://java.sun.com/javase/7/docs/api/" />
 			<packageset dir="${plugin.src.dir}">
 			</packageset>
@@ -73,6 +76,8 @@
 			</fileset>
 		</copy>
 		<jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+			<zipfileset src="${plugin.lib.dir}/gson-2.2.4.jar" />
+			<zipfileset src="${plugin.lib.dir}/commons-io-2.4.jar" />
 			<manifest>
 				<attribute name="Author" value="skobbler" />
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.skosigns.SkoSignsPlugin" />
@@ -104,7 +109,8 @@
     -->
 	<target name="install" depends="dist">
 		<property environment="env" />
-		<condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
+		<condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" 
+			else="${user.home}/.josm/plugins">
 			<and>
 				<os family="windows" />
 			</and>

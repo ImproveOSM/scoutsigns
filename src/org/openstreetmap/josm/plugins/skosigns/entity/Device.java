@@ -64,4 +64,16 @@ public class Device {
     public String getOsVersion() {
         return osVersion;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (osName != null) {
+            sb.append(osName);
+        }
+        if (osVersion != null) {
+            sb.append(", ").append(osVersion);
+        }
+        return sb.toString();
+    }
 }

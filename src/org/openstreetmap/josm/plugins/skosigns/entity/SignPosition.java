@@ -44,7 +44,7 @@ import org.openstreetmap.josm.data.coor.LatLon;
 public class SignPosition {
     
     private LatLon position;
-    private double height;
+    private Double height;
     
     
     /**
@@ -53,7 +53,7 @@ public class SignPosition {
      * @param position the road sign's position
      * @param height the height of the sign in meters relative to the vehicle
      */
-    public SignPosition(LatLon position, double height) {
+    public SignPosition(LatLon position, Double height) {
         this.position = position;
         this.height = height;
     }
@@ -63,7 +63,7 @@ public class SignPosition {
         return position;
     }
     
-    public double getHeight() {
+    public Double getHeight() {
         return height;
     }
 }

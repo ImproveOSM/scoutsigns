@@ -31,15 +31,28 @@
  */
 package org.openstreetmap.josm.plugins.skosigns;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Collection;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
+import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
+import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.plugins.skosigns.gui.SkoSignsDetailsDialog;
-import org.openstreetmap.josm.plugins.skosigns.gui.SkoSignsLayer;
+import org.openstreetmap.josm.plugins.skosigns.argument.BoundingBox;
+import org.openstreetmap.josm.plugins.skosigns.entity.RoadSign;
+import org.openstreetmap.josm.plugins.skosigns.gui.details.SkoSignsDetailsDialog;
+import org.openstreetmap.josm.plugins.skosigns.gui.layer.SkoSignsLayer;
+import org.openstreetmap.josm.plugins.skosigns.util.MapUtil;
+import org.openstreetmap.josm.plugins.skosigns.util.cnf.ServiceCnf;
+import org.openstreetmap.josm.plugins.skosigns.util.pref.PrefManager;
+import org.openstreetmap.josm.tools.OsmUrlToBounds;
 
 
 /**
@@ -48,10 +61,15 @@ import org.openstreetmap.josm.plugins.skosigns.gui.SkoSignsLayer;
  * @author Bea
  * @version $Revision$
  */
-public class SkoSignsPlugin extends Plugin implements LayerChangeListener {
+public class SkoSignsPlugin extends Plugin implements LayerChangeListener,
+        ZoomChangeListener {
     
     private SkoSignsLayer layer;
     private SkoSignsDetailsDialog dialog;
+    
+    
+    /** timer for the zoom in/out operations */
+    private Timer zoomTimer;
     
     
     /**
@@ -62,6 +80,7 @@ public class SkoSignsPlugin extends Plugin implements LayerChangeListener {
      */
     public SkoSignsPlugin(PluginInformation info) {
         super(info);
+        PrefManager.getInstance().saveSupressErrorFlag(false);
     }
     
     
@@ -70,22 +89,29 @@ public class SkoSignsPlugin extends Plugin implements LayerChangeListener {
         if (Main.map != null) {
             dialog = new SkoSignsDetailsDialog();
             newMapFrame.addToggleDialog(dialog);
+            NavigatableComponent.addZoomChangeListener(this);
             MapView.addLayerChangeListener(this);
         }
     }
     
-    
     @Override
     public void activeLayerChange(Layer layer1, Layer layer2) {
-        // this operation is not supported
+        // no action
     }
     
     @Override
     public void layerAdded(Layer newLayer) {
         if (newLayer != null && layer == null) {
-            layer = new SkoSignsLayer();
-            Main.main.addLayer(layer);
-            Main.map.mapView.moveLayer(layer, 0);
+            Main.worker.execute(new Runnable() {
+                @Override
+                public void run() {
+                    layer = new SkoSignsLayer();
+                    Main.main.addLayer(layer);
+                    Main.map.mapView.setActiveLayer(layer);
+                    Main.map.mapView.moveLayer(layer, 0);
+                    zoomChanged();
+                }
+            });
         }
     }
     
@@ -94,6 +120,60 @@ public class SkoSignsPlugin extends Plugin implements LayerChangeListener {
         if (currentLayer instanceof SkoSignsLayer) {
             Main.map.mapView.removeLayer(layer);
             Main.map.remove(dialog);
+        }
+    }
+    
+    @Override
+    public void zoomChanged() {
+        if (dialog.isShowing()) {
+            if (zoomTimer != null && zoomTimer.isRunning()) {
+                zoomTimer.restart();
+            } else {
+                zoomTimer = new Timer(ServiceCnf.getInstance().getSearchDelay(),
+                        new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                Main.worker.execute(new UpdateThread());
+                                }
+                            });
+                zoomTimer.setRepeats(false);
+                zoomTimer.start();
+            }
+        }
+    }
+    
+    private void updateView(final Collection<RoadSign> roadSigns) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                layer.setRoadSigns(roadSigns);
+                Main.map.repaint();
+            }
+        });
+    }
+    
+    /**
+     * Downloads the road signs from the current view, and updates the plugin 
+     * with the new data.
+     * 
+     * @author Beata
+     * @version $Revision$
+     */
+    private final class UpdateThread implements Runnable {
+        
+        @Override
+        public void run() {
+            if (Main.map != null && Main.map.mapView != null) {
+                BoundingBox bbox = MapUtil.buildBBox(Main.map.mapView);
+                if (bbox != null) {
+                    int zoom = OsmUrlToBounds.getZoom(Main.map.mapView.
+                            getRealBounds());
+                    Collection<RoadSign> roadSigns =
+                            ServiceHandler.getInstance().searchSigns(bbox, 
+                                    null, zoom);
+                    updateView(roadSigns);
+                }
+            }
         }
     }
 }

@@ -52,12 +52,24 @@ public final class IconCnf {
     
     private final String shcName;
     private final Icon layerIcon;
+    private final Icon filterIcon;
+    private final Icon photoIcon;
+    private final Icon tripIcon;
+    private final Icon commentIcon;
+    private final Icon moreActionIcon;
+    private final String typeIconPath;
     
     
     private IconCnf() {
         Properties properties = CnfUtil.load(CNF_FILE);
         shcName = CnfUtil.readProperty(properties, "dialog.shc");
         layerIcon = getIcon(properties, "layer.icon");
+        filterIcon = getIcon(properties, "filter.icon");
+        photoIcon = getIcon(properties, "photo.icon");
+        tripIcon = getIcon(properties, "trip.icon");
+        commentIcon = getIcon(properties, "comment.icon");
+        moreActionIcon = getIcon(properties, "more.icon");
+        typeIconPath = CnfUtil.readProperty(properties, "types.path");
     }
     
     
@@ -75,5 +87,29 @@ public final class IconCnf {
     
     public Icon getLayerIcon() {
         return layerIcon;
+    }
+    
+    public Icon getFilterIcon() {
+        return filterIcon;
+    }
+    
+    public Icon getPhotoIcon() {
+        return photoIcon;
+    }
+    
+    public Icon getTripIcon() {
+        return tripIcon;
+    }
+    
+    public Icon getCommentIcon() {
+        return commentIcon;
+    }
+    
+    public Icon getMoreActionIcon() {
+        return moreActionIcon;
+    }
+
+    public String getTypeIconPath() {
+        return typeIconPath;
     }
 }
