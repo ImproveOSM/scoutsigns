@@ -73,29 +73,40 @@ public class FcdSignService {
     }
     
     /**
-     * Searches for the road signs from the specified area that satisfy the given
-     * filters. Null filters are ignored.
+     * Searches for the road signs from the specified area that satisfy the
+     * given filters. Null filters are ignored.
      * 
      * @param bbox a {@code BoundingBox} specifies the searching area
      * @param filter specifies the search filters
      * @param zoom the current zoom level
      * @return a collection of {@code RoadSign}. If no road signs are found, the
      * method returns an empty collection.
-     * @throws FcdSignServiceException if an error occurred during the 
-     * FcdSignService method execution 
+     * @throws FcdSignServiceException if an error occurred during the
+     * FcdSignService method execution
      */
     public Collection<RoadSign> searchSigns(BoundingBox bbox,
             SearchFilter filter, int zoom) throws FcdSignServiceException {
         String url = new HttpQueryBuilder(bbox, filter, zoom).build(
                 Constants.SEARCH_SIGNS);
         Root root = executeGet(url);
-        if (root.getStatus() != null && root.getStatus().isErrorCode()) {
-            throw new FcdSignServiceException(
-                    "Error occured durring searchSigns method execution:"
-                            + root.getStatus().getApiMessage());
-        }
+        verifyStatus(root);
         return root.getRoadSigns() != null ? root.getRoadSigns()
                 : new ArrayList<RoadSign>();
+    }
+    
+    /**
+     * Retrieves the road sign corresponding to the given identifier.
+     * 
+     * @param id the identifier of the desired road sign
+     * @return a {@code RoadSign} object
+     * @throws FcdSignServiceException if an error occurred during the
+     * FcdSignService method execution
+     */
+    public RoadSign retrieveRoadSign(Long id) throws FcdSignServiceException {
+        String url = new HttpQueryBuilder(id).build(Constants.RETRIEVE_SIGN);
+        Root root = executeGet(url);
+        verifyStatus(root);
+        return root.getRoadSign();
     }
     
     /* this will be used by addComment/addComments methods */
@@ -124,7 +135,7 @@ public class FcdSignService {
     }
     
     private Root buildRoot(String response) throws FcdSignServiceException {
-        Root root = null;
+        Root root = new Root();
         if (response != null) {
             try {
                 root = gson.fromJson(response, Root.class);
@@ -133,5 +144,11 @@ public class FcdSignService {
             }
         }
         return root;
+    }
+    
+    private void verifyStatus(Root root) throws FcdSignServiceException {
+        if (root.getStatus() != null && root.getStatus().isErrorCode()) {
+            throw new FcdSignServiceException(root.getStatus().getApiMessage());
+        }
     }
 }

@@ -38,13 +38,6 @@ class RoadSignPanel extends InfoPanel<RoadSign> {
     private int y = 0;
     private int pnlWidth = 0;
     
-    /**
-     * Builds a new {@code RoadSignPanel}.
-     */
-    RoadSignPanel() {
-        super(getGuiCnf().getDetailsDefLbl());
-    }
-    
     
     @Override
     void createComponents(RoadSign roadSign) {
@@ -104,7 +97,7 @@ class RoadSignPanel extends InfoPanel<RoadSign> {
         add(Builder.buildLabel(getGuiCnf().getTypeLbl(), FontUtil.BOLD_12,
                 new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
         int widthVal = FontUtil.FM_PLAIN_12.stringWidth(type);
-        Icon icon = TypeIconFactory.getInstance().getIcon(type);
+        Icon icon = TypeIconFactory.getInstance().getIcon(type, false);
         add(Builder.buildLabel(icon, new Rectangle(widthLbl, y, widthVal,
                 LHEIGHT)));
         pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
@@ -136,8 +129,7 @@ class RoadSignPanel extends InfoPanel<RoadSign> {
         if (duplicateOf != null) {
             add(Builder.buildLabel(getGuiCnf().getDuplLbl(), FontUtil.BOLD_12,
                     new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
-            int widthVal =
-                    FontUtil.FM_PLAIN_12.stringWidth(duplicateOf.toString());
+            int widthVal = FontUtil.FM_PLAIN_12.stringWidth(duplicateOf.toString());
             add(Builder.buildLabel(duplicateOf.toString(), FontUtil.PLAIN_12,
                     new Rectangle(widthLbl, y, widthVal, LHEIGHT)));
             pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);

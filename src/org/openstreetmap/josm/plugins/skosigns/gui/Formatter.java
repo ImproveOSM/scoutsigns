@@ -31,6 +31,7 @@ import org.openstreetmap.josm.plugins.skosigns.entity.Status;
  */
 public final class Formatter {
     
+    private static final Long TSTP = 1000L;
     private static final String TSTP_FORMAT = "yyyy-MM-dd HH:mm:ss";
     
     private Formatter() {}
@@ -44,13 +45,11 @@ public final class Formatter {
      */
     public static String formatComments(Collection<Comment> comments) {
         StringBuilder sb = new StringBuilder(
-                "<html><font size='3' face='times new roman'>");
+                "<html><body><font size='3' face='times new roman'>");
         for (Comment comment : comments) {
-            sb.append("<p>");
             sb.append(formatComment(comment));
-            sb.append("</p>");
         }
-        sb.append("</font></html>");
+        sb.append("</font></body></html>");
         return sb.toString();
     }
     
@@ -113,7 +112,7 @@ public final class Formatter {
     public static String formatTimestamp(Long timestamp) {
         SimpleDateFormat dateTimeFormat = new SimpleDateFormat(TSTP_FORMAT);
         dateTimeFormat.setTimeZone(TimeZone.getDefault());
-        Date date = new Date(timestamp);
+        Date date = new Date(timestamp * TSTP);
         return date != null ? dateTimeFormat.format(date) : "";
     }
     

@@ -67,16 +67,33 @@ final class ServiceHandler {
         return result;
     }
     
+    /**
+     * Retrieves the road sign corresponding to the given identifier.
+     * 
+     * @param id the identifier of the desired road sign
+     * @return a {@code RoadSign} object
+     */
+    RoadSign retrieveSign(Long id) {
+        RoadSign result = null;
+        try {
+            result = signService.retrieveRoadSign(id);
+        } catch (FcdSignServiceException ex) {
+            handleException(ex, true);
+        }
+        return result;
+    }
+    
+    
     private void handleException(Exception ex, boolean suppress) {
         if (suppress) {
             if (!PrefManager.getInstance().loadSupressErrorFlag()) {
                 PrefManager.getInstance().saveSupressErrorFlag(suppress);
                 JOptionPane.showMessageDialog(Main.parent, ex.getMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                        "Unexpected error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             JOptionPane.showMessageDialog(Main.parent, ex.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+                    "Unexpected error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

@@ -120,11 +120,9 @@ public class RoadSign {
         return id;
     }
     
-    
     public String getType() {
         return type;
     }
-    
     
     public Long getTstamp() {
         return tstamp;
@@ -164,5 +162,25 @@ public class RoadSign {
     
     public Collection<Comment> getComments() {
         return comments;
+    }
+    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        boolean result = false;
+        if (this == obj) {
+            result = true;
+        } else if (obj instanceof RoadSign) {
+            RoadSign other = (RoadSign) obj;
+            result = id.equals(other.getId());
+        }
+        return result;
     }
 }

@@ -13,14 +13,10 @@
  */
 package org.openstreetmap.josm.plugins.skosigns.gui.details;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import org.openstreetmap.josm.plugins.skosigns.gui.Builder;
-import org.openstreetmap.josm.plugins.skosigns.gui.FontUtil;
 import org.openstreetmap.josm.plugins.skosigns.util.cnf.GuiCnf;
 
 
@@ -47,20 +43,13 @@ abstract class InfoPanel<T> extends JPanel {
     /** holds GUI texts */
     private static GuiCnf guiCnf = GuiCnf.getInstance();
     
-    /** the default label to show if the given object is null */
-    private JLabel lblDefault;
-    
     
     /**
      * Builds a new {@code InfoPanel} with the given argument.
-     * 
-     * @param defaultTxt the default text to display in the panel
      */
-    InfoPanel(String defaultTxt) {
+    InfoPanel() {
         setBackground(Color.white);
-        setLayout(new BorderLayout());
-        lblDefault = Builder.buildLabel(defaultTxt, FontUtil.BOLD_12, null);
-        setPreferredSize(PANEL_MIN);
+        updateData(null);
     }
     
     
@@ -69,14 +58,12 @@ abstract class InfoPanel<T> extends JPanel {
      * 
      * @param obj an object of type T
      */
-    void updateData(T obj) {
+    final void updateData(T obj) {
         removeAll();
         if (obj != null) {
             setLayout(null);
             createComponents(obj);
         } else {
-            setLayout(new BorderLayout());
-            add(lblDefault, BorderLayout.CENTER);
             setPreferredSize(PANEL_MIN);
         }
     }

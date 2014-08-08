@@ -83,6 +83,14 @@ class HttpQueryBuilder {
         }
     }
     
+    
+    HttpQueryBuilder(Long id) {
+        query = new StringBuilder();
+        
+        addFormatFilter();
+        addIdFilter(id);
+    }
+    
     /**
      * Builds a new HTTP query for the specified method with the currently set
      * fields.
@@ -91,8 +99,8 @@ class HttpQueryBuilder {
      * @return a {@code String} object
      */
     String build(String method) {
-        StringBuilder url = new StringBuilder(ServiceCnf.getInstance().
-                getServiceUrl());
+        StringBuilder url =
+                new StringBuilder(ServiceCnf.getInstance().getServiceUrl());
         url.append(method).append(QUESTIONM);
         url.append(query);
         return url.toString();
@@ -122,7 +130,8 @@ class HttpQueryBuilder {
         if (tsFilter != null) {
             if (tsFilter.getFrom() != null) {
                 query.append(AND);
-                query.append(Constants.FROM).append(EQ).append(tsFilter.getFrom());
+                query.append(Constants.FROM).append(EQ)
+                        .append(tsFilter.getFrom());
             }
             if (tsFilter.getTo() != null) {
                 query.append(AND);
@@ -192,5 +201,10 @@ class HttpQueryBuilder {
             query.append(Constants.USERNAME).append(EQ);
             query.append(HttpUtil.utf8Encode(username));
         }
+    }
+    
+    private void addIdFilter(Long id) {
+        query.append(AND);
+        query.append(Constants.ID).append(EQ).append(id);
     }
 }

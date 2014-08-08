@@ -41,8 +41,7 @@ package org.openstreetmap.josm.plugins.skosigns.service.entity;
  */
 public class Status {
     
-    private static final int CODE_400 = 400;
-    private static final int CODE_404 = 404;
+    private static final int SUCCESS_CODE = 200;
     
     private Integer apiCode;
     private String apiMessage;
@@ -90,6 +89,6 @@ public class Status {
      * @return true if the status has an error code, false otherwise.
      */
     public boolean isErrorCode() {
-        return httpCode == CODE_400 || httpCode == CODE_404;
+        return httpCode != SUCCESS_CODE;
     }
 }

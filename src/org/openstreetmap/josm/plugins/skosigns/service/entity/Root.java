@@ -45,7 +45,10 @@ public class Root {
     
     private Status status;
     private Collection<RoadSign> roadSigns;
+    private RoadSign roadSign;
     
+    
+    public Root() {}
     
     /**
      * Builds a new {@code Root} with he given argument.
@@ -58,13 +61,24 @@ public class Root {
     
     /**
      * Builds a new {@code Root} with he given arguments.
-     *  
+     * 
      * @param status represents the status information
      * @param roadSigns a collection of {@code RoadSigns}
      */
     public Root(Status status, Collection<RoadSign> roadSigns) {
         this(status);
         this.roadSigns = roadSigns;
+    }
+    
+    /**
+     * Builds a new {@code Root} with the given arguments.
+     * 
+     * @param status represents the status information
+     * @param roadSign a {@code RoadSign}
+     */
+    public Root(Status status, RoadSign roadSign) {
+        this.status = status;
+        this.roadSign = roadSign;
     }
     
     
@@ -74,5 +88,9 @@ public class Root {
     
     public Collection<RoadSign> getRoadSigns() {
         return roadSigns;
+    }
+    
+    public RoadSign getRoadSign() {
+        return roadSign;
     }
 }

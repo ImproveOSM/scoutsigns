@@ -33,10 +33,13 @@ package org.openstreetmap.josm.plugins.skosigns;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Collection;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.NavigatableComponent;
@@ -49,7 +52,7 @@ import org.openstreetmap.josm.plugins.skosigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.skosigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.skosigns.gui.details.SkoSignsDetailsDialog;
 import org.openstreetmap.josm.plugins.skosigns.gui.layer.SkoSignsLayer;
-import org.openstreetmap.josm.plugins.skosigns.util.MapUtil;
+import org.openstreetmap.josm.plugins.skosigns.util.Util;
 import org.openstreetmap.josm.plugins.skosigns.util.cnf.ServiceCnf;
 import org.openstreetmap.josm.plugins.skosigns.util.pref.PrefManager;
 import org.openstreetmap.josm.tools.OsmUrlToBounds;
@@ -62,11 +65,10 @@ import org.openstreetmap.josm.tools.OsmUrlToBounds;
  * @version $Revision$
  */
 public class SkoSignsPlugin extends Plugin implements LayerChangeListener,
-        ZoomChangeListener {
+        ZoomChangeListener, MouseListener {
     
     private SkoSignsLayer layer;
     private SkoSignsDetailsDialog dialog;
-    
     
     /** timer for the zoom in/out operations */
     private Timer zoomTimer;
@@ -89,90 +91,203 @@ public class SkoSignsPlugin extends Plugin implements LayerChangeListener,
         if (Main.map != null) {
             dialog = new SkoSignsDetailsDialog();
             newMapFrame.addToggleDialog(dialog);
-            NavigatableComponent.addZoomChangeListener(this);
-            MapView.addLayerChangeListener(this);
+            dialog.getButton().addActionListener(
+                    new ToggleButtonActionListener());
+            registerListeners();
+            addLayer();
         }
     }
     
-    @Override
-    public void activeLayerChange(Layer layer1, Layer layer2) {
-        // no action
-    }
     
-    @Override
-    public void layerAdded(Layer newLayer) {
-        if (newLayer != null && layer == null) {
-            Main.worker.execute(new Runnable() {
-                @Override
-                public void run() {
-                    layer = new SkoSignsLayer();
-                    Main.main.addLayer(layer);
-                    Main.map.mapView.setActiveLayer(layer);
-                    Main.map.mapView.moveLayer(layer, 0);
-                    zoomChanged();
-                }
-            });
-        }
-    }
-    
-    @Override
-    public void layerRemoved(Layer currentLayer) {
-        if (currentLayer instanceof SkoSignsLayer) {
-            Main.map.mapView.removeLayer(layer);
-            Main.map.remove(dialog);
-        }
-    }
+    /* ZoomChangeListener method */
     
     @Override
     public void zoomChanged() {
-        if (dialog.isShowing()) {
+        if (layer != null && layer.isVisible()) {
             if (zoomTimer != null && zoomTimer.isRunning()) {
                 zoomTimer.restart();
             } else {
                 zoomTimer = new Timer(ServiceCnf.getInstance().getSearchDelay(),
                         new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                Main.worker.execute(new UpdateThread());
-                                }
-                            });
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        Main.worker.execute(new UpdateThread());
+                        }
+                    });
                 zoomTimer.setRepeats(false);
                 zoomTimer.start();
             }
         }
     }
     
-    private void updateView(final Collection<RoadSign> roadSigns) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                layer.setRoadSigns(roadSigns);
-                Main.map.repaint();
-            }
-        });
+    
+    /* LayerChangeListener methods */
+    
+    @Override
+    public void activeLayerChange(Layer layer1, Layer layer2) {
+        // this action is not supported
     }
     
-    /**
-     * Downloads the road signs from the current view, and updates the plugin 
+    @Override
+    public void layerAdded(Layer newLayer) {
+        if (newLayer instanceof SkoSignsLayer) {
+            Main.map.mapView.moveLayer(newLayer, 0);
+            Main.map.mapView.setActiveLayer(newLayer);
+            zoomChanged();
+        }
+    }
+    
+    @Override
+    public void layerRemoved(Layer currentLayer) {
+        if (currentLayer instanceof SkoSignsLayer) {
+            SwingUtilities.invokeLater(new Runnable() {
+                
+                @Override
+                public void run() {
+                    // remove the layer & toggle dialog
+                    Main.map.mapView.removeLayer(layer);
+                    Main.map.remove(dialog);
+                    dialog.getButton().setSelected(false);
+                    dialog.setVisible(false);
+                    dialog.destroy();
+                    layer = null;
+                    
+                    // unregister listeners
+                    NavigatableComponent
+                            .removeZoomChangeListener(SkoSignsPlugin.this);
+                    MapView.removeLayerChangeListener(SkoSignsPlugin.this);
+                    Main.map.mapView.removeMouseListener(SkoSignsPlugin.this);
+                }
+            });
+        }
+    }
+    
+    
+    /* MouseListener methods */
+    
+    @Override
+    public void mouseClicked(MouseEvent event) {
+        if (Main.map.mapView.getActiveLayer() == layer) {
+            RoadSign roadSign = layer.nearbyRoadSign(event.getPoint());
+            if (roadSign != null) {
+                // road sign was selected
+                final Long id = roadSign.getId();
+                Main.worker.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        final RoadSign roadSign = ServiceHandler.getInstance().
+                                retrieveSign(id);
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                dialog.updateData(roadSign);
+                                Main.map.repaint();
+                            }
+                        });
+                    }
+                });
+            } else {
+                // un-select previously selected road sign
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.updateData(null);
+                        Main.map.repaint();
+                    }
+                });
+            }
+        }
+    }
+    
+    @Override
+    public void mousePressed(MouseEvent event) {
+        // this action is not supported
+    }
+    
+    @Override
+    public void mouseReleased(MouseEvent event) {
+        // this action is not supported
+    }
+    
+    @Override
+    public void mouseEntered(MouseEvent event) {
+        // this action is not supported
+    }
+    
+    @Override
+    public void mouseExited(MouseEvent event) {
+        // this action is not supported
+    }
+    
+    
+    /* local methods & classes */
+    
+    private void registerListeners() {
+        NavigatableComponent.addZoomChangeListener(this);
+        MapView.addLayerChangeListener(this);
+        Main.map.mapView.addMouseListener(this);
+    }
+    
+    private void addLayer() {
+        layer = new SkoSignsLayer();
+        Main.main.addLayer(layer);
+    }
+    
+    
+    /*
+     * Downloads the road signs from the current view, and updates the plugin
      * with the new data.
-     * 
-     * @author Beata
-     * @version $Revision$
      */
     private final class UpdateThread implements Runnable {
         
         @Override
         public void run() {
             if (Main.map != null && Main.map.mapView != null) {
-                BoundingBox bbox = MapUtil.buildBBox(Main.map.mapView);
+                BoundingBox bbox = Util.buildBBox(Main.map.mapView);
                 if (bbox != null) {
                     int zoom = OsmUrlToBounds.getZoom(Main.map.mapView.
                             getRealBounds());
-                    Collection<RoadSign> roadSigns =
-                            ServiceHandler.getInstance().searchSigns(bbox, 
-                                    null, zoom);
-                    updateView(roadSigns);
+                    final Collection<RoadSign> roadSigns = 
+                            ServiceHandler.getInstance().searchSigns(bbox, null, 
+                                    zoom);
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            layer.setRoadSigns(roadSigns);
+                            Main.map.repaint();
+                        }
+                    });
                 }
+            }
+        }
+    }
+    
+    /*
+     * Listens to toggle dialog button actions.
+     */
+    private final class ToggleButtonActionListener implements ActionListener {
+        
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            if (event.getSource() instanceof IconToggleButton) {
+                final IconToggleButton btn = (IconToggleButton) event.getSource();
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (btn.isSelected()) {
+                            dialog.setVisible(true);
+                            btn.setSelected(true);
+                        } else {
+                            dialog.setVisible(false);
+                            btn.setSelected(false);
+                            btn.setFocusable(false);
+                        }
+                        if (layer == null) {
+                            registerListeners();
+                            addLayer();
+                        }
+                    }
+                });
             }
         }
     }

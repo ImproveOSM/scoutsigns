@@ -61,11 +61,13 @@ class PaintHandler {
      * @param roadSigns the {@code RoadSign} collection to be displayed
      */
     void drawRoadSigns(Graphics2D g2D, MapView mv,
-            Collection<RoadSign> roadSigns) {
+            Collection<RoadSign> roadSigns, RoadSign selRoadSign) {
         for (RoadSign roadSign : roadSigns) {
             Point point = mv.getPoint(roadSign.getSignPos().getPosition());
             if (mv.contains(point)) {
-                ImageIcon icon = iconFactory.getIcon(roadSign.getType());
+                ImageIcon icon = null;
+                boolean selected = roadSign.equals(selRoadSign);
+                icon = iconFactory.getIcon(roadSign.getType(), selected);
                 drawIcon(g2D, icon, point);
             }
         }

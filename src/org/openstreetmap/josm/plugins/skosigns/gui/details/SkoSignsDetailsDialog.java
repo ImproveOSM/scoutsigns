@@ -32,6 +32,7 @@
 package org.openstreetmap.josm.plugins.skosigns.gui.details;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
@@ -54,7 +55,7 @@ public class SkoSignsDetailsDialog extends ToggleDialog {
     private static final long serialVersionUID = -4603746238296761716L;
     
     /** the toggle dialog window height */
-    private static final int DLG_HEIGHT = 200;
+    private static final int DLG_HEIGHT = 50;
     
     /** the shortcut which will be shown on the left side of JOSM */
     private static Shortcut sh = Shortcut.registerShortcut(GuiCnf.getInstance()
@@ -72,6 +73,7 @@ public class SkoSignsDetailsDialog extends ToggleDialog {
         super(GuiCnf.getInstance().getDlgTitle(), IconCnf.getInstance()
                 .getShcName(), TltCnf.getInstance().getPluginTlt(), sh,
                 DLG_HEIGHT);
+        setPreferredSize(new Dimension(DLG_HEIGHT, DLG_HEIGHT));
         
         /* create & add components */
         pnlDetails = new DetailsPanel();

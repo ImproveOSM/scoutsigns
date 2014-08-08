@@ -37,29 +37,21 @@ class TripPanel extends InfoPanel<Trip> {
     private int pnlWidth = 0;
     
     
-    /**
-     * Builds a {@code TripPanel} displaying a default text.
-     */
-    TripPanel() {
-        super(getGuiCnf().getDetailsDefLbl());
-    }
-    
-    
     @Override
     void createComponents(Trip trip) {
         y = 0;
+        pnlWidth = 0;
         int widthLbl = getMaxWidth(FontUtil.FM_BOLD_12, getGuiCnf().getIdLbl(),
                 getGuiCnf().getModeLbl(), getGuiCnf().getProfileLbl(),
                 getGuiCnf().getAppLbl(), getGuiCnf().getDeviceLbl());
         addId(trip.getId(), widthLbl);
         addMode(trip.getMode(), widthLbl);
-        addProfile(trip.getMode(), widthLbl);
+        addProfile(trip.getProfile(), widthLbl);
         addApp(trip.getApp(), widthLbl);
         addDevice(trip.getDevice(), widthLbl);
         int pnlHeight = y + SPACE_Y;
         setPreferredSize(new Dimension(pnlWidth + SPACE_Y, pnlHeight));
     }
-    
     
     private void addId(String id, int widthLbl) {
         add(Builder.buildLabel(getGuiCnf().getIdLbl(), FontUtil.BOLD_12,
@@ -84,9 +76,8 @@ class TripPanel extends InfoPanel<Trip> {
     
     private void addProfile(String profile, int widthLbl) {
         if (profile != null) {
-            add(Builder.buildLabel(getGuiCnf().getProfileLbl(), 
-                    FontUtil.BOLD_12, new Rectangle(RECT_X, y, widthLbl,
-                            LHEIGHT)));
+            add(Builder.buildLabel(getGuiCnf().getProfileLbl(), FontUtil.BOLD_12, 
+                    new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
             int widthVal = FontUtil.FM_PLAIN_12.stringWidth(profile);
             add(Builder.buildLabel(profile, FontUtil.PLAIN_12, new Rectangle(
                     widthLbl, y, widthVal, LHEIGHT)));
@@ -110,9 +101,8 @@ class TripPanel extends InfoPanel<Trip> {
     
     private void addDevice(Device device, int widthLbl) {
         if (device != null) {
-            add(Builder.buildLabel(getGuiCnf().getDeviceLbl(),
-                    FontUtil.BOLD_12, new Rectangle(RECT_X, y, widthLbl,
-                            LHEIGHT)));
+            add(Builder.buildLabel(getGuiCnf().getDeviceLbl(), FontUtil.BOLD_12,
+                    new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
             String deviceStr = device.toString();
             int widthVal = FontUtil.FM_PLAIN_12.stringWidth(deviceStr);
             add(Builder.buildLabel(deviceStr, FontUtil.PLAIN_12, new Rectangle(

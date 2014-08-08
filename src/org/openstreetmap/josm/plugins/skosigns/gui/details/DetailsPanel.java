@@ -14,9 +14,13 @@
 package org.openstreetmap.josm.plugins.skosigns.gui.details;
 
 import java.awt.Dimension;
+import java.util.Collection;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import org.openstreetmap.josm.plugins.skosigns.entity.CarPosition;
+import org.openstreetmap.josm.plugins.skosigns.entity.Comment;
 import org.openstreetmap.josm.plugins.skosigns.entity.RoadSign;
+import org.openstreetmap.josm.plugins.skosigns.entity.Trip;
 import org.openstreetmap.josm.plugins.skosigns.gui.Builder;
 import org.openstreetmap.josm.plugins.skosigns.util.cnf.GuiCnf;
 
@@ -28,7 +32,7 @@ import org.openstreetmap.josm.plugins.skosigns.util.cnf.GuiCnf;
  * @version $Revision$
  */
 class DetailsPanel extends JTabbedPane {
-
+    
     private static final long serialVersionUID = -2257889142891757874L;
     
     /** the preferred dimension of the panel components */
@@ -59,11 +63,12 @@ class DetailsPanel extends JTabbedPane {
         JScrollPane cmpCarLocation = Builder.buildScrollPane(
                 guiCnf.getCarPosTitle(), pnlCarPos, getBackground(), DIM);
         add(cmpCarLocation);
-        JScrollPane cmpTrip = Builder.buildScrollPane(guiCnf.getTripTitle(), 
-                pnlTrip,getBackground(), DIM);
+        JScrollPane cmpTrip = Builder.buildScrollPane(guiCnf.getTripTitle(),
+                pnlTrip, getBackground(), DIM);
         add(cmpTrip);
         add(pnlComments);
     }
+    
     
     /**
      * Updates the details panel with the given road sign.
@@ -72,8 +77,16 @@ class DetailsPanel extends JTabbedPane {
      */
     void updateData(RoadSign roadSign) {
         pnlRoadSign.updateData(roadSign);
-        pnlCarPos.updateData(roadSign.getCarPos());
-        pnlTrip.updateData(roadSign.getTrip());
-        pnlComments.updateData(roadSign.getComments());
+        CarPosition carPos = null;
+        Collection<Comment> comments = null;
+        Trip trip = null;
+        if (roadSign != null) {
+            carPos = roadSign.getCarPos();
+            trip = roadSign.getTrip();
+            comments = roadSign.getComments();
+        }
+        pnlCarPos.updateData(carPos);
+        pnlTrip.updateData(trip);
+        pnlComments.updateData(comments);
     }
 }

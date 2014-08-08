@@ -33,6 +33,7 @@ package org.openstreetmap.josm.plugins.skosigns.gui.layer;
 
 import java.util.Collection;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import javax.swing.Action;
 import javax.swing.Icon;
 import org.openstreetmap.josm.data.Bounds;
@@ -42,6 +43,7 @@ import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.skosigns.entity.RoadSign;
+import org.openstreetmap.josm.plugins.skosigns.util.Util;
 import org.openstreetmap.josm.plugins.skosigns.util.cnf.GuiCnf;
 import org.openstreetmap.josm.plugins.skosigns.util.cnf.IconCnf;
 import org.openstreetmap.josm.plugins.skosigns.util.cnf.TltCnf;
@@ -57,6 +59,7 @@ public class SkoSignsLayer extends Layer {
     
     private PaintHandler paintHandler;
     private Collection<RoadSign> roadSigns;
+    private RoadSign selRoadSign;
     
     
     /**
@@ -67,6 +70,18 @@ public class SkoSignsLayer extends Layer {
         paintHandler = new PaintHandler();
     }
     
+    /**
+     * Returns the road sign near to the given point. The method returns null if
+     * there is no nearby road sign.
+     * 
+     * @param point a {@code Point}
+     * @return a {@code RoadSign}
+     */
+    public RoadSign nearbyRoadSign(Point point) {
+        RoadSign roadSign = Util.nearbyRoadSign(roadSigns, point);
+        setSelRoadSign(roadSign);
+        return selRoadSign;
+    }
     
     @Override
     public Icon getIcon() {
@@ -88,7 +103,6 @@ public class SkoSignsLayer extends Layer {
                 new LayerListPopup.InfoAction(this) };
     }
     
-    
     @Override
     public String getToolTipText() {
         return TltCnf.getInstance().getPluginTlt();
@@ -108,13 +122,17 @@ public class SkoSignsLayer extends Layer {
     public void paint(Graphics2D g2D, MapView mv, Bounds bounds) {
         mv.setDoubleBuffered(true);
         if (roadSigns != null) {
-            paintHandler.drawRoadSigns(g2D, mv, roadSigns);
+            paintHandler.drawRoadSigns(g2D, mv, roadSigns, selRoadSign);
         }
     }
     
     @Override
     public void visitBoundingBox(BoundingXYVisitor arg0) {
         // not supported
+    }
+    
+    private void setSelRoadSign(RoadSign selRoadSign) {
+        this.selRoadSign = selRoadSign;
     }
     
     public void setRoadSigns(Collection<RoadSign> roadSigns) {

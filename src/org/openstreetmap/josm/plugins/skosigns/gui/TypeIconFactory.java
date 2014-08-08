@@ -32,11 +32,10 @@
 package org.openstreetmap.josm.plugins.skosigns.gui;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.swing.ImageIcon;
-import org.openstreetmap.josm.plugins.skosigns.util.cnf.ServiceCnf;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Pair;
 
 
 /**
@@ -47,18 +46,17 @@ import org.openstreetmap.josm.tools.ImageProvider;
  */
 public final class TypeIconFactory {
     
-    private static Map<String, ImageIcon> map;
+    private static Map<String, Pair<ImageIcon, ImageIcon>> map;
     
     /* the icons path */
-    private static final String PATH = "types/";
+    private static final String PATH = "types/normal/";
+    private static final String SEL_PATH = "types/selected/";
     
     /* the icons extension */
     private static final String EXT = ".png";
     
-    /* default icon to be used if no corresponding icon found*/
-    private static final String DF_ICON_PATH = "types/UNKNOWN.png";
-    private static ImageIcon defaultIcon;
-    
+    /* default icon to be used if no corresponding icon found */
+    private static final String DF_ICON = "UNKNOWN.png";
     
     private static final TypeIconFactory UNIQUE_INSTANCE =
             new TypeIconFactory();
@@ -66,15 +64,6 @@ public final class TypeIconFactory {
     
     private TypeIconFactory() {
         map = new HashMap<>();
-        defaultIcon = ImageProvider.get(DF_ICON_PATH);
-        List<String> types = ServiceCnf.getInstance().getTypes();
-        for (String type : types) {
-            ImageIcon icon = ImageProvider.get(PATH + type + EXT);
-            if (icon == null) {
-                icon = defaultIcon;
-            }
-            map.put(type, icon);
-        }
     }
     
     
@@ -88,14 +77,26 @@ public final class TypeIconFactory {
     }
     
     /**
-     * Returns the icon corresponding to the given type. The method returns
-     * a default icon if no corresponding icon found.
+     * Returns the icon corresponding to the given type.
      * 
      * @param type specifies a road sign type
-     * @return an {@code Icon}
+     * @param selected if true a "selected" icon is returned
+     * @return an {@code ImageIcon} object
      */
-    public ImageIcon getIcon(String type) {
-        ImageIcon icon = map.get(type);
-        return icon != null ? icon : defaultIcon;
+    public ImageIcon getIcon(String type, boolean selected) {
+        Pair<ImageIcon, ImageIcon> imgPair = map.get(type);
+        if (imgPair == null) {
+            ImageIcon icon = ImageProvider.get(PATH + type + EXT);
+            if (icon == null) {
+                icon = ImageProvider.get(PATH + DF_ICON + EXT);
+            }
+            ImageIcon selIcon = ImageProvider.get(SEL_PATH + type + EXT);
+            if (selIcon == null) {
+                selIcon = ImageProvider.get(SEL_PATH + DF_ICON + EXT);
+            }
+            imgPair = new Pair<ImageIcon, ImageIcon>(icon, selIcon);
+            map.put(type, imgPair);
+        }
+        return selected ? imgPair.b : imgPair.a;
     }
 }

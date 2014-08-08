@@ -31,20 +31,28 @@
  */
 package org.openstreetmap.josm.plugins.skosigns.util;
 
+import java.awt.Point;
+import java.awt.geom.Point2D;
+import java.util.Collection;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.skosigns.argument.BoundingBox;
+import org.openstreetmap.josm.plugins.skosigns.entity.RoadSign;
 
 
 /**
- * Provides utility methods for map related operations (actions).
+ * Provides utility methods.
  * 
  * @author Beata
  * @version $Revision$
  */
-public final class MapUtil {
+public final class Util {
     
-    private MapUtil() {}
+    private static final double POZ_DIST = 15.0;
+    
+    private Util() {}
     
     /**
      * Computes the bounding box of the currently visible {@code MapView}.
@@ -57,5 +65,36 @@ public final class MapUtil {
                 mapView.getLatLon(mapView.getWidth(), 0));
         return new BoundingBox(bounds.getMax().lat(), bounds.getMin().lat(),
                 bounds.getMax().lon(), bounds.getMin().lon());
+    }
+    
+    /**
+     * Returns the nearest road sign to the given point. If there is no nearest
+     * road sign the method returns null.
+     * 
+     * @param roadSigns a collection of {@code RoadSign}s
+     * @param point a {@code Point} representing a location
+     * @return the corresponding {@code RoadSing}
+     */
+    public static RoadSign nearbyRoadSign(Collection<RoadSign> roadSigns,
+            Point point) {
+        double minDist = Double.MAX_VALUE;
+        RoadSign result = null;
+        if (roadSigns != null) {
+            for (RoadSign roadSign : roadSigns) {
+                double dist =
+                        distance(point, roadSign.getSignPos().getPosition());
+                if (dist <= minDist && dist <= POZ_DIST) {
+                    minDist = dist;
+                    result = roadSign;
+                }
+            }
+        }
+        return result;
+    }
+    
+    private static double distance(Point2D fromPoint, LatLon toLatLon) {
+        Point toPoint = Main.map.mapView.getPoint(toLatLon);
+        return new Point2D.Double(fromPoint.getX(), fromPoint.getY())
+                .distance(toPoint);
     }
 }

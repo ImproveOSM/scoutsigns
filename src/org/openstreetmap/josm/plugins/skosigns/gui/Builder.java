@@ -147,6 +147,7 @@ public final class Builder {
     public static JTextPane buildTextPane(String txt, String contentType) {
         JTextPane txtPane = new JTextPane();
         txtPane.setCaretPosition(0);
+        txtPane.setEditable(false);
         txtPane.setContentType(contentType);
         txtPane.setText(txt);
         return txtPane;

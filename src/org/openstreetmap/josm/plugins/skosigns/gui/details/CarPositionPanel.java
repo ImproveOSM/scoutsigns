@@ -34,15 +34,13 @@ class CarPositionPanel extends InfoPanel<CarPosition> {
     private int y = 0;
     private int pnlWidth = 0;
     
-    CarPositionPanel() {
-        super(getGuiCnf().getDetailsDefLbl());
-    }
     
     @Override
     void createComponents(CarPosition obj) {
         y = 0;
+        pnlWidth = 0;
         int widthLbl = getMaxWidth(FontUtil.FM_BOLD_12, getGuiCnf().getPointLbl(),
-                getGuiCnf().getTypeLbl(), getGuiCnf().getHeadingLbl(), 
+                getGuiCnf().getTypeLbl(), getGuiCnf().getHeadingLbl(),
                 getGuiCnf().getAccLbl());
         addPoint(obj.getPosition(), widthLbl);
         addType(obj.getType(), widthLbl);
@@ -79,8 +77,9 @@ class CarPositionPanel extends InfoPanel<CarPosition> {
     
     private void addHeading(Integer heading, int widthLbl) {
         if (heading != null) {
-            add(Builder.buildLabel(getGuiCnf().getHeadingLbl(), FontUtil.BOLD_12,
-                    new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
+            add(Builder.buildLabel(getGuiCnf().getHeadingLbl(),
+                    FontUtil.BOLD_12, new Rectangle(RECT_X, y, widthLbl,
+                            LHEIGHT)));
             String headingStr = heading.toString();
             int widthVal = FontUtil.FM_PLAIN_12.stringWidth(headingStr);
             add(Builder.buildLabel(headingStr, FontUtil.PLAIN_12,

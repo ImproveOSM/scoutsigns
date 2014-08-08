@@ -45,4 +45,8 @@ final class Constants {
     static final String OSNAME = "osName";
     static final String OSVER = "osVer";
     static final String USERNAME = "username";
+    
+    /* "retrieveSign" method & parameter */
+    static final String RETRIEVE_SIGN = "retrieveSign";
+    static final String ID = "id";
 }

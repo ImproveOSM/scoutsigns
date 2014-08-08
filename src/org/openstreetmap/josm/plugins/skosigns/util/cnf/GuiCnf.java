@@ -69,7 +69,6 @@ public final class GuiCnf {
     private final String profileLbl;
     private final String appLbl;
     private final String deviceLbl;
-    private final String detailsDefLbl;
     
     
     private GuiCnf() {
@@ -97,7 +96,6 @@ public final class GuiCnf {
         profileLbl = CnfUtil.readProperty(properties, "details.profile");
         appLbl = CnfUtil.readProperty(properties, "details.app");
         deviceLbl = CnfUtil.readProperty(properties, "details.device");
-        detailsDefLbl = CnfUtil.readProperty(properties, "details.def");
     }
     
     public static GuiCnf getInstance() {
@@ -178,9 +176,5 @@ public final class GuiCnf {
     
     public String getDeviceLbl() {
         return deviceLbl;
-    }
-    
-    public String getDetailsDefLbl() {
-        return detailsDefLbl;
     }
 }
