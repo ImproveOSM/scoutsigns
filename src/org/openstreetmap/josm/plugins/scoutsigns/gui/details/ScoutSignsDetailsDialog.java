@@ -50,7 +50,7 @@ import org.openstreetmap.josm.tools.Shortcut;
  * @author Bea
  * @version $Revision$
  */
-public class SkoSignsDetailsDialog extends ToggleDialog {
+public class ScoutSignsDetailsDialog extends ToggleDialog {
     
     private static final long serialVersionUID = -4603746238296761716L;
     
@@ -69,7 +69,7 @@ public class SkoSignsDetailsDialog extends ToggleDialog {
      * Builds a new {@code SkoSignsDetailsDialog} window with the default
      * settings.
      */
-    public SkoSignsDetailsDialog() {
+    public ScoutSignsDetailsDialog() {
         super(GuiCnf.getInstance().getDlgTitle(), IconCnf.getInstance()
                 .getShcName(), TltCnf.getInstance().getPluginTlt(), sh,
                 DLG_HEIGHT);
