@@ -9,7 +9,7 @@
 	<property name="plugin.dist.dir" value="${basedir}/dist" />
 	<property name="plugin.lib.dir" value="${basedir}/lib" />
 	<property name="plugin.images.dir" value="${basedir}/images" />
-	<property name="plugin.jar" value="${plugin.dist.dir}/skosigns.jar" />
+	<property name="plugin.jar" value="${plugin.dist.dir}/scoutsigns.jar" />
 
 	<!--
     **********************************************************
@@ -47,7 +47,7 @@
 	<target name="javadoc">
 		<mkdir dir="${plugin.apidoc.dir}" />
 		<javadoc destdir="${plugin.apidoc.dir}" source="1.7" 
-			classpathref="classpath" windowtitle="skosigns plugin API">
+			classpathref="classpath" windowtitle="scoutsigns plugin API">
 			<link href="http://java.sun.com/javase/7/docs/api/" />
 			<packageset dir="${plugin.src.dir}">
 			</packageset>
@@ -80,9 +80,9 @@
 			<zipfileset src="${plugin.lib.dir}/commons-io-2.4.jar" />
 			<manifest>
 				<attribute name="Author" value="skobbler" />
-				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.skosigns.SkoSignsPlugin" />
+				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.scoutsigns.ScoutSignsPlugin" />
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}" />
-				<attribute name="Plugin-Description" value="The skosigns plugin
+				<attribute name="Plugin-Description" value="The scoutsigns plugin
 					displays the captured road signs on the map." />
 				<attribute name="Plugin-Icon" value="images/placeholder_icon_50.png" />
 				<attribute name="Plugin-Mainversion" value="1" />
