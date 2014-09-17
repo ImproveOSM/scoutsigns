@@ -26,74 +26,71 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Jun 17, 2014 by Bea
+ * Created on Sep 15, 2014 by Beata
  * Modified on $DateTime$ by $Author$
  */
 package org.openstreetmap.josm.plugins.scoutsigns.gui.details;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
-import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
+import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.plugins.scoutsigns.entity.Image;
+import org.openstreetmap.josm.plugins.scoutsigns.util.ImageUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltCnf;
-import org.openstreetmap.josm.tools.Shortcut;
 
 
 /**
- * Displays the details related to a selected road sign in a
- * {@code ToggleDialog} window.
+ * Defines a frame for displaying the photo of a selected road sign.
  * 
- * @author Bea
+ * @author Beata
  * @version $Revision$
  */
-public class ScoutSignsDetailsDialog extends ToggleDialog {
+class ImageFrame extends JFrame {
     
-    private static final long serialVersionUID = -4603746238296761716L;
+    private static final long serialVersionUID = -4511721458975966411L;
     
-    /** the toggle dialog window height */
-    private static final int DLG_HEIGHT = 50;
-    
-    /** the shortcut which will be shown on the left side of JOSM */
-    private static Shortcut sh = Shortcut.registerShortcut(GuiCnf.getInstance()
-            .getDlgTitle(), TltCnf.getInstance().getPluginTlt(), KeyEvent.VK_F,
-            Shortcut.ALT_SHIFT);
-    
-    private DetailsPanel pnlDetails;
-    private ButtonPanel pnlBtn;
+    private static final Dimension DIM = new Dimension(250, 200);
     
     
     /**
-     * Builds a new {@code SkoSignsDetailsDialog} window with the default
-     * settings.
+     * Builds a new frame for the given image.
+     * 
+     * @param image a {@code Image}
      */
-    public ScoutSignsDetailsDialog() {
-        super(GuiCnf.getInstance().getDlgTitle(), IconCnf.getInstance()
-                .getShcName(), TltCnf.getInstance().getPluginTlt(), sh,
-                DLG_HEIGHT);
-        setPreferredSize(new Dimension(DLG_HEIGHT, DLG_HEIGHT));
-        
-        /* create & add components */
-        pnlDetails = new DetailsPanel();
-        pnlBtn = new ButtonPanel();
-        JPanel pnlMain = new JPanel(new BorderLayout());
-        pnlMain.add(pnlDetails, BorderLayout.CENTER);
-        pnlMain.add(pnlBtn, BorderLayout.SOUTH);
-        add(pnlMain);
+    ImageFrame(Image image) {
+        setTitle(GuiCnf.getInstance().getPhotoTitle());
+        setIconImage(IconCnf.getInstance().getPhotoIcon().getImage());
+        setResizable(true);
+        setVisible(true);
+        setLocationRelativeTo(Main.map.mapView);
+        setAlwaysOnTop(true);
+        setPreferredSize(DIM);
+        addComponent(image);
+        repaint();
     }
     
     
-    /**
-     * Updates the details panel with the given road sign.
-     * 
-     * @param roadSign the currently selected {@code RoadSign}
-     */
-    public void updateData(RoadSign roadSign) {
-        pnlDetails.updateData(roadSign);
-        pnlBtn.setRoadSign(roadSign);
-        repaint();
+    private void addComponent(Image image) {
+        JLabel lbl;
+        if (image == null) {
+            lbl = new JLabel(GuiCnf.getInstance().getPhotoMissingLbl());
+        } else {
+            try { BufferedImage bi = ImageUtil.base64ToImage(image.getData(),
+                    image.getWidth(), image.getHeight());
+                lbl = new JLabel(new ImageIcon(bi));
+            } catch (IOException ex) {
+                lbl = new JLabel(GuiCnf.getInstance().getPhotoErrorLbl());
+            }
+        }
+        JPanel pnl = new JPanel(new BorderLayout());
+        pnl.add(lbl, BorderLayout.CENTER);
+        add(pnl);
     }
 }

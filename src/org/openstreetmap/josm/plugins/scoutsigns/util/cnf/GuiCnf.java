@@ -70,6 +70,11 @@ public final class GuiCnf {
     private final String appLbl;
     private final String deviceLbl;
     
+    /* photo frame texts */
+    private final String photoTitle;
+    private final String photoErrorLbl;
+    private final String photoMissingLbl;
+    
     
     private GuiCnf() {
         Properties properties = CnfUtil.load(CNF_FILE);
@@ -96,6 +101,11 @@ public final class GuiCnf {
         profileLbl = CnfUtil.readProperty(properties, "details.profile");
         appLbl = CnfUtil.readProperty(properties, "details.app");
         deviceLbl = CnfUtil.readProperty(properties, "details.device");
+        
+        /* photo frame texts */
+        photoTitle = CnfUtil.readProperty(properties, "photo.title");
+        photoErrorLbl = CnfUtil.readProperty(properties, "photo.error");
+        photoMissingLbl = CnfUtil.readProperty(properties, "photo.missing");
     }
     
     public static GuiCnf getInstance() {
@@ -176,5 +186,17 @@ public final class GuiCnf {
     
     public String getDeviceLbl() {
         return deviceLbl;
+    }
+    
+    public String getPhotoTitle() {
+        return photoTitle;
+    }
+    
+    public String getPhotoErrorLbl() {
+        return photoErrorLbl;
+    }
+    
+    public String getPhotoMissingLbl() {
+        return photoMissingLbl;
     }
 }

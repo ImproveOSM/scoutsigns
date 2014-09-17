@@ -14,7 +14,10 @@
 package org.openstreetmap.josm.plugins.scoutsigns.gui.details;
 
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
 import javax.swing.JPanel;
+import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
 
@@ -32,6 +35,9 @@ class ButtonPanel extends JPanel {
     private static final int ROWS = 1;
     private static final int COLS = 5;
     
+    /* the selected road sign */
+    private RoadSign roadSign;
+    
     
     /**
      * Builds a new {@code ButtonPanel}
@@ -39,9 +45,37 @@ class ButtonPanel extends JPanel {
     ButtonPanel() {
         super(new GridLayout(ROWS, COLS));
         add(Builder.buildButton(null, IconCnf.getInstance().getFilterIcon()));
-        add(Builder.buildButton(null, IconCnf.getInstance().getPhotoIcon()));
+        add(Builder.buildButton(new DisplayImageDialog(), IconCnf.getInstance()
+                .getPhotoIcon()));
         add(Builder.buildButton(null, IconCnf.getInstance().getTripIcon()));
         add(Builder.buildButton(null, IconCnf.getInstance().getCommentIcon()));
         add(Builder.buildButton(null, IconCnf.getInstance().getMoreActionIcon()));
+    }
+    
+    
+    /**
+     * Sets the selected road sign.
+     * 
+     * @param roadSign a {@code RoadSign}
+     */
+    void setRoadSign(RoadSign roadSign) {
+        this.roadSign = roadSign;
+    }
+    
+    
+    /*
+     * Displays the selected road sign's image.
+     */
+    private final class DisplayImageDialog extends AbstractAction {
+        
+        private static final long serialVersionUID = 5500399753585606903L;
+        
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            if (roadSign != null) {
+                ImageFrame imgFrame = new ImageFrame(roadSign.getImage());
+                imgFrame.pack();
+            }
+        }
     }
 }

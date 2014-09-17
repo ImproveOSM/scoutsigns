@@ -53,7 +53,7 @@ public final class IconCnf {
     private final String shcName;
     private final Icon layerIcon;
     private final Icon filterIcon;
-    private final Icon photoIcon;
+    private final ImageIcon photoIcon;
     private final Icon tripIcon;
     private final Icon commentIcon;
     private final Icon moreActionIcon;
@@ -93,7 +93,7 @@ public final class IconCnf {
         return filterIcon;
     }
     
-    public Icon getPhotoIcon() {
+    public ImageIcon getPhotoIcon() {
         return photoIcon;
     }
     
@@ -108,7 +108,7 @@ public final class IconCnf {
     public Icon getMoreActionIcon() {
         return moreActionIcon;
     }
-
+    
     public String getTypeIconPath() {
         return typeIconPath;
     }

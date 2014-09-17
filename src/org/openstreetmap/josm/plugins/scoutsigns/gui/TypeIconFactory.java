@@ -56,7 +56,7 @@ public final class TypeIconFactory {
     private static final String EXT = ".png";
     
     /* default icon to be used if no corresponding icon found */
-    private static final String DF_ICON = "UNKNOWN.png";
+    private static final String DF_ICON = "UNKNOWN";
     
     private static final TypeIconFactory UNIQUE_INSTANCE =
             new TypeIconFactory();
@@ -86,12 +86,17 @@ public final class TypeIconFactory {
     public ImageIcon getIcon(String type, boolean selected) {
         Pair<ImageIcon, ImageIcon> imgPair = map.get(type);
         if (imgPair == null) {
-            ImageIcon icon = ImageProvider.get(PATH + type + EXT);
-            if (icon == null) {
+            ImageIcon icon;
+            try {
+                icon = ImageProvider.get(PATH + type + EXT);
+            } catch (RuntimeException ex) {
                 icon = ImageProvider.get(PATH + DF_ICON + EXT);
             }
-            ImageIcon selIcon = ImageProvider.get(SEL_PATH + type + EXT);
-            if (selIcon == null) {
+            
+            ImageIcon selIcon;
+            try {
+                selIcon = ImageProvider.get(SEL_PATH + type + EXT);
+            } catch (RuntimeException ex) {
                 selIcon = ImageProvider.get(SEL_PATH + DF_ICON + EXT);
             }
             imgPair = new Pair<ImageIcon, ImageIcon>(icon, selIcon);

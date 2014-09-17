@@ -50,7 +50,7 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.details.SkoSignsDetailsDialog;
+import org.openstreetmap.josm.plugins.scoutsigns.gui.details.ScoutSignsDetailsDialog;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.layer.ScoutSignsLayer;
 import org.openstreetmap.josm.plugins.scoutsigns.util.Util;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ServiceCnf;
@@ -68,7 +68,7 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
         ZoomChangeListener, MouseListener {
     
     private ScoutSignsLayer layer;
-    private SkoSignsDetailsDialog dialog;
+    private ScoutSignsDetailsDialog dialog;
     
     /** timer for the zoom in/out operations */
     private Timer zoomTimer;
@@ -89,7 +89,7 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
     @Override
     public void mapFrameInitialized(MapFrame oldMapFrame, MapFrame newMapFrame) {
         if (Main.map != null) {
-            dialog = new SkoSignsDetailsDialog();
+            dialog = new ScoutSignsDetailsDialog();
             newMapFrame.addToggleDialog(dialog);
             dialog.getButton().addActionListener(
                     new ToggleButtonActionListener());
