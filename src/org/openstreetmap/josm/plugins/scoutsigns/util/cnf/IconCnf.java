@@ -52,12 +52,17 @@ public final class IconCnf {
     
     private final String shcName;
     private final Icon layerIcon;
-    private final Icon filterIcon;
+    private final ImageIcon filterIcon;
     private final ImageIcon photoIcon;
     private final Icon tripIcon;
     private final Icon commentIcon;
     private final Icon moreActionIcon;
     private final String typeIconPath;
+    
+    private final Icon openIcon;
+    private final Icon solvedIcon;
+    private final Icon invalidIcon;
+    private final Icon duplicateIcon;
     
     
     private IconCnf() {
@@ -70,6 +75,11 @@ public final class IconCnf {
         commentIcon = getIcon(properties, "comment.icon");
         moreActionIcon = getIcon(properties, "more.icon");
         typeIconPath = CnfUtil.readProperty(properties, "types.path");
+        
+        openIcon = getIcon(properties, "status.open");
+        solvedIcon = getIcon(properties, "status.solved");
+        invalidIcon =getIcon(properties, "status.invalid");
+        duplicateIcon = getIcon(properties, "status.duplicate");
     }
     
     
@@ -89,7 +99,7 @@ public final class IconCnf {
         return layerIcon;
     }
     
-    public Icon getFilterIcon() {
+    public ImageIcon getFilterIcon() {
         return filterIcon;
     }
     
@@ -111,5 +121,21 @@ public final class IconCnf {
     
     public String getTypeIconPath() {
         return typeIconPath;
+    }
+    
+    public Icon getOpenIcon() {
+        return openIcon;
+    }
+    
+    public Icon getSolvedIcon() {
+        return solvedIcon;
+    }
+    
+    public Icon getInvalidIcon() {
+        return invalidIcon;
+    }
+    
+    public Icon getDuplicateIcon() {
+        return duplicateIcon;
     }
 }

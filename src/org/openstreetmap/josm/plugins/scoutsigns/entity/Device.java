@@ -76,4 +76,27 @@ public class Device {
         }
         return sb.toString();
     }
+    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ObjectUtil.hashCode(osName);
+        result = prime * result + ObjectUtil.hashCode(osVersion);
+        return result;
+    }
+    
+    
+    @Override
+    public boolean equals(Object obj) {
+        boolean result = false;
+        if (this == obj) {
+            result = true;
+        } else if (obj instanceof Device) {
+            Device other = (Device) obj;
+            result = ObjectUtil.bothNullOrEqual(osName, other.getOsName());
+            result = result && ObjectUtil.bothNullOrEqual(osVersion, other.getOsVersion());
+        }
+        return result;
+    }
 }

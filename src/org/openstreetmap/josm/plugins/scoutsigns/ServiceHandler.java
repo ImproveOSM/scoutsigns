@@ -20,6 +20,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
+import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.service.FcdSignService;
 import org.openstreetmap.josm.plugins.scoutsigns.service.FcdSignServiceException;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
@@ -81,6 +82,23 @@ final class ServiceHandler {
             handleException(ex, true);
         }
         return result;
+    }
+    
+    /**
+     * 
+     * @param signId
+     * @param userName
+     * @param text
+     * @param status
+     * @param duplicateOf
+     */
+    void addComment(Long signId, String userName, String text, Status status,
+            Long duplicateOf) {
+        try {
+            signService.addComment(signId, userName, text, status, duplicateOf);
+        } catch (FcdSignServiceException ex) {
+            handleException(ex, true);
+        }
     }
     
     

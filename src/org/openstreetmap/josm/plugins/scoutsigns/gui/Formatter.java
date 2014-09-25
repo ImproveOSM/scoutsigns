@@ -14,10 +14,7 @@
 package org.openstreetmap.josm.plugins.scoutsigns.gui;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
-import java.util.TimeZone;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Comment;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
@@ -31,21 +28,20 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
  */
 public final class Formatter {
     
-    private static final Long TSTP = 1000L;
-    private static final String TSTP_FORMAT = "yyyy-MM-dd HH:mm:ss";
     
     private Formatter() {}
     
     
     /**
-     * Formats the given collection of {@code Comment}s using html tags. 
+     * Formats the given collection of {@code Comment}s using html tags.
      * 
      * @param comments a collection of {@code Comment}s
      * @return a string containing the given {@code Comment}s
      */
     public static String formatComments(Collection<Comment> comments) {
-        StringBuilder sb = new StringBuilder(
-                "<html><body><font size='3' face='times new roman'>");
+        StringBuilder sb =
+                new StringBuilder(
+                        "<html><body><font size='3' face='times new roman'>");
         for (Comment comment : comments) {
             sb.append(formatComment(comment));
         }
@@ -55,7 +51,7 @@ public final class Formatter {
     
     private static String formatComment(Comment value) {
         StringBuilder sb = new StringBuilder("<b>");
-        sb.append(Formatter.formatTimestamp(value.getTstamp()));
+        sb.append(DateUtil.formatTimestamp(value.getTstamp()));
         sb.append(", ").append(value.getUsername());
         sb.append("</b><br>");
         if (value.getStatus() != null) {
@@ -95,25 +91,11 @@ public final class Formatter {
      * Formats the given decimal value, using the specified format.
      * 
      * @param value the value to be formated
-     * @param format specifies the format 
+     * @param format specifies the format
      * @return a string containing the given value
      */
     public static String formatDecimal(double value, DecFormat format) {
         return new DecimalFormat(format.getValue()).format(value);
-    }
-    
-    /**
-     * Formats the given timestamp using the default time zone. Returns a string
-     * of the following format: yyyy-MM-dd HH:mm:ss.
-     * 
-     * @param timestamp a long representing a timestamp
-     * @return a formated timestamp
-     */
-    public static String formatTimestamp(Long timestamp) {
-        SimpleDateFormat dateTimeFormat = new SimpleDateFormat(TSTP_FORMAT);
-        dateTimeFormat.setTimeZone(TimeZone.getDefault());
-        Date date = new Date(timestamp * TSTP);
-        return date != null ? dateTimeFormat.format(date) : "";
     }
     
     

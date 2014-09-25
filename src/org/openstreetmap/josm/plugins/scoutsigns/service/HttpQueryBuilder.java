@@ -56,6 +56,9 @@ class HttpQueryBuilder {
     private StringBuilder query;
     
     
+    HttpQueryBuilder() {}
+    
+    
     /**
      * Creates a {@code HttpQueryBuilder} with the given arguments.
      * 
@@ -79,7 +82,9 @@ class HttpQueryBuilder {
             addDuplicateFilter(filter.getDuplicateOf());
             addApplicationCtiteria(filter.getApp());
             addDeviceFilter(filter.getDevice());
-            addUsernameFilter(filter.getUsername());
+            
+            // TODO not supported yet
+            addUsernameFilter(null);
         }
     }
     

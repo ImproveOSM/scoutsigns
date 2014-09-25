@@ -35,6 +35,7 @@ import java.util.Properties;
 
 
 /**
+ * Utility class, holds UI texts.
  * 
  * @author Bea
  * @version $Revision$
@@ -48,32 +49,44 @@ public final class GuiCnf {
     
     private final String dlgTitle;
     
-    /* details panel tab titltes */
+    /* details panel tab titles */
     private final String roadSignTitle;
     private final String carPosTitle;
     private final String tripTitle;
     private final String commentsTitle;
     
-    /* details panel labels */
+    /* details panel texts */
     private final String idLbl;
     private final String pointLbl;
     private final String heightLbl;
-    private final String typeLbl;
-    private final String statusLbl;
     private final String confLbl;
     private final String createdLbl;
-    private final String duplLbl;
     private final String headingLbl;
     private final String accLbl;
     private final String modeLbl;
     private final String profileLbl;
-    private final String appLbl;
-    private final String deviceLbl;
     
     /* photo frame texts */
     private final String photoTitle;
     private final String photoErrorLbl;
     private final String photoMissingLbl;
+    
+    /* filter dialog texts */
+    private final String filterTitle;
+    private final String timeIntLbl;
+    
+    /* commonly used labels */
+    private final String typeLbl;
+    private final String statusLbl;
+    private final String duplLbl;
+    private final String appLbl;
+    private final String deviceLbl;
+    
+    
+    /* button texts */
+    private final String btnOk;
+    private final String btnReset;
+    private final String btnCancel;
     
     
     private GuiCnf() {
@@ -90,23 +103,35 @@ public final class GuiCnf {
         idLbl = CnfUtil.readProperty(properties, "details.id");
         pointLbl = CnfUtil.readProperty(properties, "details.point");
         heightLbl = CnfUtil.readProperty(properties, "details.height");
-        typeLbl = CnfUtil.readProperty(properties, "details.type");
-        statusLbl = CnfUtil.readProperty(properties, "details.status");
         confLbl = CnfUtil.readProperty(properties, "details.conf");
         createdLbl = CnfUtil.readProperty(properties, "details.created");
-        duplLbl = CnfUtil.readProperty(properties, "details.dupl");
         headingLbl = CnfUtil.readProperty(properties, "details.heading");
         accLbl = CnfUtil.readProperty(properties, "details.acc");
         modeLbl = CnfUtil.readProperty(properties, "details.mode");
         profileLbl = CnfUtil.readProperty(properties, "details.profile");
-        appLbl = CnfUtil.readProperty(properties, "details.app");
-        deviceLbl = CnfUtil.readProperty(properties, "details.device");
         
         /* photo frame texts */
         photoTitle = CnfUtil.readProperty(properties, "photo.title");
         photoErrorLbl = CnfUtil.readProperty(properties, "photo.error");
         photoMissingLbl = CnfUtil.readProperty(properties, "photo.missing");
+        
+        /* filter dialog texts */
+        filterTitle = CnfUtil.readProperty(properties, "filter.title");
+        timeIntLbl = CnfUtil.readProperty(properties, "filter.int");
+        
+        /* commonly used texts */
+        typeLbl = CnfUtil.readProperty(properties, "type");
+        statusLbl = CnfUtil.readProperty(properties, "status");
+        duplLbl = CnfUtil.readProperty(properties, "dupl");
+        appLbl = CnfUtil.readProperty(properties, "app");
+        deviceLbl = CnfUtil.readProperty(properties, "device");
+        
+        /* button texts */
+        btnOk = CnfUtil.readProperty(properties, "btn.ok");
+        btnReset = CnfUtil.readProperty(properties, "btn.reset");
+        btnCancel = CnfUtil.readProperty(properties, "bnt.cancel");
     }
+    
     
     public static GuiCnf getInstance() {
         return INSTANCE;
@@ -144,24 +169,12 @@ public final class GuiCnf {
         return heightLbl;
     }
     
-    public String getTypeLbl() {
-        return typeLbl;
-    }
-    
-    public String getStatusLbl() {
-        return statusLbl;
-    }
-    
     public String getConfLbl() {
         return confLbl;
     }
     
     public String getCreatedLbl() {
         return createdLbl;
-    }
-    
-    public String getDuplLbl() {
-        return duplLbl;
     }
     
     public String getHeadingLbl() {
@@ -180,14 +193,6 @@ public final class GuiCnf {
         return profileLbl;
     }
     
-    public String getAppLbl() {
-        return appLbl;
-    }
-    
-    public String getDeviceLbl() {
-        return deviceLbl;
-    }
-    
     public String getPhotoTitle() {
         return photoTitle;
     }
@@ -198,5 +203,45 @@ public final class GuiCnf {
     
     public String getPhotoMissingLbl() {
         return photoMissingLbl;
+    }
+    
+    public String getFilterTitle() {
+        return filterTitle;
+    }
+    
+    public String getTimeIntLbl() {
+        return timeIntLbl;
+    }
+    
+    public String getTypeLbl() {
+        return typeLbl;
+    }
+    
+    public String getStatusLbl() {
+        return statusLbl;
+    }
+    
+    public String getDuplLbl() {
+        return duplLbl;
+    }
+    
+    public String getAppLbl() {
+        return appLbl;
+    }
+    
+    public String getDeviceLbl() {
+        return deviceLbl;
+    }
+    
+    public String getBtnOk() {
+        return btnOk;
+    }
+    
+    public String getBtnReset() {
+        return btnReset;
+    }
+    
+    public String getBtnCancel() {
+        return btnCancel;
     }
 }

@@ -32,6 +32,11 @@
 package org.openstreetmap.josm.plugins.scoutsigns.util.pref;
 
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
+import org.openstreetmap.josm.plugins.scoutsigns.argument.TimestampFilter;
+import org.openstreetmap.josm.plugins.scoutsigns.entity.Application;
+import org.openstreetmap.josm.plugins.scoutsigns.entity.Device;
+import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 
 
 /**
@@ -75,5 +80,87 @@ public final class PrefManager {
      */
     public boolean loadSupressErrorFlag() {
         return Main.pref.getBoolean(Keys.ERROR_SUPRESS);
+    }
+    
+    /**
+     * Saves the given search filter to the global preference file.
+     * 
+     * @param filter the {@code SearchFilter} object
+     */
+    public void saveSearchFilter(SearchFilter filter) {
+        String from = "";
+        String to = "";
+        String type = "";
+        String status = "";
+        String duplicate = "";
+        String appName = "";
+        String appVersion = "";
+        String osName = "";
+        String osVersion = "";
+        
+        if (filter != null) {
+            if (filter.getTimestampFilter() != null) {
+                TimestampFilter tstpFilter = filter.getTimestampFilter();
+                from = tstpFilter.getFrom() != null ? tstpFilter.getFrom().
+                        toString() : "";
+                to = tstpFilter.getTo() != null ? tstpFilter.getTo().
+                        toString() : "";
+            }
+            type = filter.getType();
+            status = filter.getStatus() != null ? filter.getStatus().name() : 
+                null;
+            duplicate = filter.getDuplicateOf() != null ? filter.getDuplicateOf()
+                    .toString() : null;
+            if (filter.getApp() != null) {
+                appName = filter.getApp().getName();
+                appVersion = filter.getApp().getVersion();
+            }
+            if (filter.getDevice() != null) {
+                osName = filter.getDevice().getOsName();
+                osVersion = filter.getDevice().getOsVersion();
+            }
+        }
+        Main.pref.put(Keys.FROM, from);
+        Main.pref.put(Keys.TO, to);
+        Main.pref.put(Keys.STATUS, status);
+        Main.pref.put(Keys.TYPE, type);
+        Main.pref.put(Keys.DUPLICATE, duplicate);
+        Main.pref.put(Keys.APP_NAME, appName);
+        Main.pref.put(Keys.APP_VERSION, appVersion);
+        Main.pref.put(Keys.OS_NAME, osName);
+        Main.pref.put(Keys.OS_VERSION, osVersion);
+    }
+    
+    /**
+     * Loads the search filter from the global preference file.
+     * 
+     * @return a {@code SearchFilter} object
+     */
+    public SearchFilter loadSearchFilter() {
+        String fromStr = Main.pref.get(Keys.FROM);
+        String toStr = Main.pref.get(Keys.TO);
+        String type = Main.pref.get(Keys.TYPE);
+        String statusStr = Main.pref.get(Keys.STATUS);
+        String duplicateStr = Main.pref.get(Keys.DUPLICATE);
+        String appName = Main.pref.get(Keys.APP_NAME);
+        String appVersion = Main.pref.get(Keys.APP_VERSION);
+        String osName = Main.pref.get(Keys.OS_NAME);
+        String osVersion = Main.pref.get(Keys.OS_VERSION);
+        
+        Long from = (fromStr != null && !fromStr.isEmpty()) ?
+                Long.valueOf(fromStr) : null;
+        Long to = (toStr != null && !toStr.isEmpty()) ? Long.valueOf(toStr) 
+                : null;
+        Status status = (statusStr != null && !statusStr.isEmpty()) ? 
+                Status.valueOf(statusStr) : null;
+        Long duplicate = (duplicateStr != null && !duplicateStr.isEmpty()) ? 
+                Long.valueOf(duplicateStr) : null;
+        return new SearchFilter(new TimestampFilter(from, to), type, status,
+                duplicate, new Application(appName, appVersion), new Device(
+                        osName, osVersion));
+    }
+    
+    public void saveFiltersChangedFlag(boolean changed) {
+        Main.pref.put(Keys.FILTERS_CHANGED, changed);
     }
 }

@@ -104,4 +104,8 @@ public final class TypeIconFactory {
         }
         return selected ? imgPair.b : imgPair.a;
     }
+    
+    public String[] getKeys() {
+        return map.keySet().toArray(new String[0]);
+    }
 }

@@ -75,4 +75,27 @@ public class Application {
         }
         return sb.toString();
     }
+    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ObjectUtil.hashCode(name);
+        result = prime * result + ObjectUtil.hashCode(version);
+        return result;
+    }
+    
+    
+    @Override
+    public boolean equals(Object obj) {
+        boolean result = false;
+        if (this == obj) {
+            result = true;
+        } else if (obj instanceof Application) {
+            Application other = (Application) obj;
+            result = ObjectUtil.bothNullOrEqual(name, other.getName());
+            result = result && ObjectUtil.bothNullOrEqual(version, other.getVersion());
+        }
+        return result;
+    }
 }

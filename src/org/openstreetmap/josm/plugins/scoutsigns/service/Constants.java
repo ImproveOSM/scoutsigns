@@ -49,4 +49,9 @@ final class Constants {
     /* "retrieveSign" method & parameter */
     static final String RETRIEVE_SIGN = "retrieveSign";
     static final String ID = "id";
+    
+    /* "addComments" method & paramaters */
+    static final String ADD_COMMENT = "addComment";
+    static final String SIGN_ID = "signId";
+    static final String TEXT = "text";
 }

@@ -43,5 +43,15 @@ public final class Keys {
     
     private Keys() {}
     
-    static final String ERROR_SUPRESS = "skosigns.error.supress";
+    static final String ERROR_SUPRESS = "scoutsigns.error.supress";
+    public static final String FILTERS_CHANGED = "scoutsigns.filter.changed";
+    static final String FROM = "scoutsigns.filter.from";
+    static final String TO = "scoutsigns.filter.to";
+    static final String STATUS = "scoutsigns.filter.status";
+    static final String TYPE = "scoutsigns.filter.types";
+    static final String DUPLICATE = "scoutsigns.filter.duplicate";
+    static final String APP_NAME = "scoutsigns.filter.appName";
+    static final String APP_VERSION = "scoutsigns.filter.appVersion";
+    static final String OS_NAME = "scoutsigns.filter.osName";
+    static final String OS_VERSION = "scoutsigns.filter.osVersion";
 }

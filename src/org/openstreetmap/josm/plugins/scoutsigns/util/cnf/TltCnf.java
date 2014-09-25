@@ -49,11 +49,16 @@ public final class TltCnf {
     private final String pluginTlt;
     private final String layerInfo;
     
+    private final String prevMonth;
+    private final String nextMonth;
+    
     
     private TltCnf() {
         Properties properties = CnfUtil.load(CNF_FILE);
         pluginTlt =  CnfUtil.readProperty(properties, "plugin.tlt");
         layerInfo = CnfUtil.readProperty(properties, "layer.info");
+        prevMonth = CnfUtil.readProperty(properties, "cal.month.prev");
+        nextMonth = CnfUtil.readProperty(properties, "cal.month.next");
     }
     
     public static TltCnf getInstance() {
@@ -68,5 +73,13 @@ public final class TltCnf {
 
     public String getLayerInfo() {
         return layerInfo;
+    }
+
+    public String getPrevMonth() {
+        return prevMonth;
+    }
+    
+    public String getNextMonth() {
+        return nextMonth;
     }
 }

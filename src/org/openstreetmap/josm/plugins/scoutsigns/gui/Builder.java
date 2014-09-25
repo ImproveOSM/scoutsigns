@@ -39,11 +39,17 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 import javax.swing.AbstractAction;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
@@ -57,6 +63,7 @@ import javax.swing.SwingConstants;
  */
 public final class Builder {
     
+    private static final int HEADER_WIDTH = 12;
     
     private Builder() {}
     
@@ -90,7 +97,23 @@ public final class Builder {
      */
     public static JLabel buildLabel(Icon icon, Rectangle bounds) {
         JLabel label = new JLabel(icon);
-        label.setBounds(bounds);
+        if (bounds != null) {
+            label.setBounds(bounds);
+        }
+        return label;
+    }
+    
+    public static JLabel buildLabel(String text, String tooltip, int hAligment,
+            Color textColor, Font font) {
+        JLabel label = new JLabel(text);
+        if (tooltip != null) {
+            label.setToolTipText(tooltip);
+        }
+        label.setHorizontalAlignment(hAligment);
+        if (textColor != null) {
+            label.setForeground(textColor);
+        }
+        label.setFont(font);
         return label;
     }
     
@@ -105,9 +128,10 @@ public final class Builder {
      */
     public static JScrollPane buildScrollPane(String name, Component component,
             Color bgColor, Dimension prefSize) {
-        JScrollPane pane = new JScrollPane(component,
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane pane =
+                new JScrollPane(component,
+                        ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         pane.setBackground(bgColor);
         pane.setAutoscrolls(true);
         if (name != null) {
@@ -179,5 +203,64 @@ public final class Builder {
             txtArea.setBounds(bounds);
         }
         return txtArea;
+    }
+    
+    public static JCheckBox buildCheckBox(String tooltip, boolean selected) {
+        JCheckBox cbbox = new JCheckBox();
+        cbbox.setToolTipText(tooltip);
+        cbbox.setFont(FontUtil.PLAIN_12);
+        cbbox.setFocusPainted(false);
+        cbbox.setSelected(selected);
+        return cbbox;
+    }
+    
+    public static JTextField buildTextField(String txt, String tooltip,
+            Color bgColor) {
+        JTextField txtField = new JTextField();
+        if (txt != null) {
+            txtField.setText(txt);
+        }
+        if (tooltip != null) {
+            txtField.setToolTipText(tooltip);
+        }
+        txtField.setFont(FontUtil.PLAIN_12);
+        txtField.setBackground(bgColor);
+        return txtField;
+    }
+    
+    public static JScrollPane buildScrollPane(Component component, Color bgColor) {
+        JScrollPane scrollPane =
+                new JScrollPane(component,
+                        ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setBackground(bgColor);
+        scrollPane.setAutoscrolls(true);
+        return scrollPane;
+    }
+    
+    public static JButton buildButton(AbstractAction action, String text) {
+        JButton button = new JButton(action);
+        button.setFont(FontUtil.BOLD_12);
+        button.setText(text);
+        button.setFocusable(false);
+        return button;
+    }
+    
+    public static JPanel buildBoxLayoutPanel(JComponent cmpLeft,
+            JComponent cmpCenter, JComponent cmpRight) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        panel.setBackground(Color.lightGray);
+        panel.setOpaque(true);
+        panel.add(Box.createHorizontalStrut(HEADER_WIDTH));
+        panel.add(cmpLeft);
+        panel.add(Box.createHorizontalStrut(HEADER_WIDTH));
+        panel.add(Box.createHorizontalGlue());
+        panel.add(cmpCenter);
+        panel.add(Box.createHorizontalGlue());
+        panel.add(Box.createHorizontalStrut(HEADER_WIDTH));
+        panel.add(cmpRight);
+        panel.add(Box.createHorizontalStrut(HEADER_WIDTH));
+        return panel;
     }
 }

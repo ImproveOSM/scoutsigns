@@ -13,6 +13,8 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.argument;
 
+import org.openstreetmap.josm.plugins.scoutsigns.entity.ObjectUtil;
+
 
 /**
  * Timestamp filter for the search road sign method. This filter defines an
@@ -47,5 +49,28 @@ public class TimestampFilter {
     
     public Long getTo() {
         return to;
+    }
+    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ObjectUtil.hashCode(from);
+        result = prime * result + ObjectUtil.hashCode(to);
+        return result;
+    }
+    
+    
+    @Override
+    public boolean equals(Object obj) {
+        boolean result = false;
+        if (this == obj) {
+            result = true;
+        } else if (obj instanceof TimestampFilter) {
+            TimestampFilter other = (TimestampFilter) obj;
+            result = ObjectUtil.bothNullOrEqual(from, other.getFrom());
+            result = result && ObjectUtil.bothNullOrEqual(to, other.getTo());
+        }
+        return result;
     }
 }

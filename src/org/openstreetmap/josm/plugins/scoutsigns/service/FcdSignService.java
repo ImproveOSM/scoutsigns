@@ -33,6 +33,7 @@ package org.openstreetmap.josm.plugins.scoutsigns.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
@@ -86,8 +87,9 @@ public class FcdSignService {
      */
     public Collection<RoadSign> searchSigns(BoundingBox bbox,
             SearchFilter filter, int zoom) throws FcdSignServiceException {
-        String url = new HttpQueryBuilder(bbox, filter, zoom).build(
-                Constants.SEARCH_SIGNS);
+        String url =
+                new HttpQueryBuilder(bbox, filter, zoom)
+                        .build(Constants.SEARCH_SIGNS);
         Root root = executeGet(url);
         verifyStatus(root);
         return root.getRoadSigns() != null ? root.getRoadSigns()
@@ -109,8 +111,31 @@ public class FcdSignService {
         return root.getRoadSign();
     }
     
-    /* this will be used by addComment/addComments methods */
-    @SuppressWarnings("unused")
+    /**
+     * 
+     * @param signId
+     * @param userName
+     * @param text
+     * @param status
+     * @param duplicateOf
+     * @throws FcdSignServiceException
+     */
+    public void addComment(Long signId, String userName, String text,
+            Status status, Long duplicateOf) throws FcdSignServiceException {
+        Map<String, String> content = new HashMap<>();
+        content.put(Constants.SIGN_ID, signId.toString());
+        content.put(Constants.USERNAME, userName);
+        content.put(Constants.TEXT, text);
+        if (status != null) {
+            content.put(Constants.STATUS, status.name());
+        }
+        if (duplicateOf != null) {
+            content.put(Constants.DUPLICATE_OF, duplicateOf.toString());
+        }
+        String url = new HttpQueryBuilder().build(Constants.ADD_COMMENT);
+        executePost(url, content);
+    }
+    
     private Root executePost(String url, Map<String, String> content)
             throws FcdSignServiceException {
         String response = null;

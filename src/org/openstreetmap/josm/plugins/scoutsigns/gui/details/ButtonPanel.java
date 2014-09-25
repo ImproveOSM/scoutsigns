@@ -19,6 +19,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
+import org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter.RoadSignFilterDialog;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
 
 
@@ -44,8 +45,9 @@ class ButtonPanel extends JPanel {
      */
     ButtonPanel() {
         super(new GridLayout(ROWS, COLS));
-        add(Builder.buildButton(null, IconCnf.getInstance().getFilterIcon()));
-        add(Builder.buildButton(new DisplayImageDialog(), IconCnf.getInstance()
+        add(Builder.buildButton(new DisplayFilterDialog(), IconCnf
+                .getInstance().getFilterIcon()));
+        add(Builder.buildButton(new DisplayImageFrame(), IconCnf.getInstance()
                 .getPhotoIcon()));
         add(Builder.buildButton(null, IconCnf.getInstance().getTripIcon()));
         add(Builder.buildButton(null, IconCnf.getInstance().getCommentIcon()));
@@ -66,7 +68,7 @@ class ButtonPanel extends JPanel {
     /*
      * Displays the selected road sign's image.
      */
-    private final class DisplayImageDialog extends AbstractAction {
+    private final class DisplayImageFrame extends AbstractAction {
         
         private static final long serialVersionUID = 5500399753585606903L;
         
@@ -76,6 +78,17 @@ class ButtonPanel extends JPanel {
                 ImageFrame imgFrame = new ImageFrame(roadSign.getImage());
                 imgFrame.pack();
             }
+        }
+    }
+    
+    private final class DisplayFilterDialog extends AbstractAction {
+        
+        private static final long serialVersionUID = -7084091586699723933L;
+        
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            RoadSignFilterDialog dlgFilter = new RoadSignFilterDialog();
+            dlgFilter.setVisible(true);
         }
     }
 }

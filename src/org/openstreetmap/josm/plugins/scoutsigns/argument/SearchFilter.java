@@ -33,6 +33,7 @@ package org.openstreetmap.josm.plugins.scoutsigns.argument;
 
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Application;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Device;
+import org.openstreetmap.josm.plugins.scoutsigns.entity.ObjectUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 
 
@@ -49,8 +50,9 @@ public class SearchFilter {
     private Long duplicateOf;
     private Application app;
     private Device device;
-    private String username;
     
+    
+    public SearchFilter() {}
     
     /**
      * Builds a new filter with the given arguments.
@@ -68,15 +70,13 @@ public class SearchFilter {
      * @param username the user's OSM user name
      */
     public SearchFilter(TimestampFilter timestampFilter, String type,
-            Status status, Long duplicateOf, Application app, Device device,
-            String username) {
+            Status status, Long duplicateOf, Application app, Device device) {
         this.timestampFilter = timestampFilter;
         this.type = type;
         this.status = status;
         this.duplicateOf = duplicateOf;
         this.app = app;
         this.device = device;
-        this.username = username;
     }
     
     
@@ -104,7 +104,36 @@ public class SearchFilter {
         return device;
     }
     
-    public String getUsername() {
-        return username;
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ObjectUtil.hashCode(app);
+        result = prime * result + ObjectUtil.hashCode(device);
+        result = prime * result + ObjectUtil.hashCode(duplicateOf);
+        result = prime * result + ObjectUtil.hashCode(status);
+        result = prime * result + ObjectUtil.hashCode(timestampFilter);
+        result = prime * result + ObjectUtil.hashCode(type);
+        return result;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        boolean result = false;
+        if (this == obj) {
+            result = true;
+        } else if (obj instanceof SearchFilter) {
+            SearchFilter other = (SearchFilter) obj;
+            result = ObjectUtil.bothNullOrEqual(timestampFilter, 
+                    other.getTimestampFilter());
+            result = result && ObjectUtil.bothNullOrEqual(status, other.getStatus());
+            result = result && ObjectUtil.bothNullOrEqual(type, other.getType());
+            result = result && ObjectUtil.bothNullOrEqual(duplicateOf,
+                    other.getDuplicateOf());
+            result = result && ObjectUtil.bothNullOrEqual(app, other.getApp());
+            result = result && ObjectUtil.bothNullOrEqual(device,
+                    other.getDevice());
+        }
+        return result;
     }
 }
