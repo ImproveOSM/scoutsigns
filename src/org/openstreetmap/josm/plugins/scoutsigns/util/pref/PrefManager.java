@@ -160,7 +160,13 @@ public final class PrefManager {
                         osName, osVersion));
     }
     
+    /**
+     * Saves the "filters changed" flag in the global preference file.
+     * 
+     * @param changed a boolean value
+     */
     public void saveFiltersChangedFlag(boolean changed) {
-        Main.pref.put(Keys.FILTERS_CHANGED, changed);
+        Main.pref.put(Keys.FILTERS_CHANGED, "");
+        Main.pref.put(Keys.FILTERS_CHANGED, "" + changed);
     }
 }
