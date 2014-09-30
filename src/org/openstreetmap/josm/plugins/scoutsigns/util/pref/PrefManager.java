@@ -103,8 +103,8 @@ public final class PrefManager {
                 TimestampFilter tstpFilter = filter.getTimestampFilter();
                 from = tstpFilter.getFrom() != null ? tstpFilter.getFrom().
                         toString() : "";
-                to = tstpFilter.getTo() != null ? tstpFilter.getTo().toString() 
-                        : "";
+                to = tstpFilter.getTo() != null ? tstpFilter.getTo().
+                        toString() : "";
             }
             type = filter.getType();
             status = filter.getStatus() != null ? filter.getStatus().name() : 
@@ -137,27 +137,27 @@ public final class PrefManager {
      * @return a {@code SearchFilter} object
      */
     public SearchFilter loadSearchFilter() {
-        String fromStr = Main.pref.get(Keys.FROM);
-        String toStr = Main.pref.get(Keys.TO);
         String type = Main.pref.get(Keys.TYPE);
         String statusStr = Main.pref.get(Keys.STATUS);
-        String duplicateStr = Main.pref.get(Keys.DUPLICATE);
         String appName = Main.pref.get(Keys.APP_NAME);
         String appVersion = Main.pref.get(Keys.APP_VERSION);
         String osName = Main.pref.get(Keys.OS_NAME);
         String osVersion = Main.pref.get(Keys.OS_VERSION);
         
-        Long from = (fromStr != null && !fromStr.isEmpty()) ? 
-                Long.valueOf(fromStr) : null;
-        Long to = (toStr != null && !toStr.isEmpty()) ? 
-                Long.valueOf(toStr) : null;
+        Long from = loadLongValue(Keys.FROM);
+        Long to = loadLongValue(Keys.TO);
         Status status = (statusStr != null && !statusStr.isEmpty()) ? 
                 Status.valueOf(statusStr) : null;
-        Long duplicate = (duplicateStr != null && !duplicateStr.isEmpty()) ? 
-                Long.valueOf(duplicateStr) : null;
+        Long duplicate = loadLongValue(Keys.DUPLICATE);
         return new SearchFilter(new TimestampFilter(from, to), type, status,
                 duplicate, new Application(appName, appVersion), new Device(
                         osName, osVersion));
+    }
+    
+    private Long loadLongValue(String key) {
+        String valueStr = Main.pref.get(key);
+        return (valueStr != null && !valueStr.isEmpty()) ? Long
+                .valueOf(valueStr) : null;
     }
     
     /**
