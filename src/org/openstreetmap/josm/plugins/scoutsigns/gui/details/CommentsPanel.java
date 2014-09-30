@@ -38,7 +38,7 @@ class CommentsPanel extends InfoPanel<Collection<Comment>> {
      * Builds a new {@code CommentsPanel}
      */
     CommentsPanel() {
-        setName(getGuiCnf().getCommentsTitle());
+        setName(getGuiCnf().getPnlCommentsTitle());
     }
     
     
@@ -47,9 +47,8 @@ class CommentsPanel extends InfoPanel<Collection<Comment>> {
         setLayout(new BorderLayout());
         String txt = Formatter.formatComments(comments);
         JTextPane txtPane = Builder.buildTextPane(txt, CONTENT_TYPE);
-        JScrollPane cmp =
-                Builder.buildScrollPane(getGuiCnf().getCommentsTitle(),
-                        txtPane, getBackground(), null);
+        JScrollPane cmp = Builder.buildScrollPane(getGuiCnf().getPnlCommentsTitle(),
+                txtPane, getBackground(), null);
         add(cmp, BorderLayout.CENTER);
     }
 }

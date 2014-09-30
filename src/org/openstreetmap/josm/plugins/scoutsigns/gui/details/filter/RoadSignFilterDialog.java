@@ -59,7 +59,7 @@ public class RoadSignFilterDialog extends JDialog {
     public RoadSignFilterDialog() {
         setLayout(new BorderLayout());
         setModal(true);
-        setTitle(GuiCnf.getInstance().getFilterTitle());
+        setTitle(GuiCnf.getInstance().getDlgFilterTitle());
         setIconImage(IconCnf.getInstance().getFilterIcon().getImage());
         setSize(DIM);
         setMinimumSize(DIM);

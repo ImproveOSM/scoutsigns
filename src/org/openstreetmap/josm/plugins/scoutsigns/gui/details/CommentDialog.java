@@ -81,7 +81,7 @@ class CommentDialog extends JDialog implements StatusChangeObservable {
      */
     CommentDialog() {
         setIconImage(IconCnf.getInstance().getCommentIcon().getImage());
-        setTitle(GuiCnf.getInstance().getCommentDlgTitle());
+        setTitle(GuiCnf.getInstance().getDlgCommentTitle());
         setLayout(new BorderLayout());
         setModal(true);
         setMinimumSize(DIM);
@@ -138,8 +138,8 @@ class CommentDialog extends JDialog implements StatusChangeObservable {
                 dispose();
                 if (username.isEmpty()) {
                     String nemUsername = JOptionPane.showInputDialog(Main.parent, 
-                            GuiCnf.getInstance().getCommentWarningTxt(),
-                            GuiCnf.getInstance().getWarningDlgTitle(),
+                            GuiCnf.getInstance().getTxtUsernameWarning(),
+                            GuiCnf.getInstance().getDlgWarningTitle(),
                             JOptionPane.WARNING_MESSAGE);
                     if (nemUsername != null && !nemUsername.isEmpty()) {
                         PrefManager.getInstance().saveOsmUsername(nemUsername);

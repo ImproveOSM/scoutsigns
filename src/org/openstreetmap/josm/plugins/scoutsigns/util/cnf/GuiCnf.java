@@ -47,43 +47,43 @@ public final class GuiCnf {
     
     private static final GuiCnf INSTANCE = new GuiCnf();
     
-    private final String dlgTitle;
+    private final String dlgDetailsTitle;
     
     /* details panel tab titles */
-    private final String roadSignTitle;
-    private final String carPosTitle;
-    private final String tripTitle;
-    private final String commentsTitle;
+    private final String pnlRoadSignTitle;
+    private final String pnlCarPosTitle;
+    private final String pnlTripTitle;
+    private final String pnlCommentsTitle;
     
     /* details panel texts */
-    private final String idLbl;
-    private final String pointLbl;
-    private final String heightLbl;
-    private final String confLbl;
-    private final String createdLbl;
-    private final String headingLbl;
-    private final String accLbl;
-    private final String modeLbl;
-    private final String profileLbl;
+    private final String lblId;
+    private final String lblPoint;
+    private final String lblHeight;
+    private final String lblConf;
+    private final String lblCreated;
+    private final String lblHeading;
+    private final String lblAcc;
+    private final String lblMode;
+    private final String lblProfile;
     
     /* photo frame texts */
-    private final String photoTitle;
-    private final String photoErrorLbl;
-    private final String photoMissingLbl;
+    private final String frmPhotoTitle;
+    private final String lblPhotoError;
+    private final String lblPhotoMissing;
     
     /* filter dialog texts */
-    private final String filterTitle;
-    private final String timeIntLbl;
+    private final String dlgFilterTitle;
+    private final String lblTimeInt;
     
-    private final String commentDlgTitle;
-    private final String commentWarningTxt;
+    private final String dlgCommentTitle;
+    private final String txtUsernameWarning;
     
     /* commonly used labels */
-    private final String typeLbl;
-    private final String statusLbl;
-    private final String duplLbl;
-    private final String appLbl;
-    private final String deviceLbl;
+    private final String lblType;
+    private final String lblStatus;
+    private final String lblDupl;
+    private final String lblApp;
+    private final String lblDevice;
     
     
     /* button texts */
@@ -91,165 +91,169 @@ public final class GuiCnf {
     private final String btnReset;
     private final String btnCancel;
     
-    private final String warningDlgTitle;
+    private final String dlgWarningTitle;
     
     private GuiCnf() {
         Properties properties = CnfUtil.load(CNF_FILE);
-        dlgTitle = CnfUtil.readProperty(properties, "dialog.title");
+        dlgDetailsTitle = CnfUtil.readProperty(properties, "dialog.title");
         
         /* details panel tab titles */
-        roadSignTitle = CnfUtil.readProperty(properties, "details.roadSign");
-        carPosTitle = CnfUtil.readProperty(properties, "details.carPos");
-        tripTitle = CnfUtil.readProperty(properties, "details.trip");
-        commentsTitle = CnfUtil.readProperty(properties, "details.comments");
+        pnlRoadSignTitle = CnfUtil.readProperty(properties, "details.roadSign");
+        pnlCarPosTitle = CnfUtil.readProperty(properties, "details.carPos");
+        pnlTripTitle = CnfUtil.readProperty(properties, "details.trip");
+        pnlCommentsTitle = CnfUtil.readProperty(properties, "details.comments");
         
         /* details panel labels */
-        idLbl = CnfUtil.readProperty(properties, "details.id");
-        pointLbl = CnfUtil.readProperty(properties, "details.point");
-        heightLbl = CnfUtil.readProperty(properties, "details.height");
-        confLbl = CnfUtil.readProperty(properties, "details.conf");
-        createdLbl = CnfUtil.readProperty(properties, "details.created");
-        headingLbl = CnfUtil.readProperty(properties, "details.heading");
-        accLbl = CnfUtil.readProperty(properties, "details.acc");
-        modeLbl = CnfUtil.readProperty(properties, "details.mode");
-        profileLbl = CnfUtil.readProperty(properties, "details.profile");
+        lblId = CnfUtil.readProperty(properties, "details.id");
+        lblPoint = CnfUtil.readProperty(properties, "details.point");
+        lblHeight = CnfUtil.readProperty(properties, "details.height");
+        lblConf = CnfUtil.readProperty(properties, "details.conf");
+        lblCreated = CnfUtil.readProperty(properties, "details.created");
+        lblHeading = CnfUtil.readProperty(properties, "details.heading");
+        lblAcc = CnfUtil.readProperty(properties, "details.acc");
+        lblMode = CnfUtil.readProperty(properties, "details.mode");
+        lblProfile = CnfUtil.readProperty(properties, "details.profile");
         
         /* photo frame texts */
-        photoTitle = CnfUtil.readProperty(properties, "photo.title");
-        photoErrorLbl = CnfUtil.readProperty(properties, "photo.error");
-        photoMissingLbl = CnfUtil.readProperty(properties, "photo.missing");
+        frmPhotoTitle = CnfUtil.readProperty(properties, "photo.title");
+        lblPhotoError = CnfUtil.readProperty(properties, "photo.error");
+        lblPhotoMissing = CnfUtil.readProperty(properties, "photo.missing");
         
         /* filter dialog texts */
-        filterTitle = CnfUtil.readProperty(properties, "filter.title");
-        timeIntLbl = CnfUtil.readProperty(properties, "filter.int");
+        dlgFilterTitle = CnfUtil.readProperty(properties, "filter.title");
+        lblTimeInt = CnfUtil.readProperty(properties, "filter.int");
         
-        commentDlgTitle = CnfUtil.readProperty(properties, "comment.title");
-        commentWarningTxt = CnfUtil.readProperty(properties, "warning.username");
+        dlgCommentTitle = CnfUtil.readProperty(properties, "comment.title");
+        txtUsernameWarning = CnfUtil.readProperty(properties, "warning.username");
         
         /* commonly used texts */
-        typeLbl = CnfUtil.readProperty(properties, "type");
-        statusLbl = CnfUtil.readProperty(properties, "status");
-        duplLbl = CnfUtil.readProperty(properties, "dupl");
-        appLbl = CnfUtil.readProperty(properties, "app");
-        deviceLbl = CnfUtil.readProperty(properties, "device");
+        lblType = CnfUtil.readProperty(properties, "type");
+        lblStatus = CnfUtil.readProperty(properties, "status");
+        lblDupl = CnfUtil.readProperty(properties, "dupl");
+        lblApp = CnfUtil.readProperty(properties, "app");
+        lblDevice = CnfUtil.readProperty(properties, "device");
         
         /* button texts */
         btnOk = CnfUtil.readProperty(properties, "btn.ok");
         btnReset = CnfUtil.readProperty(properties, "btn.reset");
         btnCancel = CnfUtil.readProperty(properties, "bnt.cancel");
         
-        warningDlgTitle = CnfUtil.readProperty(properties, "warning.title");
+        dlgWarningTitle = CnfUtil.readProperty(properties, "warning.title");
     }
     
     
     public static GuiCnf getInstance() {
         return INSTANCE;
     }
-    
-    public String getDlgTitle() {
-        return dlgTitle;
+
+    public String getDlgDetailsTitle() {
+        return dlgDetailsTitle;
+    }
+
+    public String getPnlRoadSignTitle() {
+        return pnlRoadSignTitle;
     }
     
-    public String getRoadSignTitle() {
-        return roadSignTitle;
+    public String getPnlCarPosTitle() {
+        return pnlCarPosTitle;
+    }
+
+    public String getPnlTripTitle() {
+        return pnlTripTitle;
+    }
+
+    public String getPnlCommentsTitle() {
+        return pnlCommentsTitle;
+    }
+
+    public String getLblId() {
+        return lblId;
     }
     
-    public String getCarPosTitle() {
-        return carPosTitle;
+    public String getLblPoint() {
+        return lblPoint;
+    }
+
+    public String getLblHeight() {
+        return lblHeight;
+    }
+
+    public String getLblConf() {
+        return lblConf;
+    }
+
+    public String getLblCreated() {
+        return lblCreated;
+    }
+
+    public String getLblHeading() {
+        return lblHeading;
+    }
+
+    public String getLblAcc() {
+        return lblAcc;
+    }
+
+    public String getLblMode() {
+        return lblMode;
     }
     
-    public String getTripTitle() {
-        return tripTitle;
+    public String getLblProfile() {
+        return lblProfile;
+    }
+
+    public String getFrmPhotoTitle() {
+        return frmPhotoTitle;
+    }
+
+    public String getLblPhotoError() {
+        return lblPhotoError;
     }
     
-    public String getCommentsTitle() {
-        return commentsTitle;
+    public String getLblPhotoMissing() {
+        return lblPhotoMissing;
     }
     
-    public String getIdLbl() {
-        return idLbl;
+    public String getDlgFilterTitle() {
+        return dlgFilterTitle;
+    }
+
+    public String getLblTimeInt() {
+        return lblTimeInt;
+    }
+
+    public String getDlgCommentTitle() {
+        return dlgCommentTitle;
+    }
+
+    public String getTxtUsernameWarning() {
+        return txtUsernameWarning;
+    }
+
+    public String getLblType() {
+        return lblType;
     }
     
-    public String getPointLbl() {
-        return pointLbl;
+    public String getLblStatus() {
+        return lblStatus;
     }
     
-    public String getHeightLbl() {
-        return heightLbl;
+    public String getLblDupl() {
+        return lblDupl;
     }
     
-    public String getConfLbl() {
-        return confLbl;
+    public String getLblApp() {
+        return lblApp;
     }
-    
-    public String getCreatedLbl() {
-        return createdLbl;
-    }
-    
-    public String getHeadingLbl() {
-        return headingLbl;
-    }
-    
-    public String getAccLbl() {
-        return accLbl;
-    }
-    
-    public String getModeLbl() {
-        return modeLbl;
-    }
-    
-    public String getProfileLbl() {
-        return profileLbl;
-    }
-    
-    public String getPhotoTitle() {
-        return photoTitle;
-    }
-    
-    public String getPhotoErrorLbl() {
-        return photoErrorLbl;
-    }
-    
-    public String getPhotoMissingLbl() {
-        return photoMissingLbl;
-    }
-    
-    public String getFilterTitle() {
-        return filterTitle;
-    }
-    
-    public String getTimeIntLbl() {
-        return timeIntLbl;
-    }
-    
-    public String getCommentDlgTitle() {
-        return commentDlgTitle;
-    }
-    
-    public String getTypeLbl() {
-        return typeLbl;
-    }
-    
-    public String getStatusLbl() {
-        return statusLbl;
-    }
-    
-    public String getDuplLbl() {
-        return duplLbl;
-    }
-    
-    public String getAppLbl() {
-        return appLbl;
-    }
-    
-    public String getDeviceLbl() {
-        return deviceLbl;
+
+    public String getLblDevice() {
+        return lblDevice;
     }
     
     public String getBtnOk() {
         return btnOk;
     }
-    
+
     public String getBtnReset() {
         return btnReset;
     }
@@ -257,12 +261,8 @@ public final class GuiCnf {
     public String getBtnCancel() {
         return btnCancel;
     }
-    
-    public String getCommentWarningTxt() {
-        return commentWarningTxt;
-    }
-    
-    public String getWarningDlgTitle() {
-        return warningDlgTitle;
+
+    public String getDlgWarningTitle() {
+        return dlgWarningTitle;
     }
 }

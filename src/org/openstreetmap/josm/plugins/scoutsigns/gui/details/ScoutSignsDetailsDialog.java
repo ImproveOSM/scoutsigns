@@ -60,7 +60,7 @@ public class ScoutSignsDetailsDialog extends ToggleDialog {
     
     /** the shortcut which will be shown on the left side of JOSM */
     private static Shortcut sh = Shortcut.registerShortcut(GuiCnf.getInstance()
-            .getDlgTitle(), TltCnf.getInstance().getPluginTlt(), KeyEvent.VK_F,
+            .getDlgDetailsTitle(), TltCnf.getInstance().getPluginTlt(), KeyEvent.VK_F,
             Shortcut.ALT_SHIFT);
     
     private DetailsPanel pnlDetails;
@@ -72,7 +72,7 @@ public class ScoutSignsDetailsDialog extends ToggleDialog {
      * settings.
      */
     public ScoutSignsDetailsDialog() {
-        super(GuiCnf.getInstance().getDlgTitle(), IconCnf.getInstance()
+        super(GuiCnf.getInstance().getDlgDetailsTitle(), IconCnf.getInstance()
                 .getShcName(), TltCnf.getInstance().getPluginTlt(), sh,
                 DLG_HEIGHT);
         setPreferredSize(new Dimension(DLG_HEIGHT, DLG_HEIGHT));

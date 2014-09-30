@@ -77,7 +77,7 @@ class PopupMenu extends JPopupMenu implements DaySelectionObservable {
     
     /* calendar components */
     private JPanel pnlHeader;
-    private JLabel monthLabel;
+    private JLabel lblMonth;
     private JPanel pnlDays = null;
     
     private boolean monthChanged = false;
@@ -96,29 +96,25 @@ class PopupMenu extends JPopupMenu implements DaySelectionObservable {
     
     private void initPnlHeader() {
         TltCnf tltCnf = TltCnf.getInstance();
-        JLabel lblPrevMonth =
-                Builder.buildLabel("<", tltCnf.getPrevMonth(),
-                        SwingConstants.LEFT, Color.black, FontUtil.BOLD_12);
+        JLabel lblPrevMonth = Builder.buildLabel("<", tltCnf.getPrevMonth(),
+                SwingConstants.LEFT, Color.black, FontUtil.BOLD_12);
         lblPrevMonth.addMouseListener(new MonthSelectionListener(lblPrevMonth,
                 -1));
-        monthLabel =
-                Builder.buildLabel("", "", SwingConstants.CENTER, Color.black,
-                        FontUtil.BOLD_12);
-        JLabel lblNextMonth =
-                Builder.buildLabel(">", tltCnf.getNextMonth(),
-                        SwingConstants.RIGHT, Color.black, FontUtil.BOLD_12);
+        lblMonth = Builder.buildLabel("", "", SwingConstants.CENTER, Color.black,
+                FontUtil.BOLD_12);
+        JLabel lblNextMonth = Builder.buildLabel(">", tltCnf.getNextMonth(), 
+                SwingConstants.RIGHT, Color.black, FontUtil.BOLD_12);
         lblNextMonth.addMouseListener(new MonthSelectionListener(lblNextMonth,
                 1));
-        pnlHeader =
-                Builder.buildBoxLayoutPanel(lblPrevMonth, monthLabel,
-                        lblNextMonth);
+        pnlHeader = Builder.buildBoxLayoutPanel(lblPrevMonth, lblMonth,
+                lblNextMonth);
     }
     
     /**
      * Updates the currently displayed calendar.
      */
     void update() {
-        monthLabel.setText(DateUtil.formatMonth(calendar.getTimeInMillis()));
+        lblMonth.setText(DateUtil.formatMonth(calendar.getTimeInMillis()));
         if (pnlDays != null) {
             remove(pnlDays);
         }
@@ -173,12 +169,11 @@ class PopupMenu extends JPopupMenu implements DaySelectionObservable {
         setupCalendar.set(Calendar.DAY_OF_WEEK,
                 setupCalendar.getFirstDayOfWeek());
         for (int i = 0; i < ROWS; i++) {
-            DayName dayName =
-                    DayName.getDayName(setupCalendar.get(Calendar.DAY_OF_WEEK));
+            DayName dayName = DayName.getDayName(setupCalendar.get(
+                    Calendar.DAY_OF_WEEK));
             Color txtColor = dayName == DayName.SUN ? Color.blue : Color.black;
-            JLabel label =
-                    Builder.buildLabel(dayName.toString(), null,
-                            SwingConstants.CENTER, txtColor, FontUtil.BOLD_12);
+            JLabel label = Builder.buildLabel(dayName.toString(), null,
+                    SwingConstants.CENTER, txtColor, FontUtil.BOLD_12);
             pnlDays.add(label);
             setupCalendar.roll(Calendar.DAY_OF_WEEK, true);
         }
@@ -192,12 +187,10 @@ class PopupMenu extends JPopupMenu implements DaySelectionObservable {
         }
         int selDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         int dayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        for (int i = 1; i <= setupCalendar
-                .getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
-            JLabel label =
-                    Builder.buildLabel(String.valueOf(i), null,
-                            SwingConstants.CENTER, Color.black,
-                            FontUtil.PLAIN_12);
+        for (int i = 1; i <= setupCalendar.getActualMaximum(
+                Calendar.DAY_OF_MONTH); i++) {
+            JLabel label = Builder.buildLabel(String.valueOf(i), null, 
+                    SwingConstants.CENTER, Color.black, FontUtil.PLAIN_12);
             if (!monthChanged) {
                 if (i == dayOfMonth) {
                     label.setOpaque(true);
@@ -237,8 +230,8 @@ class PopupMenu extends JPopupMenu implements DaySelectionObservable {
         
         @Override
         public void mouseExited(MouseEvent e) {
-            lbl.setBorder(new EmptyBorder(new EtchedBorder()
-                    .getBorderInsets(new JLabel())));
+            lbl.setBorder(new EmptyBorder(new EtchedBorder().getBorderInsets(
+                    new JLabel())));
         }
     }
 }

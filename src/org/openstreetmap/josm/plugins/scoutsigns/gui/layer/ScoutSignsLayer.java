@@ -66,7 +66,7 @@ public class ScoutSignsLayer extends Layer {
      * Builds a new {@code SkoSignsLayer} with default functionality.
      */
     public ScoutSignsLayer() {
-        super(GuiCnf.getInstance().getDlgTitle());
+        super(GuiCnf.getInstance().getDlgDetailsTitle());
         paintHandler = new PaintHandler();
     }
     

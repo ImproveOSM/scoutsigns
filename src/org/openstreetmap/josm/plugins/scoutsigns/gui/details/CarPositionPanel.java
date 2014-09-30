@@ -39,9 +39,9 @@ class CarPositionPanel extends InfoPanel<CarPosition> {
     void createComponents(CarPosition obj) {
         y = 0;
         pnlWidth = 0;
-        int widthLbl = getMaxWidth(FontUtil.FM_BOLD_12, getGuiCnf().getPointLbl(),
-                getGuiCnf().getTypeLbl(), getGuiCnf().getHeadingLbl(),
-                getGuiCnf().getAccLbl());
+        int widthLbl = getMaxWidth(FontUtil.FM_BOLD_12, getGuiCnf().getLblPoint(),
+                getGuiCnf().getLblType(), getGuiCnf().getLblHeading(),
+                getGuiCnf().getLblAcc());
         addPoint(obj.getPosition(), widthLbl);
         addType(obj.getType(), widthLbl);
         addHeading(obj.getHeading(), widthLbl);
@@ -52,7 +52,7 @@ class CarPositionPanel extends InfoPanel<CarPosition> {
     
     private void addPoint(LatLon point, int widthLbl) {
         if (point != null) {
-            add(Builder.buildLabel(getGuiCnf().getPointLbl(), FontUtil.BOLD_12,
+            add(Builder.buildLabel(getGuiCnf().getLblPoint(), FontUtil.BOLD_12,
                     new Rectangle(RECT_X, RECT_Y, widthLbl, LHEIGHT)));
             String pointStr = Formatter.formatLatLon(point);
             int widthVal = FontUtil.FM_PLAIN_12.stringWidth(pointStr);
@@ -65,7 +65,7 @@ class CarPositionPanel extends InfoPanel<CarPosition> {
     
     private void addType(String type, int widthLbl) {
         if (type != null) {
-            add(Builder.buildLabel(getGuiCnf().getTypeLbl(), FontUtil.BOLD_12,
+            add(Builder.buildLabel(getGuiCnf().getLblType(), FontUtil.BOLD_12,
                     new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
             int widthVal = FontUtil.FM_PLAIN_12.stringWidth(type);
             add(Builder.buildLabel(type, FontUtil.PLAIN_12, new Rectangle(
@@ -77,7 +77,7 @@ class CarPositionPanel extends InfoPanel<CarPosition> {
     
     private void addHeading(Integer heading, int widthLbl) {
         if (heading != null) {
-            add(Builder.buildLabel(getGuiCnf().getHeadingLbl(),
+            add(Builder.buildLabel(getGuiCnf().getLblHeading(),
                     FontUtil.BOLD_12, new Rectangle(RECT_X, y, widthLbl,
                             LHEIGHT)));
             String headingStr = heading.toString();
@@ -91,7 +91,7 @@ class CarPositionPanel extends InfoPanel<CarPosition> {
     
     private void addAccuracy(Integer accuracy, int widthLbl) {
         if (accuracy != null) {
-            add(Builder.buildLabel(getGuiCnf().getAccLbl(), FontUtil.BOLD_12,
+            add(Builder.buildLabel(getGuiCnf().getLblAcc(), FontUtil.BOLD_12,
                     new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
             String accStr = accuracy.toString();
             int widthVal = FontUtil.FM_PLAIN_12.stringWidth(accStr);

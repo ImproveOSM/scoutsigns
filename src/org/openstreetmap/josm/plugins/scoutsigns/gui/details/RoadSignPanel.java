@@ -44,10 +44,10 @@ class RoadSignPanel extends InfoPanel<RoadSign> {
     void createComponents(RoadSign roadSign) {
         y = 0;
         pnlWidth = 0;
-        int widthLbl = getMaxWidth(FontUtil.FM_BOLD_12, getGuiCnf().getIdLbl(),
-                getGuiCnf().getPointLbl(), getGuiCnf().getTypeLbl(),
-                getGuiCnf().getStatusLbl(), getGuiCnf().getConfLbl(),
-                getGuiCnf().getCreatedLbl(), getGuiCnf().getDuplLbl());
+        int widthLbl = getMaxWidth(FontUtil.FM_BOLD_12, getGuiCnf().getLblId(),
+                getGuiCnf().getLblPoint(), getGuiCnf().getLblType(),
+                getGuiCnf().getLblStatus(), getGuiCnf().getLblConf(),
+                getGuiCnf().getLblCreated(), getGuiCnf().getLblDupl());
         addId(roadSign.getId(), widthLbl);
         addPoint(roadSign.getSignPos().getPosition(), widthLbl);
         addHeight(roadSign.getSignPos().getHeight(), widthLbl);
@@ -60,7 +60,7 @@ class RoadSignPanel extends InfoPanel<RoadSign> {
     }
     
     private void addId(Long id, int widthLbl) {
-        add(Builder.buildLabel(getGuiCnf().getIdLbl(), FontUtil.BOLD_12,
+        add(Builder.buildLabel(getGuiCnf().getLblId(), FontUtil.BOLD_12,
                 new Rectangle(RECT_X, RECT_Y, widthLbl, LHEIGHT)));
         int widthVal = FontUtil.FM_PLAIN_12.stringWidth(id.toString());
         add(Builder.buildLabel(id.toString(), FontUtil.PLAIN_12, new Rectangle(
@@ -70,7 +70,7 @@ class RoadSignPanel extends InfoPanel<RoadSign> {
     }
     
     private void addPoint(LatLon point, int widthLbl) {
-        add(Builder.buildLabel(getGuiCnf().getPointLbl(), FontUtil.BOLD_12,
+        add(Builder.buildLabel(getGuiCnf().getLblPoint(), FontUtil.BOLD_12,
                 new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
         String pointStr = Formatter.formatLatLon(point);
         int widthVal = FontUtil.FM_PLAIN_12.stringWidth(pointStr);
@@ -82,7 +82,7 @@ class RoadSignPanel extends InfoPanel<RoadSign> {
     
     private void addHeight(Double height, int widthLbl) {
         if (height != null) {
-            add(Builder.buildLabel(getGuiCnf().getHeightLbl(), FontUtil.BOLD_12, 
+            add(Builder.buildLabel(getGuiCnf().getLblHeight(), FontUtil.BOLD_12, 
                     new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
             String heightStr = Formatter.formatDecimal(height, DecFormat.SHORT) 
                     + " m";
@@ -95,7 +95,7 @@ class RoadSignPanel extends InfoPanel<RoadSign> {
     }
     
     private void addType(String type, int widthLbl) {
-        add(Builder.buildLabel(getGuiCnf().getTypeLbl(), FontUtil.BOLD_12,
+        add(Builder.buildLabel(getGuiCnf().getLblType(), FontUtil.BOLD_12,
                 new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
         int widthVal = FontUtil.FM_PLAIN_12.stringWidth(type);
         Icon icon = TypeIconFactory.getInstance().getIcon(type, false);
@@ -106,7 +106,7 @@ class RoadSignPanel extends InfoPanel<RoadSign> {
     }
     
     private void addStatus(Status status, int widthLbl) {
-        add(Builder.buildLabel(getGuiCnf().getStatusLbl(), FontUtil.BOLD_12,
+        add(Builder.buildLabel(getGuiCnf().getLblStatus(), FontUtil.BOLD_12,
                 new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
         int widthVal = FontUtil.FM_PLAIN_12.stringWidth(status.name());
         add(Builder.buildLabel(status.name(), FontUtil.PLAIN_12, new Rectangle(
@@ -116,7 +116,7 @@ class RoadSignPanel extends InfoPanel<RoadSign> {
     }
     
     private void addCreated(Long created, int widthLbl) {
-        add(Builder.buildLabel(getGuiCnf().getCreatedLbl(), FontUtil.BOLD_12,
+        add(Builder.buildLabel(getGuiCnf().getLblCreated(), FontUtil.BOLD_12,
                 new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
         String createdStr = DateUtil.formatTimestamp(created);
         int widthVal = FontUtil.FM_PLAIN_12.stringWidth(createdStr);
@@ -128,7 +128,7 @@ class RoadSignPanel extends InfoPanel<RoadSign> {
     
     private void addDupl(Long duplicateOf, int widthLbl) {
         if (duplicateOf != null) {
-            add(Builder.buildLabel(getGuiCnf().getDuplLbl(), FontUtil.BOLD_12,
+            add(Builder.buildLabel(getGuiCnf().getLblDupl(), FontUtil.BOLD_12,
                     new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
             int widthVal = FontUtil.FM_PLAIN_12.stringWidth(duplicateOf.toString());
             add(Builder.buildLabel(duplicateOf.toString(), FontUtil.PLAIN_12,

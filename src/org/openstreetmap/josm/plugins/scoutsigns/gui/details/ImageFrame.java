@@ -65,7 +65,7 @@ class ImageFrame extends JFrame {
      * @param image a {@code Image}
      */
     ImageFrame(Image image) {
-        setTitle(GuiCnf.getInstance().getPhotoTitle());
+        setTitle(GuiCnf.getInstance().getFrmPhotoTitle());
         setIconImage(IconCnf.getInstance().getPhotoIcon().getImage());
         setResizable(true);
         setVisible(true);
@@ -80,13 +80,13 @@ class ImageFrame extends JFrame {
     private void addComponent(Image image) {
         JLabel lbl;
         if (image == null) {
-            lbl = new JLabel(GuiCnf.getInstance().getPhotoMissingLbl());
+            lbl = new JLabel(GuiCnf.getInstance().getLblPhotoMissing());
         } else {
             try { BufferedImage bi = ImageUtil.base64ToImage(image.getData(),
                     image.getWidth(), image.getHeight());
                 lbl = new JLabel(new ImageIcon(bi));
             } catch (IOException ex) {
-                lbl = new JLabel(GuiCnf.getInstance().getPhotoErrorLbl());
+                lbl = new JLabel(GuiCnf.getInstance().getLblPhotoError());
             }
         }
         JPanel pnl = new JPanel(new BorderLayout());

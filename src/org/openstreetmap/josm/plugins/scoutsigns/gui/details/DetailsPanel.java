@@ -58,12 +58,12 @@ class DetailsPanel extends JTabbedPane {
         pnlComments = new CommentsPanel();
         GuiCnf guiCnf = GuiCnf.getInstance();
         JScrollPane cmpRoadSign = Builder.buildScrollPane(
-                guiCnf.getRoadSignTitle(), pnlRoadSign, getBackground(), DIM);
+                guiCnf.getPnlRoadSignTitle(), pnlRoadSign, getBackground(), DIM);
         add(cmpRoadSign);
         JScrollPane cmpCarLocation = Builder.buildScrollPane(
-                guiCnf.getCarPosTitle(), pnlCarPos, getBackground(), DIM);
+                guiCnf.getPnlCarPosTitle(), pnlCarPos, getBackground(), DIM);
         add(cmpCarLocation);
-        JScrollPane cmpTrip = Builder.buildScrollPane(guiCnf.getTripTitle(),
+        JScrollPane cmpTrip = Builder.buildScrollPane(guiCnf.getPnlTripTitle(),
                 pnlTrip, getBackground(), DIM);
         add(cmpTrip);
         add(pnlComments);

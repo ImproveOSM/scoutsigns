@@ -90,7 +90,7 @@ class RoadSignFilterPanel extends JPanel {
     
     
     private void addTimeIntervalFilter(TimestampFilter tstampFilter) {
-        add(Builder.buildLabel(GuiCnf.getInstance().getTimeIntLbl(),
+        add(Builder.buildLabel(GuiCnf.getInstance().getLblTimeInt(),
                 FontUtil.BOLD_12, null), Constraints.LBL_INT);
         Long from = tstampFilter != null ? tstampFilter.getFrom() : null;
         cbboxStart = new CalendarComboBox(from);
@@ -100,14 +100,14 @@ class RoadSignFilterPanel extends JPanel {
     }
     
     private void addStatusFilter(Status status) {
-        add(Builder.buildLabel(GuiCnf.getInstance().getStatusLbl(),
+        add(Builder.buildLabel(GuiCnf.getInstance().getLblStatus(),
                 FontUtil.BOLD_12, null), Constraints.LBL_STATUS);
         pnlStatus = new StatusFilterPanel(status);
         add(pnlStatus, Constraints.PNL_STATUS);
     }
     
     private void addTypeFilter(String type) {
-        add(Builder.buildLabel(GuiCnf.getInstance().getTypeLbl(),
+        add(Builder.buildLabel(GuiCnf.getInstance().getLblType(),
                 FontUtil.BOLD_12, null), Constraints.LBL_TYPE);
         pnlType = new TypeFilterPanel(type);
         add(Builder.buildScrollPane(pnlType, Color.white, false),
@@ -115,7 +115,7 @@ class RoadSignFilterPanel extends JPanel {
     }
     
     private void addDuplicateFilter(Long duplicate) {
-        add(Builder.buildLabel(GuiCnf.getInstance().getDuplLbl(),
+        add(Builder.buildLabel(GuiCnf.getInstance().getLblDupl(),
                 FontUtil.BOLD_12, null), Constraints.LBL_DUPL);
         String txt = duplicate != null ? duplicate.toString() : "";
         txtDuplicate = Builder.buildTextField(txt, null, Color.white);
@@ -123,7 +123,7 @@ class RoadSignFilterPanel extends JPanel {
     }
     
     private void addDeviceFilter(Device device) {
-        add(Builder.buildLabel(GuiCnf.getInstance().getDeviceLbl(),
+        add(Builder.buildLabel(GuiCnf.getInstance().getLblDevice(),
                 FontUtil.BOLD_12, null), Constraints.LBL_DEV);
         String name = "";
         String vers = "";
@@ -138,7 +138,7 @@ class RoadSignFilterPanel extends JPanel {
     }
     
     private void addAppFilter(Application application) {
-        add(Builder.buildLabel(GuiCnf.getInstance().getAppLbl(),
+        add(Builder.buildLabel(GuiCnf.getInstance().getLblApp(),
                 FontUtil.BOLD_12, null), Constraints.LBL_APP);
         String name = "";
         String vers = "";
