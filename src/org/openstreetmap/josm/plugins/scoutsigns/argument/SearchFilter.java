@@ -52,8 +52,6 @@ public class SearchFilter {
     private Device device;
     
     
-    public SearchFilter() {}
-    
     /**
      * Builds a new filter with the given arguments.
      * 

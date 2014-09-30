@@ -103,14 +103,14 @@ public final class PrefManager {
                 TimestampFilter tstpFilter = filter.getTimestampFilter();
                 from = tstpFilter.getFrom() != null ? tstpFilter.getFrom().
                         toString() : "";
-                to = tstpFilter.getTo() != null ? tstpFilter.getTo().
-                        toString() : "";
+                to = tstpFilter.getTo() != null ? tstpFilter.getTo().toString() 
+                        : "";
             }
             type = filter.getType();
             status = filter.getStatus() != null ? filter.getStatus().name() : 
                 null;
-            duplicate = filter.getDuplicateOf() != null ? filter.getDuplicateOf()
-                    .toString() : null;
+            duplicate = filter.getDuplicateOf() != null ? 
+                    filter.getDuplicateOf().toString() : null;
             if (filter.getApp() != null) {
                 appName = filter.getApp().getName();
                 appVersion = filter.getApp().getVersion();
@@ -147,10 +147,10 @@ public final class PrefManager {
         String osName = Main.pref.get(Keys.OS_NAME);
         String osVersion = Main.pref.get(Keys.OS_VERSION);
         
-        Long from = (fromStr != null && !fromStr.isEmpty()) ?
+        Long from = (fromStr != null && !fromStr.isEmpty()) ? 
                 Long.valueOf(fromStr) : null;
-        Long to = (toStr != null && !toStr.isEmpty()) ? Long.valueOf(toStr) 
-                : null;
+        Long to = (toStr != null && !toStr.isEmpty()) ? 
+                Long.valueOf(toStr) : null;
         Status status = (statusStr != null && !statusStr.isEmpty()) ? 
                 Status.valueOf(statusStr) : null;
         Long duplicate = (duplicateStr != null && !duplicateStr.isEmpty()) ? 
@@ -168,5 +168,24 @@ public final class PrefManager {
     public void saveFiltersChangedFlag(boolean changed) {
         Main.pref.put(Keys.FILTERS_CHANGED, "");
         Main.pref.put(Keys.FILTERS_CHANGED, "" + changed);
+    }
+    
+    /**
+     * Loads the OSM username from the global preference file.
+     * 
+     * @return a {@code String}
+     */
+    public String loadOsmUsername() {
+        String username = Main.pref.get(Keys.OSM_USERNAME);
+        return username == null ? "" : username;
+    }
+    
+    /**
+     * Saves the OSM username in the global preference file.
+     * 
+     * @param username a {@code String}
+     */
+    public void saveOsmUsername(String username) {
+        Main.pref.put(Keys.OSM_USERNAME, username);
     }
 }

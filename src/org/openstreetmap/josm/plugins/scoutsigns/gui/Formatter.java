@@ -28,7 +28,6 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
  */
 public final class Formatter {
     
-    
     private Formatter() {}
     
     
@@ -44,6 +43,7 @@ public final class Formatter {
                         "<html><body><font size='3' face='times new roman'>");
         for (Comment comment : comments) {
             sb.append(formatComment(comment));
+            sb.append("<br>");
         }
         sb.append("</font></body></html>");
         return sb.toString();

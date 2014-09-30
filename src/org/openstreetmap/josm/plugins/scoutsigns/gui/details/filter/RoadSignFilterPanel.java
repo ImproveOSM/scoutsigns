@@ -110,7 +110,7 @@ class RoadSignFilterPanel extends JPanel {
         add(Builder.buildLabel(GuiCnf.getInstance().getTypeLbl(),
                 FontUtil.BOLD_12, null), Constraints.LBL_TYPE);
         pnlType = new TypeFilterPanel(type);
-        add(Builder.buildScrollPane(pnlType, Color.white),
+        add(Builder.buildScrollPane(pnlType, Color.white, false),
                 Constraints.LIST_TYPE);
     }
     
@@ -176,17 +176,17 @@ class RoadSignFilterPanel extends JPanel {
     SearchFilter getSelectedFilter() {
         String fromStr = (String) cbboxStart.getSelectedItem();
         Date fromDate = DateUtil.parseDay(fromStr);
-        Long from = fromDate != null ? fromDate.getTime() :null;
+        Long from = fromDate != null ? fromDate.getTime() : null;
         
         String toStr = (String) cbboxEnd.getSelectedItem();
         Date toDate = DateUtil.parseDay(toStr);
-        Long to = toDate != null ? toDate.getTime() :null;
+        Long to = toDate != null ? toDate.getTime() : null;
         
         Status status = pnlStatus.getSelection();
         String type = pnlType.getSelection();
-        Long duplicate = txtDuplicate.getText() != null && 
-                !txtDuplicate.getText().isEmpty() ? 
-                        Long.parseLong(txtDuplicate.getText()) : null;
+        Long duplicate = txtDuplicate.getText() != null && !txtDuplicate.
+                getText().isEmpty() ?  Long.parseLong(txtDuplicate.getText()) : 
+                    null;
         String appName = txtAppName.getText();
         String appVersion = txtAppVers.getText();
         String osName = txtOsName.getText();

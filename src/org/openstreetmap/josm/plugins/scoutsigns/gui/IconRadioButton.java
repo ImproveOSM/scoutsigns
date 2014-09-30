@@ -68,7 +68,7 @@ public class IconRadioButton extends JPanel {
      * 
      * @param icon the icon to be displayed as the value of the radio button
      * @param bgColor the background color
-     * @param tooltip the tooltip to display
+     * @param tooltip the tool-tip to display
      */
     public IconRadioButton(Icon icon, Color bgColor, String tooltip) {
         this(bgColor);
@@ -76,18 +76,38 @@ public class IconRadioButton extends JPanel {
         lblIcon.setToolTipText(tooltip);
     }
     
+    /**
+     * Returns the state of the check box.
+     * 
+     * @return true if the check box is selected, false otherwise
+     */
     public boolean isSelected() {
         return cbbox.isSelected();
     }
     
+    /**
+     * Sets the state of the check box.
+     * 
+     * @param selected the new state
+     */
     public void setSelected(boolean selected) {
         cbbox.setSelected(selected);
     }
     
+    /**
+     * Sets the icon.
+     * 
+     * @param icon a {@code Icon}
+     */
     public void setIcon(Icon icon) {
         lblIcon.setIcon(icon);
     }
     
+    /**
+     * Returns the icon.
+     * 
+     * @return a {@code Icon}
+     */
     public Icon getIcon() {
         return lblIcon.getIcon();
     }

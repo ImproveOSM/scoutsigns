@@ -54,4 +54,5 @@ public final class Keys {
     static final String APP_VERSION = "scoutsigns.filter.appVersion";
     static final String OS_NAME = "scoutsigns.filter.osName";
     static final String OS_VERSION = "scoutsigns.filter.osVersion";
+    static final String OSM_USERNAME = "osm-server.username";
 }

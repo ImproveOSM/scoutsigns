@@ -85,17 +85,20 @@ final class ServiceHandler {
     }
     
     /**
+     * Creates a new comment for the specified road sign with the given
+     * arguments.
      * 
-     * @param signId
-     * @param userName
-     * @param text
-     * @param status
-     * @param duplicateOf
+     * @param signId the road sign's identifier
+     * @param username the user's OSM username
+     * @param text the comment text
+     * @param status the road sign's new {@code Status}
+     * @param duplicateOf it is used only with {@code Status#DUPLICATE}.
+     * Specifies the parent road sign's identifier.
      */
-    void addComment(Long signId, String userName, String text, Status status,
+    void addComment(Long signId, String username, String text, Status status,
             Long duplicateOf) {
         try {
-            signService.addComment(signId, userName, text, status, duplicateOf);
+            signService.addComment(signId, username, text, status, duplicateOf);
         } catch (FcdSignServiceException ex) {
             handleException(ex, true);
         }

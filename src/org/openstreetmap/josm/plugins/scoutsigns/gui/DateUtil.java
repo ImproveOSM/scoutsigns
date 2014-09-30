@@ -53,6 +53,14 @@ public final class DateUtil {
     
     private DateUtil() {}
     
+    
+    /**
+     * Formats the given timestamp using the following pattern:'yyyy-MM-dd
+     * HH:mm:ss'.
+     * 
+     * @param timestamp a {@code Long} value representing a timestamp
+     * @return a {@code String}
+     */
     public static String formatTimestamp(Long timestamp) {
         SimpleDateFormat dateTimeFormat = new SimpleDateFormat(TSTP);
         dateTimeFormat.setTimeZone(TimeZone.getDefault());
@@ -60,6 +68,12 @@ public final class DateUtil {
         return date != null ? dateTimeFormat.format(date) : "";
     }
     
+    /**
+     * Formats the given month, using the following pattern:'MMMM yyyy'.
+     * 
+     * @param timestamp a {@code Long} value representing a timestamp
+     * @return a {@code String}
+     */
     public static String formatMonth(Long timestamp) {
         SimpleDateFormat dateTimeFormat = new SimpleDateFormat(MONTH);
         dateTimeFormat.setTimeZone(TimeZone.getDefault());
@@ -67,18 +81,37 @@ public final class DateUtil {
         return date != null ? dateTimeFormat.format(date) : "";
     }
     
+    /**
+     * Formats the given time using the following pattern: 'MMM d, yyyy'.
+     * 
+     * @param time a {@ode Date} representing a given day
+     * @return a {@code String}
+     */
     public static String formatDay(Date time) {
         SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DAY);
         dateTimeFormat.setTimeZone(TimeZone.getDefault());
         return time != null ? dateTimeFormat.format(time) : "";
     }
     
+    /**
+     * Formats the given time using the following pattern: 'MMM d, yyyy'.
+     * 
+     * @param time a {@code Long} value representing a time
+     * @return a {@code String}
+     */
     public static String formatDay(Long time) {
         SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DAY);
         dateTimeFormat.setTimeZone(TimeZone.getDefault());
         return time != null ? dateTimeFormat.format(time) : "";
     }
     
+    /**
+     * Parses the given day and returns the corresponding date. The method
+     * returns null if the day argument is null or empty.
+     * 
+     * @param day a {@code String} representing a day
+     * @return a {@code Date} object
+     */
     public static Date parseDay(String day) {
         Date result = null;
         if (day != null && !day.isEmpty()) {

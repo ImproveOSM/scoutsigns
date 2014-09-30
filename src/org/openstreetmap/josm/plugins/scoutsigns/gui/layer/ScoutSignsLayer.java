@@ -138,4 +138,8 @@ public class ScoutSignsLayer extends Layer {
     public void setRoadSigns(Collection<RoadSign> roadSigns) {
         this.roadSigns = roadSigns;
     }
+    
+    public RoadSign getSelRoadSign() {
+        return selRoadSign;
+    }
 }

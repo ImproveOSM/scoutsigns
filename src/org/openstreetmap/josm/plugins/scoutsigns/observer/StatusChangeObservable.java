@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, skobbler GmbH
+ * Copyright (c) 2014, skobbler GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,43 +26,38 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Jul 1, 2013 by Bea
+ * Created on Sep 29, 2014 by Beata
  * Modified on $DateTime$ by $Author$
  */
-package org.openstreetmap.josm.plugins.scoutsigns.entity;
+package org.openstreetmap.josm.plugins.scoutsigns.observer;
+
+import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 
 
 /**
- * Utility class provides helper methods used by the entities.
+ * The observable interface for the {@code StatusChangeObserver} object.
  * 
- * @author Bea
+ * @author Beata
  * @version $Revision$
  */
-public final class ObjectUtil {
-    
-    private ObjectUtil() {}
-    
+public interface StatusChangeObservable {
     
     /**
-     * Verifies if the given objects are both null or equals.
+     * Registers the given observer.
      * 
-     * @param obj1 the first object to be compared
-     * @param obj2 the second object to be compared
-     * @return true if both objects are null, or equals; false otherwise
+     * @param observer a {@code StatusChangeObserver}
      */
-    public static boolean bothNullOrEqual(Object obj1, Object obj2) {
-        return (obj1 == null && obj2 == null)
-                || (obj1 != null && obj1.equals(obj2));
-    }
+    void registerObserver(StatusChangeObserver observer);
     
     /**
-     * Computes the hashCode of the given object. If the object is null, the
-     * method returns 0.
+     * Notifies the registered observer.
      * 
-     * @param obj an object
-     * @return an integer value.
+     * @param username the user's OSM username
+     * @param text a comment justifying the user's action
+     * @param status the road sign's new {@code Status}
+     * @param duplicateOf the identifier of the road signs who's duplicate is
+     * the selected road sign
      */
-    public static int hashCode(Object obj) {
-        return (obj == null) ? 0 : obj.hashCode();
-    }
+    void notifyObserver(String username, String text, Status status,
+            Long duplicateOf);
 }

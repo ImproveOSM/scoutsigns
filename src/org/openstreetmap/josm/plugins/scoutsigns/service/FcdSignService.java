@@ -87,9 +87,8 @@ public class FcdSignService {
      */
     public Collection<RoadSign> searchSigns(BoundingBox bbox,
             SearchFilter filter, int zoom) throws FcdSignServiceException {
-        String url =
-                new HttpQueryBuilder(bbox, filter, zoom)
-                        .build(Constants.SEARCH_SIGNS);
+        String url = new HttpQueryBuilder(bbox, filter, zoom).build(
+                Constants.SEARCH_SIGNS);
         Root root = executeGet(url);
         verifyStatus(root);
         return root.getRoadSigns() != null ? root.getRoadSigns()
@@ -112,19 +111,23 @@ public class FcdSignService {
     }
     
     /**
+     * Creates a new comment for the specified road sign with the given
+     * arguments.
      * 
-     * @param signId
-     * @param userName
-     * @param text
-     * @param status
-     * @param duplicateOf
-     * @throws FcdSignServiceException
+     * @param signId the road sign's identifier
+     * @param username the user's OSM username
+     * @param text the comment text
+     * @param status the road sign's new {@code Status}
+     * @param duplicateOf it is used only with {@code Status#DUPLICATE}.
+     * Specifies the parent road sign's identifier.
+     * @throws FcdSignServiceException if an error occurred during the
+     * FcdSignService method execution
      */
-    public void addComment(Long signId, String userName, String text,
+    public void addComment(Long signId, String username, String text,
             Status status, Long duplicateOf) throws FcdSignServiceException {
         Map<String, String> content = new HashMap<>();
         content.put(Constants.SIGN_ID, signId.toString());
-        content.put(Constants.USERNAME, userName);
+        content.put(Constants.USERNAME, username);
         content.put(Constants.TEXT, text);
         if (status != null) {
             content.put(Constants.STATUS, status.name());

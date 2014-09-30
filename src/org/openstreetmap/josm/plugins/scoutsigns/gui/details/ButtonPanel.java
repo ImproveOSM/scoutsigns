@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter.RoadSignFilterDialog;
+import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
 
 
@@ -38,6 +39,9 @@ class ButtonPanel extends JPanel {
     
     /* the selected road sign */
     private RoadSign roadSign;
+    private ImageFrame imgFrame;
+    
+    private StatusChangeObserver statusChangeObserver;
     
     
     /**
@@ -45,13 +49,17 @@ class ButtonPanel extends JPanel {
      */
     ButtonPanel() {
         super(new GridLayout(ROWS, COLS));
-        add(Builder.buildButton(new DisplayFilterDialog(), IconCnf
-                .getInstance().getFilterIcon()));
-        add(Builder.buildButton(new DisplayImageFrame(), IconCnf.getInstance()
-                .getPhotoIcon()));
-        add(Builder.buildButton(null, IconCnf.getInstance().getTripIcon()));
-        add(Builder.buildButton(null, IconCnf.getInstance().getCommentIcon()));
-        add(Builder.buildButton(null, IconCnf.getInstance().getMoreActionIcon()));
+        
+        // add components
+        IconCnf iconCnf = IconCnf.getInstance();
+        add(Builder.buildButton(new DisplayFilterDialog(), 
+                iconCnf.getFilterIcon()));
+        add(Builder.buildButton(new DisplayImageFrame(), 
+                iconCnf.getPhotoIcon()));
+        add(Builder.buildButton(null, iconCnf.getTripIcon()));
+        add(Builder.buildButton(new DisplayCommentDialog(), 
+                iconCnf.getCommentIcon()));
+        add(Builder.buildButton(null, iconCnf.getMoreActionIcon()));
     }
     
     
@@ -62,6 +70,15 @@ class ButtonPanel extends JPanel {
      */
     void setRoadSign(RoadSign roadSign) {
         this.roadSign = roadSign;
+    }
+    
+    /**
+     * Registers the given observer.
+     * 
+     * @param observer a {@code StatusChangeObserver}
+     */
+    void registerStatusChangeObserver(StatusChangeObserver observer) {
+        statusChangeObserver = observer;
     }
     
     
@@ -75,12 +92,19 @@ class ButtonPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent event) {
             if (roadSign != null) {
-                ImageFrame imgFrame = new ImageFrame(roadSign.getImage());
+                if (imgFrame != null && imgFrame.isVisible()) {
+                    imgFrame.dispose();
+                }
+                imgFrame = new ImageFrame(roadSign.getImage());
                 imgFrame.pack();
             }
         }
     }
     
+    
+    /*
+     * Displays the filter dialog window.
+     */
     private final class DisplayFilterDialog extends AbstractAction {
         
         private static final long serialVersionUID = -7084091586699723933L;
@@ -89,6 +113,24 @@ class ButtonPanel extends JPanel {
         public void actionPerformed(ActionEvent event) {
             RoadSignFilterDialog dlgFilter = new RoadSignFilterDialog();
             dlgFilter.setVisible(true);
+        }
+    }
+    
+    
+    /*
+     * Displays the comment dialog window.
+     */
+    private final class DisplayCommentDialog extends AbstractAction {
+        
+        private static final long serialVersionUID = -2470311157850355646L;
+        
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            if (roadSign != null) {
+                CommentDialog dlgComment = new CommentDialog();
+                dlgComment.registerObserver(statusChangeObserver);
+                dlgComment.setVisible(true);
+            }
         }
     }
 }

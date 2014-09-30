@@ -55,7 +55,7 @@ public final class IconCnf {
     private final ImageIcon filterIcon;
     private final ImageIcon photoIcon;
     private final Icon tripIcon;
-    private final Icon commentIcon;
+    private final ImageIcon commentIcon;
     private final Icon moreActionIcon;
     private final String typeIconPath;
     
@@ -111,7 +111,7 @@ public final class IconCnf {
         return tripIcon;
     }
     
-    public Icon getCommentIcon() {
+    public ImageIcon getCommentIcon() {
         return commentIcon;
     }
     

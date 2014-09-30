@@ -75,6 +75,9 @@ public final class GuiCnf {
     private final String filterTitle;
     private final String timeIntLbl;
     
+    private final String commentDlgTitle;
+    private final String commentWarningTxt;
+    
     /* commonly used labels */
     private final String typeLbl;
     private final String statusLbl;
@@ -88,6 +91,7 @@ public final class GuiCnf {
     private final String btnReset;
     private final String btnCancel;
     
+    private final String warningDlgTitle;
     
     private GuiCnf() {
         Properties properties = CnfUtil.load(CNF_FILE);
@@ -119,6 +123,9 @@ public final class GuiCnf {
         filterTitle = CnfUtil.readProperty(properties, "filter.title");
         timeIntLbl = CnfUtil.readProperty(properties, "filter.int");
         
+        commentDlgTitle = CnfUtil.readProperty(properties, "comment.title");
+        commentWarningTxt = CnfUtil.readProperty(properties, "warning.username");
+        
         /* commonly used texts */
         typeLbl = CnfUtil.readProperty(properties, "type");
         statusLbl = CnfUtil.readProperty(properties, "status");
@@ -130,6 +137,8 @@ public final class GuiCnf {
         btnOk = CnfUtil.readProperty(properties, "btn.ok");
         btnReset = CnfUtil.readProperty(properties, "btn.reset");
         btnCancel = CnfUtil.readProperty(properties, "bnt.cancel");
+        
+        warningDlgTitle = CnfUtil.readProperty(properties, "warning.title");
     }
     
     
@@ -213,6 +222,10 @@ public final class GuiCnf {
         return timeIntLbl;
     }
     
+    public String getCommentDlgTitle() {
+        return commentDlgTitle;
+    }
+    
     public String getTypeLbl() {
         return typeLbl;
     }
@@ -243,5 +256,13 @@ public final class GuiCnf {
     
     public String getBtnCancel() {
         return btnCancel;
+    }
+    
+    public String getCommentWarningTxt() {
+        return commentWarningTxt;
+    }
+    
+    public String getWarningDlgTitle() {
+        return warningDlgTitle;
     }
 }

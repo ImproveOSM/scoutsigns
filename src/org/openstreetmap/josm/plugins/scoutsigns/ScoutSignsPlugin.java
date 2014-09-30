@@ -53,8 +53,10 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
+import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.details.ScoutSignsDetailsDialog;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.layer.ScoutSignsLayer;
+import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.util.Util;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ServiceCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.Keys;
@@ -69,7 +71,8 @@ import org.openstreetmap.josm.tools.OsmUrlToBounds;
  * @version $Revision$
  */
 public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
-        ZoomChangeListener, MouseListener, PreferenceChangedListener {
+        ZoomChangeListener, MouseListener, PreferenceChangedListener,
+        StatusChangeObserver {
     
     private ScoutSignsLayer layer;
     private ScoutSignsDetailsDialog dialog;
@@ -78,7 +81,6 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
     private Timer zoomTimer;
     
     private SearchFilter searchFilter;
-    
     
     
     /**
@@ -115,15 +117,13 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
             if (zoomTimer != null && zoomTimer.isRunning()) {
                 zoomTimer.restart();
             } else {
-                zoomTimer =
-                        new Timer(ServiceCnf.getInstance().getSearchDelay(),
-                                new ActionListener() {
-                                    
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-                                        Main.worker.execute(new UpdateThread());
-                                    }
-                                });
+                zoomTimer = new Timer(ServiceCnf.getInstance().getSearchDelay(),
+                        new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        Main.worker.execute(new UpdateThread());
+                        }
+                    });
                 zoomTimer.setRepeats(false);
                 zoomTimer.start();
             }
@@ -186,16 +186,7 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
                     
                     @Override
                     public void run() {
-                        final RoadSign roadSign =
-                                ServiceHandler.getInstance().retrieveSign(id);
-                        SwingUtilities.invokeLater(new Runnable() {
-                            
-                            @Override
-                            public void run() {
-                                dialog.updateData(roadSign);
-                                Main.map.repaint();
-                            }
-                        });
+                        retrieveSign(id);
                     }
                 });
             } else {
@@ -234,7 +225,7 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
     
     @Override
     public void preferenceChanged(PreferenceChangeEvent event) {
-        if (event != null && (event.getNewValue() != null && 
+        if (event != null  && (event.getNewValue() != null && 
                 !event.getNewValue().equals(event.getOldValue()))) {
             if (event.getKey().equals(Keys.FILTERS_CHANGED)) {
                 searchFilter = PrefManager.getInstance().loadSearchFilter();
@@ -243,6 +234,38 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
         }
     }
     
+    @Override
+    public void statusChanged(final String ursername, final String text,
+            final Status status, final Long duplicateOf) {
+        final RoadSign selRoadSign = layer.getSelRoadSign();
+        if (selRoadSign != null) {
+            Main.worker.execute(new Runnable() {
+                
+                @Override
+                public void run() {
+                    ServiceHandler.getInstance().addComment(selRoadSign.getId(), 
+                            ursername, text, status, duplicateOf);
+                    retrieveSign(selRoadSign.getId());
+                }
+            });
+        }
+    }
+    
+    
+    private void retrieveSign(Long signId) {
+        final RoadSign roadSign = ServiceHandler.getInstance().retrieveSign
+                (signId);
+        SwingUtilities.invokeLater(new Runnable() {
+            
+            @Override
+            public void run() {
+                dialog.updateData(roadSign);
+                Main.map.repaint();
+            }
+        });
+    }
+    
+    
     /* local methods & classes */
     
     private void registerListeners() {
@@ -250,6 +273,7 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
         MapView.addLayerChangeListener(this);
         Main.map.mapView.addMouseListener(this);
         Main.pref.addPreferenceChangeListener(this);
+        dialog.registerStatusChangeObserver(this);
     }
     
     private void addLayer() {
@@ -269,9 +293,7 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
             if (Main.map != null && Main.map.mapView != null) {
                 BoundingBox bbox = Util.buildBBox(Main.map.mapView);
                 if (bbox != null) {
-                    int zoom =
-                            OsmUrlToBounds.getZoom(Main.map.mapView
-                                    .getRealBounds());
+                    int zoom = OsmUrlToBounds.getZoom(Main.map.mapView.getRealBounds());
                     final Collection<RoadSign> roadSigns =
                             ServiceHandler.getInstance().searchSigns(bbox,
                                     searchFilter, zoom);

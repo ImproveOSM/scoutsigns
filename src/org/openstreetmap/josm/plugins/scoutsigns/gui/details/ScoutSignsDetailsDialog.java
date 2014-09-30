@@ -37,6 +37,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
+import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltCnf;
@@ -95,5 +96,14 @@ public class ScoutSignsDetailsDialog extends ToggleDialog {
         pnlDetails.updateData(roadSign);
         pnlBtn.setRoadSign(roadSign);
         repaint();
+    }
+    
+    /**
+     * Registers the given observer.
+     * 
+     * @param observer a {@code StatusChangeObserver}
+     */
+    public void registerStatusChangeObserver(StatusChangeObserver observer) {
+        pnlBtn.registerStatusChangeObserver(observer);
     }
 }

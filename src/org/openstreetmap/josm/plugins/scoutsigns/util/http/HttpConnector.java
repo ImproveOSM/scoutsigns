@@ -91,6 +91,7 @@ public class HttpConnector {
             connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setInstanceFollowRedirects(false);
             connection.setRequestMethod(method.name());
+            connection.setDoOutput(true);
         } catch (IOException e) {
             throw new HttpException(e);
         }

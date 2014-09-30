@@ -56,7 +56,7 @@ class TripPanel extends InfoPanel<Trip> {
     private void addId(String id, int widthLbl) {
         add(Builder.buildLabel(getGuiCnf().getIdLbl(), FontUtil.BOLD_12,
                 new Rectangle(RECT_X, RECT_Y, widthLbl, LHEIGHT)));
-        add(Builder.buildTextArea(id, FontUtil.PLAIN_12, getBackground(),
+        add(Builder.buildTextArea(id, false, FontUtil.PLAIN_12, getBackground(),
                 new Rectangle(widthLbl, RECT_Y, ID_WIDTH, ID_HEIGHT)));
         pnlWidth = pnlWidth + widthLbl + ID_WIDTH;
         y = RECT_Y + ID_HEIGHT;
