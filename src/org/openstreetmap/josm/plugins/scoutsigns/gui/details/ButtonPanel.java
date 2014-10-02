@@ -14,6 +14,7 @@
 package org.openstreetmap.josm.plugins.scoutsigns.gui.details;
 
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
@@ -21,6 +22,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter.RoadSignFilterDialog;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
 
 
@@ -57,9 +59,10 @@ class ButtonPanel extends JPanel {
         add(Builder.buildButton(new DisplayImageFrame(), 
                 iconCnf.getPhotoIcon()));
         add(Builder.buildButton(null, iconCnf.getTripIcon()));
-        add(Builder.buildButton(new DisplayCommentDialog(), 
+        add(Builder.buildButton(new DisplayCommentDialog(),
                 iconCnf.getCommentIcon()));
-        add(Builder.buildButton(null, iconCnf.getMoreActionIcon()));
+        add(Builder.buildButton(new DisplayEditMenu(),
+                iconCnf.getMoreActionIcon()));
     }
     
     
@@ -116,7 +119,6 @@ class ButtonPanel extends JPanel {
         }
     }
     
-    
     /*
      * Displays the comment dialog window.
      */
@@ -127,9 +129,31 @@ class ButtonPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent event) {
             if (roadSign != null) {
-                CommentDialog dlgComment = new CommentDialog();
+                EditDialog dlgComment = new EditDialog(null, 
+                        GuiCnf.getInstance().getDlgCommentTitle(), 
+                        IconCnf.getInstance().getCommentIcon().getImage());
                 dlgComment.registerObserver(statusChangeObserver);
                 dlgComment.setVisible(true);
+            }
+        }
+    }
+    
+    /*
+     * Displays the edit menu.
+     */
+    private final class DisplayEditMenu extends AbstractAction {
+        
+        private static final long serialVersionUID = 5945560671001154104L;
+        
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            if (roadSign != null) {
+                EditPopupMenu editMenu = new EditPopupMenu(roadSign.getStatus());
+                editMenu.registerStatusChangeObserver(statusChangeObserver);
+                editMenu.show(ButtonPanel.this, 0, 0);
+                Point point = getComponent(getComponentCount() - 1).
+                        getLocationOnScreen();
+                editMenu.setLocation(point.x, point.y - getHeight());
             }
         }
     }

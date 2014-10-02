@@ -92,6 +92,21 @@ public final class GuiCnf {
     private final String btnCancel;
     
     private final String dlgWarningTitle;
+    private final String dlgMissingTitle;
+    private final String txtCommentWarning;
+    private final String txtDuplIdWarning;
+    private final String txtDuplIdCommentWarning;
+    
+    private final String txtMenuSolve;
+    private final String txtMenuInvalid;
+    private final String txtMenuDuplicate;
+    private final String txtMenuReopen;
+    
+    private final String dlgSolveTitle;
+    private final String dlgInvalidTitle;
+    private final String dlgDuplicateTitle;
+    private final String dlgReopenTitle;
+    
     
     private GuiCnf() {
         Properties properties = CnfUtil.load(CNF_FILE);
@@ -124,7 +139,8 @@ public final class GuiCnf {
         lblTimeInt = CnfUtil.readProperty(properties, "filter.int");
         
         dlgCommentTitle = CnfUtil.readProperty(properties, "comment.title");
-        txtUsernameWarning = CnfUtil.readProperty(properties, "warning.username");
+        txtUsernameWarning = CnfUtil.readProperty(properties, 
+                "warning.missing.username");
         
         /* commonly used texts */
         lblType = CnfUtil.readProperty(properties, "type");
@@ -138,18 +154,38 @@ public final class GuiCnf {
         btnReset = CnfUtil.readProperty(properties, "btn.reset");
         btnCancel = CnfUtil.readProperty(properties, "bnt.cancel");
         
-        dlgWarningTitle = CnfUtil.readProperty(properties, "warning.title");
+        dlgWarningTitle = CnfUtil.readProperty(properties, "warning.general.title");
+        dlgMissingTitle = CnfUtil.readProperty(properties, 
+                "warning.missing.title");
+        txtCommentWarning = CnfUtil.readProperty(properties, 
+                "warning.missing.comment");
+        txtDuplIdWarning = CnfUtil.readProperty(properties, 
+                "warning.missing.dupl");
+        txtDuplIdCommentWarning= CnfUtil.readProperty(properties, 
+                "warning.missing.bot");
+        
+        /* menu item texts */
+        txtMenuSolve = CnfUtil.readProperty(properties, "edit.menu.solve");
+        txtMenuInvalid = CnfUtil.readProperty(properties, "edit.menu.invalid");
+        txtMenuDuplicate = CnfUtil.readProperty(properties, "edit.meuu.duplicate");
+        txtMenuReopen = CnfUtil.readProperty(properties, "edit.menu.reopen");
+        
+        dlgSolveTitle = CnfUtil.readProperty(properties, "edit.dialog.solve");
+        dlgInvalidTitle = CnfUtil.readProperty(properties, "edit.dialog.invalid");
+        dlgDuplicateTitle = CnfUtil.readProperty(properties, 
+                "edit.dialog.duplicate");
+        dlgReopenTitle = CnfUtil.readProperty(properties, "edit.dialog.reopen");
     }
     
     
     public static GuiCnf getInstance() {
         return INSTANCE;
     }
-
+    
     public String getDlgDetailsTitle() {
         return dlgDetailsTitle;
     }
-
+    
     public String getPnlRoadSignTitle() {
         return pnlRoadSignTitle;
     }
@@ -157,15 +193,15 @@ public final class GuiCnf {
     public String getPnlCarPosTitle() {
         return pnlCarPosTitle;
     }
-
+    
     public String getPnlTripTitle() {
         return pnlTripTitle;
     }
-
+    
     public String getPnlCommentsTitle() {
         return pnlCommentsTitle;
     }
-
+    
     public String getLblId() {
         return lblId;
     }
@@ -173,27 +209,27 @@ public final class GuiCnf {
     public String getLblPoint() {
         return lblPoint;
     }
-
+    
     public String getLblHeight() {
         return lblHeight;
     }
-
+    
     public String getLblConf() {
         return lblConf;
     }
-
+    
     public String getLblCreated() {
         return lblCreated;
     }
-
+    
     public String getLblHeading() {
         return lblHeading;
     }
-
+    
     public String getLblAcc() {
         return lblAcc;
     }
-
+    
     public String getLblMode() {
         return lblMode;
     }
@@ -201,11 +237,11 @@ public final class GuiCnf {
     public String getLblProfile() {
         return lblProfile;
     }
-
+    
     public String getFrmPhotoTitle() {
         return frmPhotoTitle;
     }
-
+    
     public String getLblPhotoError() {
         return lblPhotoError;
     }
@@ -217,19 +253,19 @@ public final class GuiCnf {
     public String getDlgFilterTitle() {
         return dlgFilterTitle;
     }
-
+    
     public String getLblTimeInt() {
         return lblTimeInt;
     }
-
+    
     public String getDlgCommentTitle() {
         return dlgCommentTitle;
     }
-
+    
     public String getTxtUsernameWarning() {
         return txtUsernameWarning;
     }
-
+    
     public String getLblType() {
         return lblType;
     }
@@ -245,7 +281,7 @@ public final class GuiCnf {
     public String getLblApp() {
         return lblApp;
     }
-
+    
     public String getLblDevice() {
         return lblDevice;
     }
@@ -253,7 +289,7 @@ public final class GuiCnf {
     public String getBtnOk() {
         return btnOk;
     }
-
+    
     public String getBtnReset() {
         return btnReset;
     }
@@ -261,8 +297,56 @@ public final class GuiCnf {
     public String getBtnCancel() {
         return btnCancel;
     }
-
+    
     public String getDlgWarningTitle() {
         return dlgWarningTitle;
+    }
+    
+    public String getDlgMissingTitle() {
+        return dlgMissingTitle;
+    }
+    
+    public String getTxtCommentWarning() {
+        return txtCommentWarning;
+    }
+    
+    public String getTxtDuplIdWarning() {
+        return txtDuplIdWarning;
+    }
+    
+    public String getTxtDuplIdCommentWarning() {
+        return txtDuplIdCommentWarning;
+    }
+
+    public String getTxtMenuSolve() {
+        return txtMenuSolve;
+    }
+    
+    public String getTxtMenuInvalid() {
+        return txtMenuInvalid;
+    }
+    
+    public String getTxtMenuDuplicate() {
+        return txtMenuDuplicate;
+    }
+    
+    public String getTxtMenuReopen() {
+        return txtMenuReopen;
+    }
+    
+    public String getDlgSolveTitle() {
+        return dlgSolveTitle;
+    }
+    
+    public String getDlgInvalidTitle() {
+        return dlgInvalidTitle;
+    }
+    
+    public String getDlgDuplicateTitle() {
+        return dlgDuplicateTitle;
+    }
+    
+    public String getDlgReopenTitle() {
+        return dlgReopenTitle;
     }
 }

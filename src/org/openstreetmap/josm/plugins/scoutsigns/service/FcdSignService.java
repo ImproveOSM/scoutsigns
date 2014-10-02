@@ -136,7 +136,8 @@ public class FcdSignService {
             content.put(Constants.DUPLICATE_OF, duplicateOf.toString());
         }
         String url = new HttpQueryBuilder().build(Constants.ADD_COMMENT);
-        executePost(url, content);
+        Root root = executePost(url, content);
+        verifyStatus(root);
     }
     
     private Root executePost(String url, Map<String, String> content)

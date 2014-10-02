@@ -79,7 +79,7 @@ final class ServiceHandler {
         try {
             result = signService.retrieveRoadSign(id);
         } catch (FcdSignServiceException ex) {
-            handleException(ex, true);
+            handleException(ex, false);
         }
         return result;
     }
@@ -100,7 +100,7 @@ final class ServiceHandler {
         try {
             signService.addComment(signId, username, text, status, duplicateOf);
         } catch (FcdSignServiceException ex) {
-            handleException(ex, true);
+            handleException(ex, false);
         }
     }
     
@@ -110,11 +110,11 @@ final class ServiceHandler {
             if (!PrefManager.getInstance().loadSupressErrorFlag()) {
                 PrefManager.getInstance().saveSupressErrorFlag(suppress);
                 JOptionPane.showMessageDialog(Main.parent, ex.getMessage(),
-                        "Unexpected error", JOptionPane.ERROR_MESSAGE);
+                        "Operation failed", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             JOptionPane.showMessageDialog(Main.parent, ex.getMessage(),
-                    "Unexpected error", JOptionPane.ERROR_MESSAGE);
+                    "Operation failed", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

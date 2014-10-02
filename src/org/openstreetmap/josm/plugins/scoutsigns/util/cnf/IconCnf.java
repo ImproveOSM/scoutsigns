@@ -59,10 +59,10 @@ public final class IconCnf {
     private final Icon moreActionIcon;
     private final String typeIconPath;
     
-    private final Icon openIcon;
-    private final Icon solvedIcon;
-    private final Icon invalidIcon;
-    private final Icon duplicateIcon;
+    private final ImageIcon openIcon;
+    private final ImageIcon solvedIcon;
+    private final ImageIcon invalidIcon;
+    private final ImageIcon duplicateIcon;
     
     
     private IconCnf() {
@@ -123,19 +123,19 @@ public final class IconCnf {
         return typeIconPath;
     }
     
-    public Icon getOpenIcon() {
+    public ImageIcon getOpenIcon() {
         return openIcon;
     }
     
-    public Icon getSolvedIcon() {
+    public ImageIcon getSolvedIcon() {
         return solvedIcon;
     }
     
-    public Icon getInvalidIcon() {
+    public ImageIcon getInvalidIcon() {
         return invalidIcon;
     }
     
-    public Icon getDuplicateIcon() {
+    public ImageIcon getDuplicateIcon() {
         return duplicateIcon;
     }
 }

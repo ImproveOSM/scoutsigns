@@ -38,6 +38,7 @@ import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
+import java.awt.event.MouseListener;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -47,6 +48,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -68,9 +70,9 @@ public final class Builder {
     
     private Builder() {}
     
-
+    
     /**
-     * Builds a custom {@code JLabel} with the given properties.
+     * Builds a {@code JLabel} with the given properties.
      * 
      * @param icon the {@code Icon} to be displayed on the label
      * @param bounds the dimension and location of the label
@@ -85,7 +87,7 @@ public final class Builder {
     }
     
     /**
-     * Builds a custom {@code JLabel} with the given properties.
+     * Builds a {@code JLabel} with the given properties.
      * 
      * @param text the text which will be shown on the label
      * @param font the font of the label's text
@@ -105,7 +107,7 @@ public final class Builder {
     }
     
     /**
-     * Builds a custom {@code JLabel} with the given properties.
+     * Builds a {@code JLabel} with the given properties.
      * 
      * @param text the text which will be shown on the label
      * @param tooltip the label's tool tip
@@ -129,7 +131,7 @@ public final class Builder {
     }
     
     /**
-     * Builds a custom {@code JTextField} with the given arguments.
+     * Builds a {@code JTextField} with the given arguments.
      * 
      * @param txt the text to be displayed
      * @param tooltip the tool tip to be displayed on mouse hover action
@@ -149,9 +151,9 @@ public final class Builder {
         txtField.setBackground(bgColor);
         return txtField;
     }
-
+    
     /**
-     * Builds a custom {@code JTextPane} with the given text and content type.
+     * Builds a {@code JTextPane} with the given text and content type.
      * 
      * @param txt the text to be displayed in the text component
      * @param contentType the text's content type
@@ -167,7 +169,7 @@ public final class Builder {
     }
     
     /**
-     * Builds a custom {@code JTextArea} with the given arguments.
+     * Builds a {@code JTextArea} with the given arguments.
      * 
      * @param txt the text to be displayed in the text component
      * @param font the text's font
@@ -195,7 +197,26 @@ public final class Builder {
     }
     
     /**
-     * Builds a custom {@code JCheckBox} with the given arguments.
+     * Builds a {@code JMenuItem} with the given arguments.
+     * 
+     * @param text the text to be displayed
+     * @param icon the icon to be displayed
+     * @param listener the {@code MouseListener} associated with this item
+     * @param enabled if true the item is enabled, if false it is disabled
+     * @return a {@code JMenuItem}
+     */
+    public static JMenuItem buildMenuItem(String text, Icon icon,
+            MouseListener listener, boolean enabled) {
+        JMenuItem menuItem = new JMenuItem(text, icon);
+        if (enabled) {
+            menuItem.addMouseListener(listener);
+        }
+        menuItem.setEnabled(enabled);
+        return menuItem;
+    }
+    
+    /**
+     * Builds a {@code JCheckBox} with the given arguments.
      * 
      * @param tooltip the tool tip to be displayed on mouse hover action
      * @param selected specifies if the check box is selected or not
@@ -224,9 +245,9 @@ public final class Builder {
         btn.setFocusable(false);
         return btn;
     }
-
+    
     /**
-     * Builds a custom {@code JButton} object with the given properties.
+     * Builds a {@code JButton} object with the given properties.
      * 
      * @param action the {@code AbstractAction} to be executed when the button
      * is clicked
@@ -244,9 +265,9 @@ public final class Builder {
         btn.setFocusable(false);
         return btn;
     }
-
+    
     /**
-     * Builds a custom {@code JScrollPane} object with the given properties.
+     * Builds a {@code JScrollPane} object with the given properties.
      * 
      * @param name the name of the scroll pane
      * @param component the component to added into the scroll pane
@@ -256,7 +277,7 @@ public final class Builder {
      */
     public static JScrollPane buildScrollPane(String name, Component component,
             Color bgColor, Dimension prefSize) {
-        JScrollPane scrollPane =buildScrollPane(component, bgColor);
+        JScrollPane scrollPane = buildScrollPane(component, bgColor);
         if (name != null) {
             scrollPane.setName(name);
         }
@@ -278,16 +299,17 @@ public final class Builder {
             Color bgColor, boolean borderVisible) {
         JScrollPane scrollPane = buildScrollPane(component, bgColor);
         if (borderVisible) {
-            scrollPane.setBorder(BorderFactory.createLineBorder(Color.black));
+            scrollPane.setBorder(BorderFactory.createLineBorder(Color.gray));
         }
         return scrollPane;
     }
     
-    private static JScrollPane buildScrollPane(Component component, 
+    private static JScrollPane buildScrollPane(Component component,
             Color bgColor) {
-        JScrollPane scrollPane = new JScrollPane(component, 
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane scrollPane =
+                new JScrollPane(component,
+                        ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBackground(bgColor);
         scrollPane.setAutoscrolls(true);
         return scrollPane;
