@@ -50,8 +50,12 @@ final class Constants {
     static final String RETRIEVE_SIGN = "retrieveSign";
     static final String ID = "id";
     
-    /* "addComments" method & paramaters */
+    /* "addComment" method & paramaters */
     static final String ADD_COMMENT = "addComment";
     static final String SIGN_ID = "signId";
     static final String TEXT = "text";
+    
+    /* "addComments" method & parameters */
+    static final String ADD_COMMENTS = "addComments";
+    static final String SIGN_IDS = "signIds";
 }

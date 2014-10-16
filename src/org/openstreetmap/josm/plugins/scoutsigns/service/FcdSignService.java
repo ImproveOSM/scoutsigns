@@ -33,7 +33,6 @@ package org.openstreetmap.josm.plugins.scoutsigns.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
@@ -73,6 +72,7 @@ public class FcdSignService {
         this.gson = builder.create();
     }
     
+    
     /**
      * Searches for the road signs from the specified area that satisfy the
      * given filters. Null filters are ignored.
@@ -111,8 +111,8 @@ public class FcdSignService {
     }
     
     /**
-     * Creates a new comment for the specified road sign with the given
-     * arguments.
+     * Adds a comment to the specified road sign. If the status is not null,
+     * then also the road sign's status is modified.
      * 
      * @param signId the road sign's identifier
      * @param username the user's OSM username
@@ -125,17 +125,34 @@ public class FcdSignService {
      */
     public void addComment(Long signId, String username, String text,
             Status status, Long duplicateOf) throws FcdSignServiceException {
-        Map<String, String> content = new HashMap<>();
-        content.put(Constants.SIGN_ID, signId.toString());
-        content.put(Constants.USERNAME, username);
-        content.put(Constants.TEXT, text);
-        if (status != null) {
-            content.put(Constants.STATUS, status.name());
-        }
-        if (duplicateOf != null) {
-            content.put(Constants.DUPLICATE_OF, duplicateOf.toString());
-        }
+        Map<String, String> content = new HttpContentBuilder(signId, username, 
+                text, status, duplicateOf).getContent();
         String url = new HttpQueryBuilder().build(Constants.ADD_COMMENT);
+        Root root = executePost(url, content);
+        verifyStatus(root);
+    }
+    
+    /**
+     * Adds the same comment to every specified road sign. This is a batch '
+     * operation, and is equivalent to calling 'addComment' on each individual
+     * road sign. If the status is not null, then also the road sign's status is
+     * modified.
+     * 
+     * @param signIds the collection of road sign identifiers
+     * @param username the user's OSM username
+     * @param text the comment text
+     * @param status the road sign's new {@code Status}
+     * @param duplicateOf it is used only with {@code Status#DUPLICATE}.
+     * Specifies the parent road sign's identifier.
+     * @throws FcdSignServiceException if an error occurred during the
+     * FcdSignService method execution
+     */
+    public void addComments(Collection<Long> signIds, String username,
+            String text, Status status, Long duplicateOf)
+            throws FcdSignServiceException {
+        Map<String, String> content = new HttpContentBuilder(signIds, username, 
+                text, status, duplicateOf).getContent();
+        String url = new HttpQueryBuilder().build(Constants.ADD_COMMENTS);
         Root root = executePost(url, content);
         verifyStatus(root);
     }

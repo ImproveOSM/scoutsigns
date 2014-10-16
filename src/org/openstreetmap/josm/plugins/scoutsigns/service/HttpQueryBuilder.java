@@ -31,7 +31,6 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.service;
 
-
 import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.TimestampFilter;
@@ -57,7 +56,6 @@ class HttpQueryBuilder {
     
     
     HttpQueryBuilder() {}
-    
     
     /**
      * Creates a {@code HttpQueryBuilder} with the given arguments.
@@ -88,13 +86,18 @@ class HttpQueryBuilder {
         }
     }
     
-    
+    /**
+     * Creates a new builder with the given argument.
+     * 
+     * @param id a unique identifier
+     */
     HttpQueryBuilder(Long id) {
         query = new StringBuilder();
         
         addFormatFilter();
         addIdFilter(id);
     }
+    
     
     /**
      * Builds a new HTTP query for the specified method with the currently set
@@ -104,12 +107,13 @@ class HttpQueryBuilder {
      * @return a {@code String} object
      */
     String build(String method) {
-        StringBuilder url =
-                new StringBuilder(ServiceCnf.getInstance().getServiceUrl());
+        StringBuilder url = new StringBuilder(
+                ServiceCnf.getInstance().getServiceUrl());
         url.append(method).append(QUESTIONM);
         url.append(query);
         return url.toString();
     }
+    
     
     private void addFormatFilter() {
         query.append(Constants.FORMAT).append(EQ).append(Constants.FORMAT_VAL);
@@ -135,8 +139,7 @@ class HttpQueryBuilder {
         if (tsFilter != null) {
             if (tsFilter.getFrom() != null) {
                 query.append(AND);
-                query.append(Constants.FROM).append(EQ)
-                        .append(tsFilter.getFrom());
+                query.append(Constants.FROM).append(EQ).append(tsFilter.getFrom());
             }
             if (tsFilter.getTo() != null) {
                 query.append(AND);
