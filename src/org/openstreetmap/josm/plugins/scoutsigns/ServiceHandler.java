@@ -85,15 +85,15 @@ final class ServiceHandler {
     }
     
     /**
-     * Creates a new comment for the specified road sign with the given
-     * arguments.
+     * Adds a comment to the given road sign. If the status is not null, then
+     * also the road sign's status is modified.
      * 
      * @param signId the road sign's identifier
      * @param username the user's OSM username
      * @param text the comment text
      * @param status the road sign's new {@code Status}
-     * @param duplicateOf it is used only with {@code Status#DUPLICATE}.
-     * Specifies the parent road sign's identifier.
+     * @param duplicateOf specifies the parent road sign's identifier, it is
+     * user only with {@code Status#DUPLICATE}
      */
     void addComment(Long signId, String username, String text, Status status,
             Long duplicateOf) {
@@ -104,6 +104,28 @@ final class ServiceHandler {
         }
     }
     
+    /**
+     * Adds the same comment to every road sign from the given collection. If
+     * the status is not null, then also the status of the road signs are
+     * modified. This is a batch operation equivalent to calling "addComment" on
+     * each individual road sign from the collection.
+     * 
+     * @param signIds the collection of road sign identifiers
+     * @param username the user's OSM username
+     * @param text the comment text
+     * @param status the new {@code Status} to be set
+     * @param duplicateOf specifies the parent road sign's identifier, it is
+     * user only with {@code Status#DUPLICATE}
+     */
+    void addComments(Collection<Long> signIds, String username, String text,
+            Status status, Long duplicateOf) {
+        try {
+            signService.addComments(signIds, username, text, status,
+                    duplicateOf);
+        } catch (FcdSignServiceException ex) {
+            handleException(ex, false);
+        }
+    }
     
     private void handleException(Exception ex, boolean suppress) {
         if (suppress) {
