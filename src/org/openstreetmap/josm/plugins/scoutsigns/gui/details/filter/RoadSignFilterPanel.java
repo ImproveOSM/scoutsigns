@@ -184,9 +184,9 @@ class RoadSignFilterPanel extends JPanel {
         
         Status status = pnlStatus.getSelection();
         String type = pnlType.getSelection();
-        Long duplicate = txtDuplicate.getText() != null && !txtDuplicate.
-                getText().isEmpty() ?  Long.parseLong(txtDuplicate.getText()) : 
-                    null;
+        Long duplicate = txtDuplicate.getText() != null && 
+                !txtDuplicate.getText().isEmpty() ?
+                        Long.parseLong(txtDuplicate.getText()) : null;
         String appName = txtAppName.getText();
         String appVersion = txtAppVers.getText();
         String osName = txtOsName.getText();
@@ -222,9 +222,9 @@ class RoadSignFilterPanel extends JPanel {
                         GridBagConstraints.HORIZONTAL, new Insets(7, 5, 3, 5),
                         0, 0);
         private static final GridBagConstraints PNL_STATUS =
-                new GridBagConstraints(1, 1, 2, 1, 1, 0,
+                new GridBagConstraints(1, 1, 3, 1, 1, 0,
                         GridBagConstraints.PAGE_START,
-                        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 3, 5),
+                        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 3, 3),
                         0, 0);
         private static final GridBagConstraints LBL_TYPE =
                 new GridBagConstraints(0, 2, 1, 1, 1, 0,
@@ -235,7 +235,7 @@ class RoadSignFilterPanel extends JPanel {
                 new GridBagConstraints(1, 2, 2, 1, 1, 0,
                         GridBagConstraints.CENTER,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
-                        0, 70);
+                        0, 110);
         private static final GridBagConstraints LBL_DUPL =
                 new GridBagConstraints(0, 3, 1, 1, 1, 0,
                         GridBagConstraints.PAGE_START,

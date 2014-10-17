@@ -36,9 +36,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.IconRadioButton;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
+import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
 
 
 /**
@@ -65,10 +66,10 @@ class StatusFilterPanel extends JPanel {
             1, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
             GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0);
     
-    private IconRadioButton cboxOpen;
-    private IconRadioButton cboxSolved;
-    private IconRadioButton cboxInvalid;
-    private IconRadioButton cboxDuplicate;
+    private JRadioButton cboxOpen;
+    private JRadioButton cboxSolved;
+    private JRadioButton cboxInvalid;
+    private JRadioButton cboxDuplicate;
     private ButtonGroup btnGroup;
     
     
@@ -86,24 +87,24 @@ class StatusFilterPanel extends JPanel {
     
     
     private void addComponents() {
-        cboxOpen = new IconRadioButton(IconCnf.getInstance().getOpenIcon(), 
-                getBackground(), Status.OPEN.toString());
-        btnGroup.add(cboxOpen.getRadioButton());
+        cboxOpen = Builder.buildRadioButton(Status.OPEN.toString().toLowerCase(),
+                FontUtil.PLAIN_12, getBackground());
+        btnGroup.add(cboxOpen);
         add(cboxOpen, CB_OPEN);
         
-        cboxSolved = new IconRadioButton(IconCnf.getInstance().getSolvedIcon(),
-                getBackground(), Status.OPEN.toString());
-        btnGroup.add(cboxSolved.getRadioButton());
+        cboxSolved = Builder.buildRadioButton(Status.SOLVED.toString().toLowerCase(),
+                FontUtil.PLAIN_12, getBackground());
+        btnGroup.add(cboxSolved);
         add(cboxSolved, CB_SOLVED);
         
-        cboxInvalid = new IconRadioButton(IconCnf.getInstance().getInvalidIcon(),
-                getBackground(), Status.INVALID.toString());
-        btnGroup.add(cboxInvalid.getRadioButton());
+        cboxInvalid = Builder.buildRadioButton(Status.INVALID.toString().
+                toLowerCase(), FontUtil.PLAIN_12, getBackground());
+        btnGroup.add(cboxInvalid);
         add(cboxInvalid, CB_INVALID);
         
-        cboxDuplicate = new IconRadioButton(IconCnf.getInstance().getDuplicateIcon(),
-                getBackground(), Status.DUPLICATE.toString());
-        btnGroup.add(cboxDuplicate.getRadioButton());
+        cboxDuplicate = Builder.buildRadioButton(Status.DUPLICATE.toString().
+                toLowerCase(), FontUtil.PLAIN_12, getBackground());
+        btnGroup.add(cboxDuplicate);
         add(cboxDuplicate, CB_DUPL);
     }
     

@@ -45,11 +45,11 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -216,19 +216,20 @@ public final class Builder {
     }
     
     /**
-     * Builds a {@code JCheckBox} with the given arguments.
+     * Builds a {@code JRadioButton} with the given arguments.
      * 
-     * @param tooltip the tool tip to be displayed on mouse hover action
-     * @param selected specifies if the check box is selected or not
-     * @return a {@code JCheckBox} object
+     * @param text the text to be displayed
+     * @param font the font to be used
+     * @param bgColor the background color
+     * @return a {@code JRadioButton}
      */
-    public static JCheckBox buildCheckBox(String tooltip, boolean selected) {
-        JCheckBox cbbox = new JCheckBox();
-        cbbox.setToolTipText(tooltip);
-        cbbox.setFont(FontUtil.PLAIN_12);
-        cbbox.setFocusPainted(false);
-        cbbox.setSelected(selected);
-        return cbbox;
+    public static JRadioButton buildRadioButton(String text, Font font, 
+            Color bgColor) {
+        JRadioButton radioButton = new JRadioButton(text);
+        radioButton.setBackground(bgColor);
+        radioButton.setFont(font);
+        radioButton.setFocusable(false);
+        return radioButton;
     }
     
     /**

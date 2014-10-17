@@ -38,6 +38,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
+import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ServiceCnf;
 
 
@@ -52,11 +55,11 @@ class TypeFilterPanel extends JPanel {
     private static final long serialVersionUID = 4445057324599948957L;
     
     private static final int ROW = 0;
-    private static final int COL = 4;
-    private static final Dimension DIM = new Dimension(100, 200);
+    private static final int COL = 3;
+    private static final Dimension DIM = new Dimension(80, 200);
     
     private ButtonGroup group;
-    private List<TypeRadioButton> buttons = new ArrayList<>();
+    private List<JRadioButton> buttons = new ArrayList<>();
     
     
     /**
@@ -76,17 +79,18 @@ class TypeFilterPanel extends JPanel {
     
     private void addComponents() {
         for (String type : ServiceCnf.getInstance().getTypes()) {
-            TypeRadioButton btn = new TypeRadioButton(type);
-            buttons.add(btn);
-            group.add(btn.getRadioButton());
-            add(btn);
+            JRadioButton rbType = Builder.buildRadioButton(type, 
+                    FontUtil.PLAIN_12, Color.white);
+            buttons.add(rbType);
+            group.add(rbType);
+            add(rbType);
         }
     }
     
     private void selectElement(String selection) {
         if (selection != null) {
-            for (TypeRadioButton btn : buttons) {
-                if (btn.getType().equals(selection)) {
+            for (JRadioButton btn : buttons) {
+                if (btn.equals(selection)) {
                     btn.setSelected(true);
                     break;
                 }
@@ -109,9 +113,9 @@ class TypeFilterPanel extends JPanel {
      */
     String getSelection() {
         String selection = null;
-        for (TypeRadioButton btn : buttons) {
-            if (btn.getRadioButton().isSelected()) {
-                selection = btn.getType();
+        for (JRadioButton btn : buttons) {
+            if (btn.isSelected()) {
+                selection = btn.getText();
                 break;
             }
         }

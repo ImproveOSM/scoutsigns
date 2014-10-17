@@ -15,7 +15,6 @@ package org.openstreetmap.josm.plugins.scoutsigns.gui.details;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import javax.swing.Icon;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
@@ -23,7 +22,6 @@ import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.DateUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Formatter;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.TypeIconFactory;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Formatter.DecFormat;
 
 
@@ -98,9 +96,8 @@ class RoadSignPanel extends InfoPanel<RoadSign> {
         add(Builder.buildLabel(getGuiCnf().getLblType(), FontUtil.BOLD_12,
                 new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
         int widthVal = FontUtil.FM_PLAIN_12.stringWidth(type);
-        Icon icon = TypeIconFactory.getInstance().getIcon(type, false);
-        add(Builder.buildLabel(icon, new Rectangle(widthLbl, y, widthVal,
-                LHEIGHT)));
+        add(Builder.buildLabel(type,FontUtil.PLAIN_12, new Rectangle(widthLbl, y, 
+                widthVal, LHEIGHT)));
         pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
         y = y + LHEIGHT;
     }
