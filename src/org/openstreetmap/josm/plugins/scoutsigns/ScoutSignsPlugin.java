@@ -35,7 +35,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Collection;
+import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import org.openstreetmap.josm.Main;
@@ -80,6 +80,7 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
     /** timer for the zoom in/out operations */
     private Timer zoomTimer;
     
+    /** the filters applied to the search */
     private SearchFilter searchFilter;
     
     
@@ -118,9 +119,9 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
                 zoomTimer.restart();
             } else {
                 zoomTimer = new Timer(ServiceCnf.getInstance().getSearchDelay(),
-                        new ActionListener() {
+                        new ActionListener() {  
                     @Override
-                    public void actionPerformed(ActionEvent e) {
+                    public void actionPerformed(ActionEvent e) { 
                         Main.worker.execute(new UpdateThread());
                         }
                     });
@@ -163,10 +164,7 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
                     layer = null;
                     
                     // unregister listeners
-                    NavigatableComponent
-                            .removeZoomChangeListener(ScoutSignsPlugin.this);
-                    MapView.removeLayerChangeListener(ScoutSignsPlugin.this);
-                    Main.map.mapView.removeMouseListener(ScoutSignsPlugin.this);
+                    removeListeners();
                 }
             });
         }
@@ -178,9 +176,12 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
     @Override
     public void mouseClicked(MouseEvent event) {
         if (Main.map.mapView.getActiveLayer() == layer) {
-            RoadSign roadSign = layer.nearbyRoadSign(event.getPoint());
+            boolean multiSelect = event.isShiftDown();
+            RoadSign roadSign = layer.nearbyRoadSign(event.getPoint(), multiSelect);
+            
             if (roadSign != null) {
-                // road sign was selected
+                
+                // a road sign was selected
                 final Long id = roadSign.getId();
                 Main.worker.execute(new Runnable() {
                     
@@ -189,7 +190,8 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
                         retrieveSign(id);
                     }
                 });
-            } else {
+            } else if (!multiSelect) {
+                
                 // un-select previously selected road sign
                 SwingUtilities.invokeLater(new Runnable() {
                     
@@ -223,9 +225,12 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
         // this action is not supported
     }
     
+    
+    /* PreferenceChangedListener method */
+    
     @Override
     public void preferenceChanged(PreferenceChangeEvent event) {
-        if (event != null  && (event.getNewValue() != null && 
+        if (event != null && (event.getNewValue() != null && 
                 !event.getNewValue().equals(event.getOldValue()))) {
             if (event.getKey().equals(Keys.FILTERS_CHANGED)) {
                 searchFilter = PrefManager.getInstance().loadSearchFilter();
@@ -234,27 +239,49 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
         }
     }
     
+    
+    /* StatusChangeObserver method */
+    
     @Override
     public void statusChanged(final String ursername, final String text,
             final Status status, final Long duplicateOf) {
-        final RoadSign selRoadSign = layer.getSelRoadSign();
-        if (selRoadSign != null) {
-            Main.worker.execute(new Runnable() {
-                
-                @Override
-                public void run() {
-                    ServiceHandler.getInstance().addComment(selRoadSign.getId(), 
-                            ursername, text, status, duplicateOf);
-                    retrieveSign(selRoadSign.getId());
-                }
-            });
+        final List<RoadSign> selRoadSigns = layer.getSelRoadSigns();
+        // final RoadSign selRoadSign = layer.getSelRoadSign();
+        if (!selRoadSigns.isEmpty()) {
+            if (selRoadSigns.size() > 1) {
+                // add comment/ change status of multiple road signs
+                Main.worker.execute(new Runnable() {
+                    
+                    @Override
+                    public void run() {
+                        ServiceHandler.getInstance().addComments(selRoadSigns,
+                                ursername, text, status, duplicateOf);
+                        
+                        // update details of last road sign
+                        Long lastId = selRoadSigns.get(selRoadSigns.size() - 1).getId();
+                        retrieveSign(lastId);
+                    }
+                });
+            } else {
+                // add comment/change status of a single road sign
+                final Long signId = selRoadSigns.get(0).getId();
+                Main.worker.execute(new Runnable() {
+                    
+                    @Override
+                    public void run() {
+                        ServiceHandler.getInstance().addComment(signId, ursername, 
+                                text, status, duplicateOf);
+                        
+                        // update details of the selected road sign
+                        retrieveSign(signId);
+                    }
+                });
+            }
         }
     }
     
-    
     private void retrieveSign(Long signId) {
-        final RoadSign roadSign = ServiceHandler.getInstance().retrieveSign
-                (signId);
+        final RoadSign roadSign = ServiceHandler.getInstance().retrieveSign(signId);
         SwingUtilities.invokeLater(new Runnable() {
             
             @Override
@@ -276,6 +303,13 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
         dialog.registerStatusChangeObserver(this);
     }
     
+    private void removeListeners() {
+        NavigatableComponent.removeZoomChangeListener(this);
+        MapView.removeLayerChangeListener(this);
+        Main.map.mapView.removeMouseListener(this);
+        Main.pref.removePreferenceChangeListener(this);
+    }
+    
     private void addLayer() {
         layer = new ScoutSignsLayer();
         Main.main.addLayer(layer);
@@ -294,8 +328,8 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
                 BoundingBox bbox = Util.buildBBox(Main.map.mapView);
                 if (bbox != null) {
                     int zoom = OsmUrlToBounds.getZoom(Main.map.mapView.getRealBounds());
-                    final Collection<RoadSign> roadSigns =
-                            ServiceHandler.getInstance().searchSigns(bbox,
+                    final List<RoadSign> roadSigns = 
+                            ServiceHandler.getInstance().searchSigns(bbox, 
                                     searchFilter, zoom);
                     SwingUtilities.invokeLater(new Runnable() {
                         
@@ -318,8 +352,7 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
         @Override
         public void actionPerformed(ActionEvent event) {
             if (event.getSource() instanceof IconToggleButton) {
-                final IconToggleButton btn =
-                        (IconToggleButton) event.getSource();
+                final IconToggleButton btn =(IconToggleButton) event.getSource();
                 SwingUtilities.invokeLater(new Runnable() {
                     
                     @Override

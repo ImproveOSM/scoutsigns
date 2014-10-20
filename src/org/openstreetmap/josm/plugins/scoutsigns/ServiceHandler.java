@@ -14,7 +14,7 @@
 package org.openstreetmap.josm.plugins.scoutsigns;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
@@ -57,9 +57,9 @@ final class ServiceHandler {
      * @return a collection of {@code RoadSign}. If no road signs are found, the
      * method returns an empty collection.
      */
-    Collection<RoadSign> searchSigns(BoundingBox bbox, SearchFilter filter,
+    List<RoadSign> searchSigns(BoundingBox bbox, SearchFilter filter,
             int zoom) {
-        Collection<RoadSign> result = new ArrayList<>();
+        List<RoadSign> result = new ArrayList<>();
         try {
             result = signService.searchSigns(bbox, filter, zoom);
         } catch (FcdSignServiceException ex) {
@@ -117,8 +117,12 @@ final class ServiceHandler {
      * @param duplicateOf specifies the parent road sign's identifier, it is
      * user only with {@code Status#DUPLICATE}
      */
-    void addComments(Collection<Long> signIds, String username, String text,
-            Status status, Long duplicateOf) {
+    void addComments(List<RoadSign> roadSigns, String username,
+            String text, Status status, Long duplicateOf) {
+        List<Long> signIds = new ArrayList<>();
+        for (RoadSign roadSign : roadSigns) {
+            signIds.add(roadSign.getId());
+        }
         try {
             signService.addComments(signIds, username, text, status,
                     duplicateOf);

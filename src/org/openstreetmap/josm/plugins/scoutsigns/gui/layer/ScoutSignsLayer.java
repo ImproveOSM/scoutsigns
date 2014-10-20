@@ -31,7 +31,8 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.gui.layer;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import javax.swing.Action;
@@ -58,8 +59,8 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltCnf;
 public class ScoutSignsLayer extends Layer {
     
     private PaintHandler paintHandler;
-    private Collection<RoadSign> roadSigns;
-    private RoadSign selRoadSign;
+    private List<RoadSign> roadSigns;
+    private List<RoadSign> selRoadSigns;
     
     
     /**
@@ -68,6 +69,7 @@ public class ScoutSignsLayer extends Layer {
     public ScoutSignsLayer() {
         super(GuiCnf.getInstance().getDlgDetailsTitle());
         paintHandler = new PaintHandler();
+        selRoadSigns = new ArrayList<>();
     }
     
     /**
@@ -77,10 +79,15 @@ public class ScoutSignsLayer extends Layer {
      * @param point a {@code Point}
      * @return a {@code RoadSign}
      */
-    public RoadSign nearbyRoadSign(Point point) {
+    public RoadSign nearbyRoadSign(Point point, boolean multiSelect) {
         RoadSign roadSign = Util.nearbyRoadSign(roadSigns, point);
-        setSelRoadSign(roadSign);
-        return selRoadSign;
+        if (!multiSelect) {
+            selRoadSigns.clear();
+        }
+        if (roadSign != null && !selRoadSigns.contains(roadSign)) {
+            selRoadSigns.add(roadSign);
+        }
+        return roadSign;
     }
     
     @Override
@@ -122,7 +129,7 @@ public class ScoutSignsLayer extends Layer {
     public void paint(Graphics2D g2D, MapView mv, Bounds bounds) {
         mv.setDoubleBuffered(true);
         if (roadSigns != null) {
-            paintHandler.drawRoadSigns(g2D, mv, roadSigns, selRoadSign);
+            paintHandler.drawRoadSigns(g2D, mv, roadSigns, selRoadSigns);
         }
     }
     
@@ -131,15 +138,12 @@ public class ScoutSignsLayer extends Layer {
         // not supported
     }
     
-    private void setSelRoadSign(RoadSign selRoadSign) {
-        this.selRoadSign = selRoadSign;
-    }
-    
-    public void setRoadSigns(Collection<RoadSign> roadSigns) {
+    public void setRoadSigns(List<RoadSign> roadSigns) {
         this.roadSigns = roadSigns;
     }
     
-    public RoadSign getSelRoadSign() {
-        return selRoadSign;
+    
+    public List<RoadSign> getSelRoadSigns() {
+        return selRoadSigns;
     }
 }

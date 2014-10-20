@@ -16,9 +16,12 @@ package org.openstreetmap.josm.plugins.scoutsigns.gui.details;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
+import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter.RoadSignFilterDialog;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
@@ -45,6 +48,9 @@ class ButtonPanel extends JPanel {
     
     private StatusChangeObserver statusChangeObserver;
     
+    /* the list of statuses that a road sign/ set of road signs might have */
+    private List<Status> statuses = new ArrayList<>(Status.VALUES_LIST);
+    
     
     /**
      * Builds a new {@code ButtonPanel}
@@ -54,10 +60,9 @@ class ButtonPanel extends JPanel {
         
         // add components
         IconCnf iconCnf = IconCnf.getInstance();
-        add(Builder.buildButton(new DisplayFilterDialog(), 
+        add(Builder.buildButton(new DisplayFilterDialog(),
                 iconCnf.getFilterIcon()));
-        add(Builder.buildButton(new DisplayImageFrame(), 
-                iconCnf.getPhotoIcon()));
+        add(Builder.buildButton(new DisplayImageFrame(), iconCnf.getPhotoIcon()));
         add(Builder.buildButton(null, iconCnf.getTripIcon()));
         add(Builder.buildButton(new DisplayCommentDialog(),
                 iconCnf.getCommentIcon()));
@@ -73,6 +78,14 @@ class ButtonPanel extends JPanel {
      */
     void setRoadSign(RoadSign roadSign) {
         this.roadSign = roadSign;
+        if (this.roadSign == null) {
+            // restore possible statuses
+            if (statuses.size() != Status.VALUES_LIST.size()) {
+                statuses = new ArrayList<>(Status.VALUES_LIST);
+            }
+        } else {
+            statuses.remove(this.roadSign.getStatus());
+        }
     }
     
     /**
@@ -148,7 +161,7 @@ class ButtonPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent event) {
             if (roadSign != null) {
-                EditPopupMenu editMenu = new EditPopupMenu(roadSign.getStatus());
+                EditPopupMenu editMenu = new EditPopupMenu(statuses);
                 editMenu.registerStatusChangeObserver(statusChangeObserver);
                 editMenu.show(ButtonPanel.this, 0, 0);
                 Point point = getComponent(getComponentCount() - 1).

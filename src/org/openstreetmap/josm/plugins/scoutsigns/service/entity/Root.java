@@ -31,7 +31,7 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.service.entity;
 
-import java.util.Collection;
+import java.util.List;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 
 
@@ -44,7 +44,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 public class Root {
     
     private Status status;
-    private Collection<RoadSign> roadSigns;
+    private List<RoadSign> roadSigns;
     private RoadSign roadSign;
     
     
@@ -65,7 +65,7 @@ public class Root {
      * @param status represents the status information
      * @param roadSigns a collection of {@code RoadSigns}
      */
-    public Root(Status status, Collection<RoadSign> roadSigns) {
+    public Root(Status status, List<RoadSign> roadSigns) {
         this(status);
         this.roadSigns = roadSigns;
     }
@@ -86,7 +86,7 @@ public class Root {
         return status;
     }
     
-    public Collection<RoadSign> getRoadSigns() {
+    public List<RoadSign> getRoadSigns() {
         return roadSigns;
     }
     

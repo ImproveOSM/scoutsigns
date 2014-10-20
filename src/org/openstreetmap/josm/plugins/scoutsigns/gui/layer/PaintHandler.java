@@ -35,7 +35,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.ImageObserver;
-import java.util.Collection;
+import java.util.List;
 import javax.swing.ImageIcon;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
@@ -54,22 +54,29 @@ class PaintHandler {
     
     
     /**
-     * Draws the given collection of {@code RoadSign}s to the map.
+     * Draws the given road signs to the map.
      * 
-     * @param g2D the {@code Graphics2D} used to performed the drawing
+     * @param g2D the {@code Graphics2D} used to draw
      * @param mv the current {@code MapView}
-     * @param roadSigns the {@code RoadSign} collection to be displayed
+     * @param roadSigns the list of {@code RoadSign}s
+     * @param selRoadSign the selected {@code RoadSign}
+     * @param selRoadSigns the selected {@code RoadSigns}
      */
-    void drawRoadSigns(Graphics2D g2D, MapView mv,
-            Collection<RoadSign> roadSigns, RoadSign selRoadSign) {
+    void drawRoadSigns(Graphics2D g2D, MapView mv, List<RoadSign> roadSigns,
+             List<RoadSign> selRoadSigns) {
         for (RoadSign roadSign : roadSigns) {
-            Point point = mv.getPoint(roadSign.getSignPos().getPosition());
-            if (mv.contains(point)) {
-                ImageIcon icon = null;
-                boolean selected = roadSign.equals(selRoadSign);
-                icon = iconFactory.getIcon(roadSign.getType(), selected);
-                drawIcon(g2D, icon, point);
-            }
+            boolean selected = selRoadSigns.contains(roadSign);
+            drawRoadSign(g2D, mv, roadSign, selected);
+        }
+    }
+    
+    private void drawRoadSign(Graphics2D g2D, MapView mv, RoadSign roadSign,
+            boolean selected) {
+        Point point = mv.getPoint(roadSign.getSignPos().getPosition());
+        if (mv.contains(point)) {
+            ImageIcon icon = null;
+            icon = iconFactory.getIcon(roadSign.getType(), selected);
+            drawIcon(g2D, icon, point);
         }
     }
     

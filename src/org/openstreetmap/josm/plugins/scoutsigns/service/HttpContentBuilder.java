@@ -31,8 +31,8 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.service;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 
@@ -86,7 +86,7 @@ class HttpContentBuilder {
      * @param status a {@code Status}
      * @param duplicateOf a sign identifier
      */
-    HttpContentBuilder(Collection<Long> signIds, String username, String text,
+    HttpContentBuilder(List<Long> signIds, String username, String text,
             Status status, Long duplicateOf) {
         this(username, text, status, duplicateOf);
         StringBuilder sb = new StringBuilder();

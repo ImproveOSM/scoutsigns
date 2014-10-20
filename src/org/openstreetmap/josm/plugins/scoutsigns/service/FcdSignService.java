@@ -32,7 +32,7 @@
 package org.openstreetmap.josm.plugins.scoutsigns.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
@@ -66,8 +66,7 @@ public class FcdSignService {
      */
     public FcdSignService() {
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(SignPosition.class,
-                new SignPositionDeserializer());
+        builder.registerTypeAdapter(SignPosition.class, new SignPositionDeserializer());
         builder.registerTypeAdapter(Status.class, new StatusDeserializer());
         this.gson = builder.create();
     }
@@ -85,14 +84,14 @@ public class FcdSignService {
      * @throws FcdSignServiceException if an error occurred during the
      * FcdSignService method execution
      */
-    public Collection<RoadSign> searchSigns(BoundingBox bbox,
-            SearchFilter filter, int zoom) throws FcdSignServiceException {
+    public List<RoadSign> searchSigns(BoundingBox bbox, SearchFilter filter,
+            int zoom) throws FcdSignServiceException {
         String url = new HttpQueryBuilder(bbox, filter, zoom).build(
                 Constants.SEARCH_SIGNS);
         Root root = executeGet(url);
         verifyStatus(root);
-        return root.getRoadSigns() != null ? root.getRoadSigns()
-                : new ArrayList<RoadSign>();
+        return root.getRoadSigns() != null ? root.getRoadSigns() : 
+            new ArrayList<RoadSign>();
     }
     
     /**
@@ -125,7 +124,7 @@ public class FcdSignService {
      */
     public void addComment(Long signId, String username, String text,
             Status status, Long duplicateOf) throws FcdSignServiceException {
-        Map<String, String> content = new HttpContentBuilder(signId, username, 
+        Map<String, String> content = new HttpContentBuilder(signId, username,
                 text, status, duplicateOf).getContent();
         String url = new HttpQueryBuilder().build(Constants.ADD_COMMENT);
         Root root = executePost(url, content);
@@ -147,9 +146,8 @@ public class FcdSignService {
      * @throws FcdSignServiceException if an error occurred during the
      * FcdSignService method execution
      */
-    public void addComments(Collection<Long> signIds, String username,
-            String text, Status status, Long duplicateOf)
-            throws FcdSignServiceException {
+    public void addComments(List<Long> signIds, String username, String text,
+            Status status, Long duplicateOf) throws FcdSignServiceException {
         Map<String, String> content = new HttpContentBuilder(signIds, username, 
                 text, status, duplicateOf).getContent();
         String url = new HttpQueryBuilder().build(Constants.ADD_COMMENTS);
