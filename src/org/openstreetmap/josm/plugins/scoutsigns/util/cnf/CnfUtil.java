@@ -41,6 +41,7 @@ import java.util.Properties;
 
 
 /**
+ * Utility class, holds runtime properties.
  * 
  * @author Bea
  * @version $Revision$

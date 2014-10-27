@@ -13,6 +13,7 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.gui.details;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -27,6 +28,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter.RoadSignFilt
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltCnf;
 
 
 /**
@@ -38,6 +40,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
 class ButtonPanel extends JPanel {
     
     private static final long serialVersionUID = -853684446082269916L;
+    private static final Dimension DIM = new Dimension(200,23);
     
     private static final int ROWS = 1;
     private static final int COLS = 5;
@@ -60,14 +63,17 @@ class ButtonPanel extends JPanel {
         
         // add components
         IconCnf iconCnf = IconCnf.getInstance();
+        TltCnf tltCnf = TltCnf.getInstance();
         add(Builder.buildButton(new DisplayFilterDialog(),
-                iconCnf.getFilterIcon()));
-        add(Builder.buildButton(new DisplayImageFrame(), iconCnf.getPhotoIcon()));
-        add(Builder.buildButton(null, iconCnf.getTripIcon()));
+                iconCnf.getFilterIcon(), tltCnf.getBtnFilter()));
+        add(Builder.buildButton(new DisplayImageFrame(), iconCnf.getPhotoIcon(), 
+                tltCnf.getBtnPhoto()));
+        add(Builder.buildButton(null, iconCnf.getTripIcon(), tltCnf.getBtnTrip()));
         add(Builder.buildButton(new DisplayCommentDialog(),
-                iconCnf.getCommentIcon()));
+                iconCnf.getCommentIcon(), tltCnf.getBtnComment()));
         add(Builder.buildButton(new DisplayEditMenu(),
-                iconCnf.getMoreActionIcon()));
+                iconCnf.getMoreActionIcon(), tltCnf.getBtnMoreAction()));
+        setPreferredSize(DIM);
     }
     
     

@@ -113,6 +113,7 @@ class RoadSignPanel extends InfoPanel<RoadSign> {
     }
     
     private void addCreated(Long created, int widthLbl) {
+        System.out.println("created:" + created);
         add(Builder.buildLabel(getGuiCnf().getLblCreated(), FontUtil.BOLD_12,
                 new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
         String createdStr = DateUtil.formatTimestamp(created);

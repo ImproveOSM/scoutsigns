@@ -95,7 +95,7 @@
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}" />
 				<attribute name="Plugin-Description" value="The scoutsigns plugin
 					displays the captured road signs on the map." />
-				<attribute name="Plugin-Icon" value="images/placeholder_icon_50.png" />
+				<attribute name="Plugin-Icon" value="images/scoutsigns_logo_50x50.png" />
 				<attribute name="Plugin-Mainversion" value="1" />
 				<attribute name="Plugin-Version" value="${build-label}" />
 			</manifest>

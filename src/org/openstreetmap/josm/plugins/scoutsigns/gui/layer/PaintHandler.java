@@ -40,6 +40,7 @@ import javax.swing.ImageIcon;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.TypeIconFactory;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
 
 
 /**
@@ -63,7 +64,7 @@ class PaintHandler {
      * @param selRoadSigns the selected {@code RoadSigns}
      */
     void drawRoadSigns(Graphics2D g2D, MapView mv, List<RoadSign> roadSigns,
-             List<RoadSign> selRoadSigns) {
+            List<RoadSign> selRoadSigns) {
         for (RoadSign roadSign : roadSigns) {
             boolean selected = selRoadSigns.contains(roadSign);
             drawRoadSign(g2D, mv, roadSign, selected);
@@ -74,9 +75,10 @@ class PaintHandler {
             boolean selected) {
         Point point = mv.getPoint(roadSign.getSignPos().getPosition());
         if (mv.contains(point)) {
-            ImageIcon icon = null;
-            icon = iconFactory.getIcon(roadSign.getType(), selected);
-            drawIcon(g2D, icon, point);
+            if (selected) {
+                drawIcon(g2D, IconCnf.getInstance().getSelRoadSignBg(), point);
+            }
+            drawIcon(g2D, iconFactory.getIcon(roadSign.getType()), point);
         }
     }
     

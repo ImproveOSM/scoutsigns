@@ -49,7 +49,7 @@ public class RoadSignFilterDialog extends JDialog {
     
     private static final long serialVersionUID = 7883099145424623783L;
     
-    private static final Dimension DIM = new Dimension(380, 360);
+    private static final Dimension DIM = new Dimension(370, 360);
     private RoadSignFilterPanel pnlFilter;
     
     

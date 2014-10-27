@@ -46,7 +46,6 @@ import java.util.TimeZone;
  */
 public final class DateUtil {
     
-    private static final Long TSTP_VAL = 1000L;
     private static final String MONTH = "MMMM yyyy";
     private static final String DAY = "MMM d, yyyy";
     private static final String TSTP = "yyyy-MM-dd HH:mm:ss";
@@ -64,7 +63,7 @@ public final class DateUtil {
     public static String formatTimestamp(Long timestamp) {
         SimpleDateFormat dateTimeFormat = new SimpleDateFormat(TSTP);
         dateTimeFormat.setTimeZone(TimeZone.getDefault());
-        Date date = new Date(timestamp * TSTP_VAL);
+        Date date = new Date(timestamp );
         return date != null ? dateTimeFormat.format(date) : "";
     }
     

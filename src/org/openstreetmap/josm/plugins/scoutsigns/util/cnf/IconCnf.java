@@ -38,6 +38,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 
 /**
+ * Utility class, holds icons and icon paths.
  * 
  * @author Bea
  * @version $Revision$
@@ -52,17 +53,24 @@ public final class IconCnf {
     
     private final String shcName;
     private final Icon layerIcon;
+    
+    /* button panel icons */
     private final ImageIcon filterIcon;
     private final ImageIcon photoIcon;
     private final Icon tripIcon;
     private final ImageIcon commentIcon;
     private final Icon moreActionIcon;
-    private final String typeIconPath;
     
+    /* road sign status icons */
     private final ImageIcon openIcon;
     private final ImageIcon solvedIcon;
     private final ImageIcon invalidIcon;
     private final ImageIcon duplicateIcon;
+    
+    /*  road sign icons & path names */
+    private final ImageIcon selRoadSignBg;
+    private final String typeIconPath;
+    private final String defTypeIconName;
     
     
     private IconCnf() {
@@ -74,12 +82,15 @@ public final class IconCnf {
         tripIcon = getIcon(properties, "trip.icon");
         commentIcon = getIcon(properties, "comment.icon");
         moreActionIcon = getIcon(properties, "more.icon");
-        typeIconPath = CnfUtil.readProperty(properties, "types.path");
         
-        openIcon = getIcon(properties, "status.open");
-        solvedIcon = getIcon(properties, "status.solved");
-        invalidIcon =getIcon(properties, "status.invalid");
-        duplicateIcon = getIcon(properties, "status.duplicate");
+        openIcon = getIcon(properties, "status.open.icon");
+        solvedIcon = getIcon(properties, "status.solved.icon");
+        invalidIcon =getIcon(properties, "status.invalid.icon");
+        duplicateIcon = getIcon(properties, "status.duplicate.icon");
+
+        typeIconPath = CnfUtil.readProperty(properties, "sign.types.path");
+        selRoadSignBg = getIcon(properties, "sign.sel.bg");
+        defTypeIconName = CnfUtil.readProperty(properties, "sign.types.def");
     }
     
     
@@ -137,5 +148,13 @@ public final class IconCnf {
     
     public ImageIcon getDuplicateIcon() {
         return duplicateIcon;
+    }
+    
+    public ImageIcon getSelRoadSignBg() {
+        return selRoadSignBg;
+    }
+    
+    public String getDefTypeIconName() {
+        return defTypeIconName;
     }
 }

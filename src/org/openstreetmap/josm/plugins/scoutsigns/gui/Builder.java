@@ -39,14 +39,17 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.MouseListener;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -205,9 +208,10 @@ public final class Builder {
      * @param enabled if true the item is enabled, if false it is disabled
      * @return a {@code JMenuItem}
      */
-    public static JMenuItem buildMenuItem(String text, Icon icon,
+    public static JMenuItem buildMenuItem(Icon icon, String text,  String tooltip,
             MouseListener listener, boolean enabled) {
         JMenuItem menuItem = new JMenuItem(text, icon);
+        menuItem.setToolTipText(tooltip);
         if (enabled) {
             menuItem.addMouseListener(listener);
         }
@@ -223,7 +227,7 @@ public final class Builder {
      * @param bgColor the background color
      * @return a {@code JRadioButton}
      */
-    public static JRadioButton buildRadioButton(String text, Font font, 
+    public static JRadioButton buildRadioButton(String text, Font font,
             Color bgColor) {
         JRadioButton radioButton = new JRadioButton(text);
         radioButton.setBackground(bgColor);
@@ -255,7 +259,8 @@ public final class Builder {
      * @param icon the {@code Icon} to be displayed on the button
      * @return a {@code JButton}
      */
-    public static JButton buildButton(AbstractAction action, Icon icon) {
+    public static JButton buildButton(AbstractAction action, Icon icon,
+            String tooltip) {
         JButton btn;
         if (action == null) {
             btn = new JButton();
@@ -263,6 +268,7 @@ public final class Builder {
             btn = new JButton(action);
         }
         btn.setIcon(icon);
+        btn.setToolTipText(tooltip);
         btn.setFocusable(false);
         return btn;
     }
@@ -340,5 +346,29 @@ public final class Builder {
         panel.add(cmpRight);
         panel.add(Box.createHorizontalStrut(HEADER_WIDTH));
         return panel;
+    }
+    
+    /***
+     * Builds a {@code JList} with the given components.
+     * 
+     * @param data the data to be added into the list
+     * @param selModel the selection model
+     * @param orientation the list orientation
+     * @param selData the selected data
+     * @return a {@code JList} object
+     */
+    public static <T> JList<T> buildList(List<T> data, int selModel,
+            int orientation, T selData) {
+        DefaultListModel<T> model = new DefaultListModel<>();
+        for (T elem : data) {
+            model.addElement(elem);
+        }
+        JList<T> list = new JList<>(model);
+        list.setFont(FontUtil.PLAIN_12);
+        list.setLayoutOrientation(orientation);
+        list.setVisibleRowCount(-1);
+        list.setSelectionMode(selModel);
+        list.setSelectedValue(selData, true);
+        return list;
     }
 }

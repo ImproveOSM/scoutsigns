@@ -34,8 +34,8 @@ package org.openstreetmap.josm.plugins.scoutsigns.gui;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.ImageIcon;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.tools.Pair;
 
 
 /**
@@ -46,17 +46,10 @@ import org.openstreetmap.josm.tools.Pair;
  */
 public final class TypeIconFactory {
     
-    private static Map<String, Pair<ImageIcon, ImageIcon>> map;
-    
-    /* the icons path */
-    private static final String PATH = "types/normal/";
-    private static final String SEL_PATH = "types/selected/";
+    private static Map<String, ImageIcon> map;
     
     /* the icons extension */
     private static final String EXT = ".png";
-    
-    /* default icon to be used if no corresponding icon found */
-    private static final String DF_ICON = "UNKNOWN";
     
     private static final TypeIconFactory UNIQUE_INSTANCE =
             new TypeIconFactory();
@@ -77,31 +70,25 @@ public final class TypeIconFactory {
     }
     
     /**
-     * Returns the icon corresponding to the given type.
+     * Returns the icon corresponding to the given type. The method returns
+     * a default icon, if no icon corresponds to the given type.
      * 
      * @param type specifies a road sign type
-     * @param selected if true a "selected" icon is returned
      * @return an {@code ImageIcon} object
      */
-    public ImageIcon getIcon(String type, boolean selected) {
-        Pair<ImageIcon, ImageIcon> imgPair = map.get(type);
-        if (imgPair == null) {
+    public ImageIcon getIcon(String type) {
+        ImageIcon typeIcon = map.get(type);
+        if (typeIcon == null) {
             ImageIcon icon;
             try {
-                icon = ImageProvider.get(PATH + type + EXT);
+                icon = ImageProvider.get(IconCnf.getInstance().getTypeIconPath() 
+                        + type + EXT);
             } catch (RuntimeException ex) {
-                icon = ImageProvider.get(PATH + DF_ICON + EXT);
+                icon = ImageProvider.get(IconCnf.getInstance().getTypeIconPath() 
+                        + IconCnf.getInstance().getDefTypeIconName() + EXT);
             }
-            
-            ImageIcon selIcon;
-            try {
-                selIcon = ImageProvider.get(SEL_PATH + type + EXT);
-            } catch (RuntimeException ex) {
-                selIcon = ImageProvider.get(SEL_PATH + DF_ICON + EXT);
-            }
-            imgPair = new Pair<ImageIcon, ImageIcon>(icon, selIcon);
-            map.put(type, imgPair);
+            typeIcon = icon;
         }
-        return selected ? imgPair.b : imgPair.a;
+        return typeIcon;
     }
 }
