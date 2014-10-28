@@ -51,6 +51,7 @@ class RoadSignPanel extends InfoPanel<RoadSign> {
         addHeight(roadSign.getSignPos().getHeight(), widthLbl);
         addType(roadSign.getType(), widthLbl);
         addStatus(roadSign.getStatus(), widthLbl);
+        addConfidence(roadSign.getConfidence(), widthLbl);
         addCreated(roadSign.getTstamp(), widthLbl);
         addDupl(roadSign.getDuplicateOf(), widthLbl);
         int pnlHeight = y + SPACE_Y;
@@ -108,6 +109,16 @@ class RoadSignPanel extends InfoPanel<RoadSign> {
         int widthVal = FontUtil.FM_PLAIN_12.stringWidth(status.name());
         add(Builder.buildLabel(status.name(), FontUtil.PLAIN_12, new Rectangle(
                 widthLbl, y, widthVal, LHEIGHT)));
+        pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
+        y = y + LHEIGHT;
+    }
+    
+    private void addConfidence(Short confidence, int widthLbl) {
+        add(Builder.buildLabel(getGuiCnf().getLblConf(), FontUtil.BOLD_12,
+                new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
+        int widthVal = FontUtil.FM_PLAIN_12.stringWidth(confidence.toString());
+        add(Builder.buildLabel(confidence.toString(), FontUtil.PLAIN_12, 
+                new Rectangle(widthLbl, y, widthVal, LHEIGHT)));
         pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
         y = y + LHEIGHT;
     }
