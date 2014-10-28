@@ -43,7 +43,6 @@ import org.openstreetmap.josm.data.coor.LatLon;
  */
 public class RoadSign {
     
-    
     private Long id;
     private String type;
     private Long tstamp;
