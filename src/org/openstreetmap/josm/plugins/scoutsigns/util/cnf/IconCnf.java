@@ -60,6 +60,7 @@ public final class IconCnf {
     private final Icon tripIcon;
     private final ImageIcon commentIcon;
     private final Icon moreActionIcon;
+    private final Icon backIcon;
     
     /* road sign status icons */
     private final ImageIcon openIcon;
@@ -82,12 +83,11 @@ public final class IconCnf {
         tripIcon = getIcon(properties, "trip.icon");
         commentIcon = getIcon(properties, "comment.icon");
         moreActionIcon = getIcon(properties, "more.icon");
-        
+        backIcon = getIcon(properties, "back.icon"); 
         openIcon = getIcon(properties, "status.open.icon");
         solvedIcon = getIcon(properties, "status.solved.icon");
         invalidIcon =getIcon(properties, "status.invalid.icon");
         duplicateIcon = getIcon(properties, "status.duplicate.icon");
-
         typeIconPath = CnfUtil.readProperty(properties, "sign.types.path");
         selRoadSignBg = getIcon(properties, "sign.sel.bg");
         defTypeIconName = CnfUtil.readProperty(properties, "sign.types.def");
@@ -130,6 +130,10 @@ public final class IconCnf {
         return moreActionIcon;
     }
     
+    public Icon getBackIcon() {
+        return backIcon;
+    }
+
     public String getTypeIconPath() {
         return typeIconPath;
     }

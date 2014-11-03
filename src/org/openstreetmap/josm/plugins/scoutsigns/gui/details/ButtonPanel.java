@@ -20,12 +20,15 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter.RoadSignFilterDialog;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
+import org.openstreetmap.josm.plugins.scoutsigns.observer.TripViewObservable;
+import org.openstreetmap.josm.plugins.scoutsigns.observer.TripViewObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltCnf;
@@ -37,17 +40,25 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltCnf;
  * @author Bea
  * @version $Revision$
  */
-class ButtonPanel extends JPanel {
+class ButtonPanel extends JPanel implements TripViewObservable {
     
     private static final long serialVersionUID = -853684446082269916L;
-    private static final Dimension DIM = new Dimension(200,23);
+    private static final Dimension DIM = new Dimension(200, 23);
     
     private static final int ROWS = 1;
     private static final int COLS = 5;
     
+    private TripViewObserver observer;
+    
     /* the selected road sign */
     private RoadSign roadSign;
     private ImageFrame imgFrame;
+    
+    /* components that's state changes */
+    private JButton btnFilter;
+    private JButton btnBack;
+    private JButton btnTrip;
+    
     
     private StatusChangeObserver statusChangeObserver;
     
@@ -62,13 +73,19 @@ class ButtonPanel extends JPanel {
         super(new GridLayout(ROWS, COLS));
         
         // add components
+        
         IconCnf iconCnf = IconCnf.getInstance();
         TltCnf tltCnf = TltCnf.getInstance();
-        add(Builder.buildButton(new DisplayFilterDialog(),
-                iconCnf.getFilterIcon(), tltCnf.getBtnFilter()));
-        add(Builder.buildButton(new DisplayImageFrame(), iconCnf.getPhotoIcon(), 
-                tltCnf.getBtnPhoto()));
-        add(Builder.buildButton(null, iconCnf.getTripIcon(), tltCnf.getBtnTrip()));
+        btnFilter = Builder.buildButton(new DisplayFilterDialog(),
+                iconCnf.getFilterIcon(), tltCnf.getBtnFilter());
+        btnBack = Builder.buildButton(new ExitTrip(), iconCnf.getBackIcon(),
+                tltCnf.getBtnBack());
+        btnTrip = Builder.buildButton(new DisplayTrip(), iconCnf.getTripIcon(),
+                tltCnf.getBtnTrip());
+        add(btnFilter);
+        add(Builder.buildButton(new DisplayImageFrame(),
+                iconCnf.getPhotoIcon(), tltCnf.getBtnPhoto()));
+        add(btnTrip);
         add(Builder.buildButton(new DisplayCommentDialog(),
                 iconCnf.getCommentIcon(), tltCnf.getBtnComment()));
         add(Builder.buildButton(new DisplayEditMenu(),
@@ -104,6 +121,38 @@ class ButtonPanel extends JPanel {
     }
     
     
+    /* TripViewObservable implementation*/
+    
+    @Override
+    public void registerObserver(TripViewObserver observer) {
+        this.observer = observer;
+    }
+    
+    @Override
+    public void notifyObserver(boolean enterView) {
+        if (enterView) {
+            this.observer.enterTripView();
+        } else {
+            this.observer.exitTripView();
+        }
+    }
+    
+    
+    /*
+     * Displays the filter dialog window.
+     */
+    private final class DisplayFilterDialog extends AbstractAction {
+        
+        private static final long serialVersionUID = -7084091586699723933L;
+        
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            RoadSignFilterDialog dlgFilter = new RoadSignFilterDialog();
+            dlgFilter.setVisible(true);
+        }
+    }
+    
+    
     /*
      * Displays the selected road sign's image.
      */
@@ -125,18 +174,44 @@ class ButtonPanel extends JPanel {
     
     
     /*
-     * Displays the filter dialog window.
+     * Displays the selected road sign's trip.
      */
-    private final class DisplayFilterDialog extends AbstractAction {
+    private final class DisplayTrip extends AbstractAction {
         
-        private static final long serialVersionUID = -7084091586699723933L;
+        private static final long serialVersionUID = 559317768633883689L;
         
         @Override
         public void actionPerformed(ActionEvent event) {
-            RoadSignFilterDialog dlgFilter = new RoadSignFilterDialog();
-            dlgFilter.setVisible(true);
+            if (roadSign != null && roadSign.getNearbyPos() != null) {
+                remove(0);
+                add(btnBack, 0);
+                btnTrip.setEnabled(false);
+                revalidate();
+                repaint();
+                notifyObserver(true);
+            }
         }
     }
+    
+    
+    /*
+     * Exit the trip view.
+     */
+    private final class ExitTrip extends AbstractAction {
+        
+        private static final long serialVersionUID = -5015385030138059426L;
+        
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            remove(0);
+            add(btnFilter, 0);
+            btnTrip.setEnabled(true);
+            repaint();
+            notifyObserver(false);
+        }
+        
+    }
+    
     
     /*
      * Displays the comment dialog window.
@@ -148,14 +223,15 @@ class ButtonPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent event) {
             if (roadSign != null) {
-                EditDialog dlgComment = new EditDialog(null, 
-                        GuiCnf.getInstance().getDlgCommentTitle(), 
-                        IconCnf.getInstance().getCommentIcon().getImage());
+                EditDialog dlgComment = new EditDialog(null, GuiCnf.getInstance().
+                        getDlgCommentTitle(), IconCnf.getInstance().
+                        getCommentIcon().getImage());
                 dlgComment.registerObserver(statusChangeObserver);
                 dlgComment.setVisible(true);
             }
         }
     }
+    
     
     /*
      * Displays the edit menu.
@@ -170,8 +246,7 @@ class ButtonPanel extends JPanel {
                 EditPopupMenu editMenu = new EditPopupMenu(statuses);
                 editMenu.registerStatusChangeObserver(statusChangeObserver);
                 editMenu.show(ButtonPanel.this, 0, 0);
-                Point point = getComponent(getComponentCount() - 1).
-                        getLocationOnScreen();
+                Point point = getComponent(getComponentCount() - 1).getLocationOnScreen();
                 editMenu.setLocation(point.x, point.y - getHeight());
             }
         }

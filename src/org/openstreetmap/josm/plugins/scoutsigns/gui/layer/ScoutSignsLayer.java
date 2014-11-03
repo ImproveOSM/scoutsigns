@@ -62,6 +62,8 @@ public class ScoutSignsLayer extends Layer {
     private List<RoadSign> roadSigns;
     private List<RoadSign> selRoadSigns;
     
+    private boolean tripView;
+    
     
     /**
      * Builds a new {@code SkoSignsLayer} with default functionality.
@@ -128,7 +130,9 @@ public class ScoutSignsLayer extends Layer {
     @Override
     public void paint(Graphics2D g2D, MapView mv, Bounds bounds) {
         mv.setDoubleBuffered(true);
-        if (roadSigns != null) {
+        if (tripView) {
+            paintHandler.drawTripData(g2D, mv, selRoadSigns.get(0));
+        } else if (roadSigns != null) {
             paintHandler.drawRoadSigns(g2D, mv, roadSigns, selRoadSigns);
         }
     }
@@ -138,12 +142,49 @@ public class ScoutSignsLayer extends Layer {
         // not supported
     }
     
+    /**
+     * Sets the list of road signs. If there is any selected element, that is
+     * not present in the given list of road signs it will be removed.
+     * 
+     * @param roadSigns a list of {@code RoadSign}s
+     */
     public void setRoadSigns(List<RoadSign> roadSigns) {
         this.roadSigns = roadSigns;
+        
+        // check previously selected elements
+        checkSelRoadSigns(); 
     }
     
+    private void checkSelRoadSigns() {
+        if (!selRoadSigns.isEmpty() && roadSigns != null) {
+            for (RoadSign elem: roadSigns) {
+                if (!this.roadSigns.contains(elem)) {
+                    selRoadSigns.remove(elem);
+                }
+            }
+        }
+    }
     
     public List<RoadSign> getSelRoadSigns() {
         return selRoadSigns;
+    }
+    
+    /**
+     * Return the last selected road sign. If no road sign is selected the
+     * method returns null.
+     * 
+     * @return a {@code RoadSign} object
+     */
+    public RoadSign lastSelRoadSign() {
+        return selRoadSigns.isEmpty() ? null : selRoadSigns.get(selRoadSigns
+                .size() - 1);
+    }
+    
+    public boolean isTripView() {
+        return tripView;
+    }
+    
+    public void setTripView(boolean tripView) {
+        this.tripView = tripView;
     }
 }

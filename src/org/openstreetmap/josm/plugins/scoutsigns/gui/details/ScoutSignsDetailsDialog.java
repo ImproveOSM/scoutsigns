@@ -38,6 +38,7 @@ import javax.swing.JPanel;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
+import org.openstreetmap.josm.plugins.scoutsigns.observer.TripViewObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltCnf;
@@ -105,5 +106,14 @@ public class ScoutSignsDetailsDialog extends ToggleDialog {
      */
     public void registerStatusChangeObserver(StatusChangeObserver observer) {
         pnlBtn.registerStatusChangeObserver(observer);
+    }
+    
+    /**
+     * Registers the given trip view observer.
+     * 
+     * @param observer a {@code TripViewObserver}
+     */
+    public void registerTripViewObserver(TripViewObserver observer) {
+        pnlBtn.registerObserver(observer);
     }
 }

@@ -31,12 +31,17 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.gui.layer;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.ImageObserver;
 import java.util.List;
 import javax.swing.ImageIcon;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.TypeIconFactory;
@@ -50,6 +55,12 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
  * @version $Revision$
  */
 class PaintHandler {
+    
+    private static final Composite POS_COMP = AlphaComposite.getInstance(
+            AlphaComposite.SRC_OVER, 0.60f);
+    private static final Composite COMP = AlphaComposite.getInstance(
+            AlphaComposite.SRC_OVER, 1f);
+    private static final double RADIUS = 15.0;
     
     private TypeIconFactory iconFactory = TypeIconFactory.getInstance();
     
@@ -69,6 +80,31 @@ class PaintHandler {
             boolean selected = selRoadSigns.contains(roadSign);
             drawRoadSign(g2D, mv, roadSign, selected);
         }
+    }
+    
+    /**
+     * Draws the given road sign along with the trip data (nearby positions) 
+     * to the map.
+     * 
+     * @param g2D the {@code Graphics2D} used to draw
+     * @param mv the current {@code MapView}
+     * @param roadSign the {@code RoadSign} to be drawn
+     */
+    void drawTripData(Graphics2D g2D, MapView mv, RoadSign roadSign) {
+        // draw positions
+        g2D.setComposite(POS_COMP);
+        if (roadSign.getNearbyPos() != null) {
+            for (LatLon latLon : roadSign.getNearbyPos()) {
+                Point point = mv.getPoint(latLon);
+                if (mv.contains(point)) {
+                    drawCircle(g2D, point, Color.red, RADIUS);
+                }
+            }
+        }
+        // draw road sign
+        g2D.setComposite(COMP);
+        drawRoadSign(g2D, mv, roadSign, true);
+        
     }
     
     private void drawRoadSign(Graphics2D g2D, MapView mv, RoadSign roadSign,
@@ -92,5 +128,14 @@ class PaintHandler {
                 return false;
             }
         });
+    }
+
+    private void drawCircle(Graphics2D g2D, Point point, Color color,
+            Double radius) {
+        Ellipse2D.Double circle = new Ellipse2D.Double(point.x - radius / 2, 
+                point.y - radius / 2, radius, radius);
+        g2D.setColor(color);
+        g2D.fill(circle);
+        g2D.draw(circle);
     }
 }

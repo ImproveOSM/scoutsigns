@@ -60,6 +60,7 @@ public final class TltCnf {
     private final String btnTrip;
     private final String btnComment;
     private final String btnMoreAction;
+    private final String btnBack;
     private final String btnInvalid;
     private final String btnSolved;
     private final String btnDuplicate;
@@ -77,6 +78,7 @@ public final class TltCnf {
         btnTrip = CnfUtil.readProperty(properties, "btn.trip");
         btnComment = CnfUtil.readProperty(properties, "btn.comment");
         btnMoreAction = CnfUtil.readProperty(properties, "btn.more");
+        btnBack  = CnfUtil.readProperty(properties, "btn.back");
         btnInvalid = CnfUtil.readProperty(properties, "btn.invalid");
         btnSolved = CnfUtil.readProperty(properties, "btn.solved");
         btnDuplicate = CnfUtil.readProperty(properties, "btn.duplicate");
@@ -124,6 +126,10 @@ public final class TltCnf {
         return btnMoreAction;
     }
     
+    public String getBtnBack() {
+        return btnBack;
+    }
+
     public String getBtnInvalid() {
         return btnInvalid;
     }
