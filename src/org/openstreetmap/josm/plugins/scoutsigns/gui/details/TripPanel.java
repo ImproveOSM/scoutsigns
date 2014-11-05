@@ -63,7 +63,7 @@ class TripPanel extends InfoPanel<Trip> {
     }
     
     private void addMode(String mode, int widthLbl) {
-        if (mode != null) {
+        if (mode != null && ! mode.isEmpty()) {
             add(Builder.buildLabel(getGuiCnf().getLblMode(), FontUtil.BOLD_12,
                     new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
             int widthVal = FontUtil.FM_PLAIN_12.stringWidth(mode);
@@ -75,7 +75,7 @@ class TripPanel extends InfoPanel<Trip> {
     }
     
     private void addProfile(String profile, int widthLbl) {
-        if (profile != null) {
+        if (profile != null && !profile.isEmpty()) {
             add(Builder.buildLabel(getGuiCnf().getLblProfile(), FontUtil.BOLD_12, 
                     new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
             int widthVal = FontUtil.FM_PLAIN_12.stringWidth(profile);
