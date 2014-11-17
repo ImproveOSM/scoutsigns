@@ -99,7 +99,8 @@ class RoadSignFilterPanel extends JPanel {
         Long from = tstampFilter != null ? tstampFilter.getFrom() : null;
         cbboxStart = new CalendarComboBox(from);
         add(cbboxStart, Constraints.CBB_START);
-        cbboxEnd = new CalendarComboBox(null);
+        Long to = tstampFilter != null ? tstampFilter.getTo() : null;
+        cbboxEnd = new CalendarComboBox(to);
         add(cbboxEnd, Constraints.CBB_END);
     }
     
