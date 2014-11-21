@@ -95,6 +95,8 @@ public final class GuiCnf {
     private final String dlgMissingTitle;
     private final String txtCommentWarning;
     private final String txtDuplIdWarning;
+    private final String txtDuplIdInvalid;
+    private final String txtConfInvalid;
     private final String txtDuplIdCommentWarning;
     
     private final String txtMenuSolve;
@@ -154,14 +156,19 @@ public final class GuiCnf {
         btnReset = CnfUtil.readProperty(properties, "btn.reset");
         btnCancel = CnfUtil.readProperty(properties, "bnt.cancel");
         
-        dlgWarningTitle = CnfUtil.readProperty(properties, "warning.general.title");
+        dlgWarningTitle = CnfUtil.readProperty(properties, 
+                "warning.general.title");
         dlgMissingTitle = CnfUtil.readProperty(properties, 
                 "warning.missing.title");
         txtCommentWarning = CnfUtil.readProperty(properties, 
                 "warning.missing.comment");
         txtDuplIdWarning = CnfUtil.readProperty(properties, 
                 "warning.missing.dupl");
-        txtDuplIdCommentWarning= CnfUtil.readProperty(properties, 
+        txtDuplIdInvalid = CnfUtil.readProperty(properties, 
+                "warning.invalid.dupl");
+        txtConfInvalid = CnfUtil.readProperty(properties, 
+                "warning.invalid.conf");
+        txtDuplIdCommentWarning = CnfUtil.readProperty(properties, 
                 "warning.missing.bot");
         
         /* menu item texts */
@@ -314,10 +321,18 @@ public final class GuiCnf {
         return txtDuplIdWarning;
     }
     
+    public String getTxtDuplIdInvalid() {
+        return txtDuplIdInvalid;
+    }
+    
+    public String getTxtConfInvalid() {
+        return txtConfInvalid;
+    }
+    
     public String getTxtDuplIdCommentWarning() {
         return txtDuplIdCommentWarning;
     }
-
+    
     public String getTxtMenuSolve() {
         return txtMenuSolve;
     }

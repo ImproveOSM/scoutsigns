@@ -44,10 +44,13 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
  */
 public class SearchFilter {
     
+    public static final short DEF_CONFIDENCE = 90;
+    
     private TimestampFilter timestampFilter;
     private String type;
     private Status status;
     private Long duplicateOf;
+    private Short confidence;
     private Application app;
     private Device device;
     
@@ -68,11 +71,13 @@ public class SearchFilter {
      * @param username the user's OSM user name
      */
     public SearchFilter(TimestampFilter timestampFilter, String type,
-            Status status, Long duplicateOf, Application app, Device device) {
+            Status status, Long duplicateOf, Short confidence, Application app,
+            Device device) {
         this.timestampFilter = timestampFilter;
         this.type = type;
         this.status = status;
         this.duplicateOf = duplicateOf;
+        this.confidence = confidence;
         this.app = app;
         this.device = device;
     }
@@ -94,6 +99,10 @@ public class SearchFilter {
         return duplicateOf;
     }
     
+    public Short getConfidence() {
+        return confidence;
+    }
+    
     public Application getApp() {
         return app;
     }
@@ -109,6 +118,7 @@ public class SearchFilter {
         result = prime * result + ObjectUtil.hashCode(app);
         result = prime * result + ObjectUtil.hashCode(device);
         result = prime * result + ObjectUtil.hashCode(duplicateOf);
+        result = prime * result + ObjectUtil.hashCode(confidence);
         result = prime * result + ObjectUtil.hashCode(status);
         result = prime * result + ObjectUtil.hashCode(timestampFilter);
         result = prime * result + ObjectUtil.hashCode(type);
@@ -126,10 +136,12 @@ public class SearchFilter {
                     other.getTimestampFilter());
             result = result && ObjectUtil.bothNullOrEqual(status, other.getStatus());
             result = result && ObjectUtil.bothNullOrEqual(type, other.getType());
-            result = result && ObjectUtil.bothNullOrEqual(duplicateOf,
+            result = result && ObjectUtil.bothNullOrEqual(duplicateOf, 
                     other.getDuplicateOf());
+            result = result && ObjectUtil.bothNullOrEqual(confidence,
+                    other.getConfidence());
             result = result && ObjectUtil.bothNullOrEqual(app, other.getApp());
-            result = result && ObjectUtil.bothNullOrEqual(device,
+            result = result && ObjectUtil.bothNullOrEqual(device, 
                     other.getDevice());
         }
         return result;

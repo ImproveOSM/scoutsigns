@@ -51,6 +51,8 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
  */
 public final class PrefManager {
     
+    private static final String NULL = "null";
+    
     private static final PrefManager UNIQUE_INSTANCE = new PrefManager();
     
     
@@ -93,6 +95,7 @@ public final class PrefManager {
         String type = "";
         String status = "";
         String duplicate = "";
+        String confidence = "";
         String appName = "";
         String appVersion = "";
         String osName = "";
@@ -103,14 +106,16 @@ public final class PrefManager {
                 TimestampFilter tstpFilter = filter.getTimestampFilter();
                 from = tstpFilter.getFrom() != null ? tstpFilter.getFrom().
                         toString() : "";
-                to = tstpFilter.getTo() != null ? tstpFilter.getTo().
-                        toString() : "";
+                to = tstpFilter.getTo() != null ? tstpFilter.getTo().toString() 
+                        : "";
             }
             type = filter.getType();
             status = filter.getStatus() != null ? filter.getStatus().name() : 
                 null;
             duplicate = filter.getDuplicateOf() != null ? 
                     filter.getDuplicateOf().toString() : null;
+            confidence = filter.getConfidence() != null ? 
+                    filter.getConfidence().toString() : NULL;
             if (filter.getApp() != null) {
                 appName = filter.getApp().getName();
                 appVersion = filter.getApp().getVersion();
@@ -125,6 +130,7 @@ public final class PrefManager {
         Main.pref.put(Keys.STATUS, status);
         Main.pref.put(Keys.TYPE, type);
         Main.pref.put(Keys.DUPLICATE, duplicate);
+        Main.pref.put(Keys.CONFIDENCE, confidence);
         Main.pref.put(Keys.APP_NAME, appName);
         Main.pref.put(Keys.APP_VERSION, appVersion);
         Main.pref.put(Keys.OS_NAME, osName);
@@ -139,6 +145,7 @@ public final class PrefManager {
     public SearchFilter loadSearchFilter() {
         String type = Main.pref.get(Keys.TYPE);
         String statusStr = Main.pref.get(Keys.STATUS);
+        String confidenceStr = Main.pref.get(Keys.CONFIDENCE);
         String appName = Main.pref.get(Keys.APP_NAME);
         String appVersion = Main.pref.get(Keys.APP_VERSION);
         String osName = Main.pref.get(Keys.OS_NAME);
@@ -149,15 +156,27 @@ public final class PrefManager {
         Status status = (statusStr != null && !statusStr.isEmpty()) ? 
                 Status.valueOf(statusStr) : null;
         Long duplicate = loadLongValue(Keys.DUPLICATE);
+        
+        Short confidence;
+        if (confidenceStr.isEmpty()) {
+            // never set
+            confidence = SearchFilter.DEF_CONFIDENCE;
+        } else if (confidenceStr.equals(NULL)) {
+            confidence = null;
+        } else {
+            confidence = Short.valueOf(confidenceStr);
+        }
+        
         return new SearchFilter(new TimestampFilter(from, to), type, status,
-                duplicate, new Application(appName, appVersion), new Device(
-                        osName, osVersion));
+                duplicate, confidence, new Application(appName, appVersion),
+                new Device(osName, osVersion));
     }
     
     private Long loadLongValue(String key) {
         String valueStr = Main.pref.get(key);
-        return (valueStr != null && !valueStr.isEmpty()) ? Long
-                .valueOf(valueStr) : null;
+        valueStr = valueStr.trim();
+        return (valueStr != null && !valueStr.isEmpty()) ? Long.valueOf(valueStr) 
+                : null;
     }
     
     /**

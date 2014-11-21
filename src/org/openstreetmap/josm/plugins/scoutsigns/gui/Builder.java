@@ -117,7 +117,7 @@ public final class Builder {
      * @param hAligment the horizontal alignment
      * @param textColor the text color
      * @param font the font of the label's text
-     * @return
+     * @return a new {@code JLabel} object
      */
     public static JLabel buildLabel(String text, String tooltip, int hAligment,
             Color txtColor, Font font) {
@@ -130,6 +130,23 @@ public final class Builder {
             lbl.setForeground(txtColor);
         }
         lbl.setFont(font);
+        return lbl;
+    }
+    
+    /**
+     * Builds a {@code JLabel} with the given properties.
+     * 
+     * @param text the text which will be shown on the label
+     * @param font the font of the label's text
+     * @param textColor the text color
+     * @param visible specifies if the label is visible or not
+     * @return a new {@code JLabel} object
+     */
+    public static JLabel buildLabel(String text, Font font, Color textColor,
+            boolean visible) {
+        JLabel lbl = buildLabel(text, font, null);
+        lbl.setForeground(textColor);
+        lbl.setVisible(visible);
         return lbl;
     }
     
@@ -208,8 +225,8 @@ public final class Builder {
      * @param enabled if true the item is enabled, if false it is disabled
      * @return a {@code JMenuItem}
      */
-    public static JMenuItem buildMenuItem(Icon icon, String text,  String tooltip,
-            MouseListener listener, boolean enabled) {
+    public static JMenuItem buildMenuItem(Icon icon, String text,
+            String tooltip, MouseListener listener, boolean enabled) {
         JMenuItem menuItem = new JMenuItem(text, icon);
         menuItem.setToolTipText(tooltip);
         if (enabled) {
@@ -313,10 +330,9 @@ public final class Builder {
     
     private static JScrollPane buildScrollPane(Component component,
             Color bgColor) {
-        JScrollPane scrollPane =
-                new JScrollPane(component,
-                        ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane scrollPane = new JScrollPane(component,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBackground(bgColor);
         scrollPane.setAutoscrolls(true);
         return scrollPane;

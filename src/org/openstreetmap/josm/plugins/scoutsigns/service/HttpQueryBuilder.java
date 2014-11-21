@@ -78,6 +78,7 @@ class HttpQueryBuilder {
             addStatusFilter(filter.getStatus());
             addTypeFilter(filter.getType());
             addDuplicateFilter(filter.getDuplicateOf());
+            addConfidenceFilter(filter.getConfidence());
             addApplicationCtiteria(filter.getApp());
             addDeviceFilter(filter.getDevice());
             
@@ -168,6 +169,13 @@ class HttpQueryBuilder {
         if (duplicateOf != null) {
             query.append(AND);
             query.append(Constants.DUPLICATE_OF).append(EQ).append(duplicateOf);
+        }
+    }
+    
+    private void addConfidenceFilter(Short confidence) {
+        if (confidence != null) {
+            query.append(AND);
+            query.append(Constants.CONFIDENCE).append(EQ).append(confidence);
         }
     }
     

@@ -40,6 +40,7 @@ final class Constants {
     static final String TYPE = "type";
     static final String STATUS = "status";
     static final String DUPLICATE_OF = "duplicateOf";
+    static final String CONFIDENCE = "confidence";
     static final String APPNAME = "appName";
     static final String APPVER = "appVer";
     static final String OSNAME = "osName";

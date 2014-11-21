@@ -50,6 +50,7 @@ public final class Keys {
     static final String STATUS = "scoutsigns.filter.status";
     static final String TYPE = "scoutsigns.filter.types";
     static final String DUPLICATE = "scoutsigns.filter.duplicate";
+    static final String CONFIDENCE = "scoutsigns.filter.confidence";
     static final String APP_NAME = "scoutsigns.filter.appName";
     static final String APP_VERSION = "scoutsigns.filter.appVersion";
     static final String OS_NAME = "scoutsigns.filter.osName";

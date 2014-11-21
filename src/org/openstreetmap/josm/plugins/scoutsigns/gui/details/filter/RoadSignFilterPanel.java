@@ -36,6 +36,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.Date;
+import javax.swing.InputVerifier;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -65,11 +68,17 @@ class RoadSignFilterPanel extends JPanel {
     
     private static final long serialVersionUID = 31048161544787922L;
     
+    private static final int MIN_VAL = 0;
+    private static final int MAX_VAL = 100;
+    
     private CalendarComboBox cbboxStart;
     private CalendarComboBox cbboxEnd;
     private StatusFilterPanel pnlStatus;
     private JList<String> listTypes;
-    private JTextField txtDuplicate;
+    private JTextField txtDupl;
+    private JLabel lblDuplError;
+    private JTextField txtConf;
+    private JLabel lblConfError;
     private JTextField txtOsName;
     private JTextField txtOsVers;
     private JTextField txtAppName;
@@ -88,6 +97,7 @@ class RoadSignFilterPanel extends JPanel {
         addStatusFilter(filter.getStatus());
         addTypeFilter(filter.getType());
         addDuplicateFilter(filter.getDuplicateOf());
+        addConfidenceFilter(filter.getConfidence());
         addDeviceFilter(filter.getDevice());
         addAppFilter(filter.getApp());
     }
@@ -126,8 +136,28 @@ class RoadSignFilterPanel extends JPanel {
         add(Builder.buildLabel(GuiCnf.getInstance().getLblDupl(),
                 FontUtil.BOLD_12, null), Constraints.LBL_DUPL);
         String txt = duplicate != null ? duplicate.toString() : "";
-        txtDuplicate = Builder.buildTextField(txt, null, Color.white);
-        add(txtDuplicate, Constraints.TXT_DUPL);
+        txtDupl = Builder.buildTextField(txt, null, Color.white);
+        txtDupl.setInputVerifier(new DuplicateFilterVerifier());
+        add(txtDupl, Constraints.TXT_DUPL);
+        
+        // visible only if invalid value is entered
+        lblDuplError = Builder.buildLabel(GuiCnf.getInstance().
+                getTxtDuplIdInvalid(), FontUtil.BOLD_12, Color.red, false);
+        add(lblDuplError, Constraints.LBL_DUPL_ERROR);
+    }
+    
+    private void addConfidenceFilter(Short confidence) {
+        add(Builder.buildLabel(GuiCnf.getInstance().getLblConf(),
+                FontUtil.BOLD_12, null), Constraints.LBL_CONF);
+        String txt = confidence != null ? confidence.toString() : "";
+        txtConf = Builder.buildTextField(txt, null, Color.white);
+        txtConf.setInputVerifier(new ConfidenceFilterVerifier());
+        add(txtConf, Constraints.TXT_CONF);
+        
+        // visible only if invalid value is entered
+        lblConfError = Builder.buildLabel(GuiCnf.getInstance().getTxtConfInvalid(),
+                FontUtil.BOLD_12, Color.red, false);
+        add(lblConfError, Constraints.LBL_CONF_ERROR);
     }
     
     private void addDeviceFilter(Device device) {
@@ -168,7 +198,8 @@ class RoadSignFilterPanel extends JPanel {
         cbboxEnd.setSelectedIndex(-1);
         pnlStatus.clearSelection();
         listTypes.clearSelection();
-        txtDuplicate.setText("");
+        txtDupl.setText("");
+        txtConf.setText("" + SearchFilter.DEF_CONFIDENCE);
         txtAppName.setText("");
         txtAppVers.setText("");
         txtOsName.setText("");
@@ -192,17 +223,86 @@ class RoadSignFilterPanel extends JPanel {
         
         Status status = pnlStatus.getSelection();
         String type = listTypes.getSelectedValue();
-        Long duplicate = txtDuplicate.getText() != null && 
-                !txtDuplicate.getText().isEmpty() ? 
-                        Long.parseLong(txtDuplicate.getText()) : null;
+        String duplicateStr = txtDupl.getText().trim();
+        Long duplicate = !duplicateStr.isEmpty() ? Long.parseLong(duplicateStr) 
+                : null;
+        String confidenceStr = txtConf.getText().trim();
+        Short confidence = !confidenceStr.isEmpty() ? Short.parseShort(
+                confidenceStr) : null;
         String appName = txtAppName.getText();
         String appVersion = txtAppVers.getText();
         String osName = txtOsName.getText();
         String osVersion = txtOsVers.getText();
         
         return new SearchFilter(new TimestampFilter(from, to), type, status,
-                duplicate, new Application(appName, appVersion), new Device(
-                        osName, osVersion));
+                duplicate, confidence, new Application(appName, appVersion),
+                new Device(osName, osVersion));
+    }
+    
+    
+    /*
+     * Verifier for the duplicate filter.
+     */
+    private final class DuplicateFilterVerifier extends InputVerifier {
+        
+        @Override
+        public boolean verify(JComponent input) {
+            JTextField txtField = (JTextField) input;
+            String valueStr = ((JTextField) input).getText().trim();
+
+            boolean valid = true;
+            if (!valueStr.isEmpty()) {
+                try {
+                    Long value = Long.parseLong(valueStr);
+                    valid = value > MIN_VAL;
+                } catch (NumberFormatException e) {
+                    valid = false;
+                } 
+            }
+            
+            if (valid) {
+                if (lblDuplError.isVisible()) {
+                    lblDuplError.setVisible(false);
+                }
+            } else {
+                txtField.setText("");
+                lblDuplError.setVisible(true);
+            }
+            return valid;
+        }
+    }
+    
+    /*
+     * Verifier for the confidence filter.
+     */
+    private final class ConfidenceFilterVerifier extends InputVerifier {
+        
+        @Override
+        public boolean verify(JComponent input) {
+            JTextField txtField = (JTextField) input;
+            String valueStr = ((JTextField) input).getText().trim();
+            
+            boolean valid = true;
+            if (!valueStr.isEmpty()) {
+                try {
+                    Short value = Short.parseShort(txtField.getText().trim());
+                    valid = value >= MIN_VAL && value <= MAX_VAL;
+                } catch (NumberFormatException e) {
+                    valid = false;
+                }
+            }
+            if (valid) {
+                if (lblConfError.isVisible()) {
+                    lblConfError.setVisible(false);
+                    repaint();
+                }
+            } else {
+                txtField.setText("");
+                lblConfError.setVisible(true);
+                repaint();
+            }
+            return valid;
+ }
     }
     
     
@@ -214,7 +314,7 @@ class RoadSignFilterPanel extends JPanel {
                 0, 0, 1, 1, 1, 1, GridBagConstraints.PAGE_START,
                 GridBagConstraints.HORIZONTAL, new Insets(7, 5, 3, 5), 0, 0);
         private static final GridBagConstraints CBB_START = new GridBagConstraints(
-                1, 0, 1, 1, 1, 0, GridBagConstraints.PAGE_START, 
+                1, 0, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
                 GridBagConstraints.HORIZONTAL, new Insets(7, 5, 2, 5), 0, 0);
         private static final GridBagConstraints CBB_END = new GridBagConstraints(
                 2, 0, 1, 1, 1, 0, GridBagConstraints.PAGE_START, 
@@ -223,37 +323,54 @@ class RoadSignFilterPanel extends JPanel {
                 0, 1, 1, 1, 1, 1, GridBagConstraints.PAGE_START,
                 GridBagConstraints.HORIZONTAL, new Insets(7, 5, 3, 5), 0, 0);
         private static final GridBagConstraints PNL_STATUS = new GridBagConstraints(
-                1, 1, 3, 1, 1, 0, GridBagConstraints.PAGE_START,
+                1, 1, 3, 1, 1, 0, GridBagConstraints.PAGE_START, 
                 GridBagConstraints.HORIZONTAL, new Insets(0, 0, 3, 3), 0, 0);
         private static final GridBagConstraints LBL_TYPE = new GridBagConstraints(
                 0, 2, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
                 GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
         private static final GridBagConstraints LIST_TYPE = new GridBagConstraints(
-                1, 2, 2, 1, 1, 0, GridBagConstraints.CENTER, 
+                1, 2, 2, 1, 1, 0,  GridBagConstraints.CENTER,
                 GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 110);
         private static final GridBagConstraints LBL_DUPL = new GridBagConstraints(
                 0, 3, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
                 GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
         private static final GridBagConstraints TXT_DUPL = new GridBagConstraints(
-                1, 3, 1, 1, 1, 0, GridBagConstraints.CENTER, 
+                1, 3, 1, 1, 1, 0, GridBagConstraints.CENTER,
                 GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints LBL_DEV = new GridBagConstraints(
+        private static final GridBagConstraints LBL_DUPL_ERROR = 
+                new GridBagConstraints(2, 3, 1, 1, 1, 0, GridBagConstraints.CENTER,
+                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
+                        0, 0);
+        private static final GridBagConstraints LBL_CONF = new GridBagConstraints(
                 0, 4, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
                 GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints TXT_OS_NAME = new GridBagConstraints(
+        private static final GridBagConstraints TXT_CONF = new GridBagConstraints(
                 1, 4, 1, 1, 1, 0, GridBagConstraints.CENTER, 
                 GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints TXT_OS_VERS = new GridBagConstraints(
-                2, 4, 1, 1, 1, 0, GridBagConstraints.CENTER, 
-                GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints LBL_APP = new GridBagConstraints(
+        private static final GridBagConstraints LBL_CONF_ERROR =
+                new GridBagConstraints(2, 4, 1, 1, 1, 0, GridBagConstraints.CENTER,
+                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
+                        0, 0);
+        private static final GridBagConstraints LBL_DEV = new GridBagConstraints(
                 0, 5, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
                 GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints TXT_APP_NAME = new GridBagConstraints(
-                1, 5, 1, 1, 1, 0, GridBagConstraints.CENTER,
+        private static final GridBagConstraints TXT_OS_NAME = new GridBagConstraints(
+                1, 5, 1, 1, 1, 0, GridBagConstraints.CENTER, 
                 GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints TXT_APP_VERS = new GridBagConstraints(
-                2, 5, 1, 1, 1, 0, GridBagConstraints.CENTER, 
+        private static final GridBagConstraints TXT_OS_VERS =
+                new GridBagConstraints(2, 5, 1, 1, 1, 0, GridBagConstraints.CENTER,
+                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
+                        0, 0);
+        private static final GridBagConstraints LBL_APP = new GridBagConstraints(
+                0, 6, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
                 GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
+        private static final GridBagConstraints TXT_APP_NAME = 
+                new GridBagConstraints(1, 6, 1, 1, 1, 0, GridBagConstraints.CENTER,
+                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
+                        0, 0);
+        private static final GridBagConstraints TXT_APP_VERS = 
+                new GridBagConstraints(2, 6, 1, 1, 1, 0, GridBagConstraints.CENTER,
+                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
+                        0, 0);
     }
 }
