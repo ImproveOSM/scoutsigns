@@ -85,7 +85,7 @@ class ImageFrame extends JFrame {
             try { BufferedImage bi = ImageUtil.base64ToImage(image.getData(),
                     image.getWidth(), image.getHeight());
                 lbl = new JLabel(new ImageIcon(bi));
-            } catch (IOException ex) {
+            } catch (@SuppressWarnings("unused") IOException e) {
                 lbl = new JLabel(GuiCnf.getInstance().getLblPhotoError());
             }
         }

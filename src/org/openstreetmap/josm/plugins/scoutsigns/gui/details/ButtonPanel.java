@@ -101,12 +101,12 @@ class ButtonPanel extends JPanel implements TripViewObservable {
      */
     void setRoadSign(RoadSign roadSign) {
         this.roadSign = roadSign;
-        if (this.roadSign == null) {
-            // restore possible statuses
-            if (statuses.size() != Status.VALUES_LIST.size()) {
-                statuses = new ArrayList<>(Status.VALUES_LIST);
-            }
-        } else {
+        
+        // restore possible statuses
+        if (statuses.size() != Status.VALUES_LIST.size()) {
+            statuses = new ArrayList<>(Status.VALUES_LIST);
+        }
+        if (this.roadSign != null) {
             statuses.remove(this.roadSign.getStatus());
         }
     }

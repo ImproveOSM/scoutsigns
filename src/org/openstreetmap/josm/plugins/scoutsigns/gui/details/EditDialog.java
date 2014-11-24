@@ -35,11 +35,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -51,6 +53,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.CancelAction;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
+import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.DuplicateIdVerifier;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObservable;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
@@ -74,7 +77,7 @@ class EditDialog extends JDialog implements StatusChangeObservable {
     private static final Border BORDER = new EmptyBorder(5, 5, 2, 5);
     
     private StatusChangeObserver observer;
-    
+    private JLabel lblCommentError;
     private JTextField txtDuplicateId;
     private JTextArea txtComment;
     
@@ -91,40 +94,62 @@ class EditDialog extends JDialog implements StatusChangeObservable {
         setLayout(new BorderLayout());
         setModal(true);
         setMinimumSize(DIM);
-        addComponents();
+        
+        if (status == Status.DUPLICATE) {
+            addDuplicateId();
+        }
+        addComment();
+        addBtnPnl();
     }
     
     
-    private void addComponents() {
-        if (status == Status.DUPLICATE) {
-            // duplicate id
-            JPanel pnlDuplicate = new JPanel(new BorderLayout());
-            pnlDuplicate.setBorder(BORDER);
-            pnlDuplicate.add(Builder.buildLabel(GuiCnf.getInstance()
-                    .getLblDupl(), FontUtil.BOLD_12, null),
-                    BorderLayout.LINE_START);
-            txtDuplicateId = Builder.buildTextField(null, null, Color.white);
-            txtDuplicateId.setBorder(BorderFactory.createLineBorder(Color.gray));
-            pnlDuplicate.add(txtDuplicateId, BorderLayout.CENTER);
-            add(pnlDuplicate, BorderLayout.NORTH);
-        }
+    private void addDuplicateId() {
+        txtDuplicateId = Builder.buildTextField(null, null, Color.white);
+        txtDuplicateId.setBorder(BorderFactory.createLineBorder(Color.gray));
         
-        // comment text area
-        JPanel pnlComment = new JPanel(new BorderLayout());
-        pnlComment.setBorder(BORDER);
+        JLabel lblDuplError = Builder.buildLabel(GuiCnf.getInstance().
+                getTxtDuplIdInvalid(), FontUtil.BOLD_12, Color.red, false);
+        txtDuplicateId.setInputVerifier(new DuplicateIdVerifier(lblDuplError,
+                true));
+        
+        JPanel pnlDuplicate = new JPanel(new GridLayout(1, 0, 1, 1));
+        pnlDuplicate.add(txtDuplicateId);
+        pnlDuplicate.add(lblDuplError);
+        
+        JPanel pnlNorth = new JPanel(new BorderLayout());
+        pnlNorth.setBorder(BORDER);
+        pnlNorth.add(Builder.buildLabel(GuiCnf.getInstance().getLblDupl(),
+                FontUtil.BOLD_12, null), BorderLayout.LINE_START);
+        pnlNorth.add(pnlDuplicate, BorderLayout.CENTER);
+        add(pnlNorth, BorderLayout.NORTH);
+    }
+    
+    private void addComment() {
         txtComment = Builder.buildTextArea(null, true, FontUtil.PLAIN_12,
                 Color.white, null);
+        
+        JPanel pnlComment = new JPanel(new BorderLayout());
+        pnlComment.setBorder(BORDER);
         pnlComment.add(Builder.buildScrollPane(txtComment, Color.white, true),
                 BorderLayout.CENTER);
+        pnlComment.setVerifyInputWhenFocusTarget(true);
         add(pnlComment, BorderLayout.CENTER);
+    }
+    
+    private void addBtnPnl() {
+        lblCommentError = Builder.buildLabel(GuiCnf.getInstance().
+                getTxtCommentInvalid(), FontUtil.BOLD_12, Color.red, false);
         
-        // button panel
         JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.TRAILING));
         pnlBtn.add(Builder.buildButton(new AddCommentAction(), GuiCnf
                 .getInstance().getBtnOk()));
         pnlBtn.add(Builder.buildButton(new CancelAction(this), GuiCnf
                 .getInstance().getBtnCancel()));
-        add(pnlBtn, BorderLayout.SOUTH);
+        
+        JPanel pnlSouth = new JPanel(new BorderLayout());
+        pnlSouth.add(lblCommentError, BorderLayout.LINE_START);
+        pnlSouth.add(pnlBtn, BorderLayout.LINE_END);
+        add(pnlSouth, BorderLayout.SOUTH);
     }
     
     @Override
@@ -151,21 +176,28 @@ class EditDialog extends JDialog implements StatusChangeObservable {
         
         @Override
         public void actionPerformed(ActionEvent event) {
+            // read duplicateId if necessary
+            Long duplicateId = null;
+            if (status == Status.DUPLICATE) {
+                duplicateId = Long.parseLong(txtDuplicateId.getText().trim());
+            }
+            
+            // read comment text
             String comment = txtComment.getText().trim();
-            try {
-                Long duplicateId = null;
-                if (status == Status.DUPLICATE) {
-                    duplicateId = validate(txtDuplicateId.getText().trim(), 
-                            comment);
-                } else {
-                    validate(comment);
+            if (comment.isEmpty()) {
+                lblCommentError.setVisible(true);
+            } else {
+                if (lblCommentError.isVisible()) {
+                    lblCommentError.setVisible(false);
                 }
-                String username = PrefManager.getInstance().loadOsmUsername();
                 dispose();
+                
+                // load username
+                String username = PrefManager.getInstance().loadOsmUsername();
                 if (username.isEmpty()) {
-                    String nemUsername = JOptionPane.showInputDialog(Main.parent, 
+                    String nemUsername = JOptionPane.showInputDialog(Main.parent,
                             GuiCnf.getInstance().getTxtUsernameWarning(),
-                            GuiCnf.getInstance().getDlgWarningTitle(), 
+                            GuiCnf.getInstance().getDlgWarningTitle(),
                             JOptionPane.WARNING_MESSAGE);
                     if (nemUsername != null && !nemUsername.isEmpty()) {
                         PrefManager.getInstance().saveOsmUsername(nemUsername);
@@ -175,42 +207,7 @@ class EditDialog extends JDialog implements StatusChangeObservable {
                 } else {
                     notifyObserver(username, comment, status, duplicateId);
                 }
-                
-            } catch (IllegalArgumentException e) {
-                JOptionPane.showMessageDialog(Main.parent, e.getMessage(),
-                        GuiCnf.getInstance().getDlgMissingTitle(),
-                        JOptionPane.WARNING_MESSAGE);
             }
-        }
-        
-        private void validate(String comment) {
-            if (comment.trim().isEmpty()) {
-                throw new IllegalArgumentException(GuiCnf.getInstance()
-                        .getTxtCommentWarning());
-            }
-        }
-        
-        private Long validate(String duplIdStr, String comment) {
-            Long duplId = null;
-            if (!duplIdStr.isEmpty()) {
-                try {
-                    duplId = Long.parseLong(duplIdStr);
-                } catch (NumberFormatException e) {
-                    duplId = null;
-                }
-            }
-            if (duplId == null) {
-                if (comment.isEmpty()) {
-                    throw new IllegalArgumentException(GuiCnf.getInstance()
-                            .getTxtDuplIdCommentWarning());
-                } else {
-                    throw new IllegalArgumentException(GuiCnf.getInstance()
-                            .getTxtDuplIdWarning());
-                }
-            } else {
-                validate(comment);
-            }
-            return duplId;
         }
     }
 }
