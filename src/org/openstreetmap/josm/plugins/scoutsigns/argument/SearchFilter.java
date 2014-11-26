@@ -53,6 +53,7 @@ public class SearchFilter {
     private Short confidence;
     private Application app;
     private Device device;
+    private String username;
     
     
     /**
@@ -72,7 +73,7 @@ public class SearchFilter {
      */
     public SearchFilter(TimestampFilter timestampFilter, String type,
             Status status, Long duplicateOf, Short confidence, Application app,
-            Device device) {
+            Device device, String username) {
         this.timestampFilter = timestampFilter;
         this.type = type;
         this.status = status;
@@ -80,6 +81,7 @@ public class SearchFilter {
         this.confidence = confidence;
         this.app = app;
         this.device = device;
+        this.username = username;
     }
     
     
@@ -111,6 +113,11 @@ public class SearchFilter {
         return device;
     }
     
+    public String getUsername() {
+        return username;
+    }
+    
+    
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -122,6 +129,7 @@ public class SearchFilter {
         result = prime * result + ObjectUtil.hashCode(status);
         result = prime * result + ObjectUtil.hashCode(timestampFilter);
         result = prime * result + ObjectUtil.hashCode(type);
+        result = prime * result + ObjectUtil.hashCode(username);
         return result;
     }
     
@@ -134,15 +142,18 @@ public class SearchFilter {
             SearchFilter other = (SearchFilter) obj;
             result = ObjectUtil.bothNullOrEqual(timestampFilter, 
                     other.getTimestampFilter());
-            result = result && ObjectUtil.bothNullOrEqual(status, other.getStatus());
+            result = result && ObjectUtil.bothNullOrEqual(status, 
+                    other.getStatus());
             result = result && ObjectUtil.bothNullOrEqual(type, other.getType());
-            result = result && ObjectUtil.bothNullOrEqual(duplicateOf, 
+            result = result && ObjectUtil.bothNullOrEqual(duplicateOf,
                     other.getDuplicateOf());
             result = result && ObjectUtil.bothNullOrEqual(confidence,
                     other.getConfidence());
             result = result && ObjectUtil.bothNullOrEqual(app, other.getApp());
-            result = result && ObjectUtil.bothNullOrEqual(device, 
+            result = result && ObjectUtil.bothNullOrEqual(device,
                     other.getDevice());
+            result = result && ObjectUtil.bothNullOrEqual(username,
+                    other.getUsername());
         }
         return result;
     }

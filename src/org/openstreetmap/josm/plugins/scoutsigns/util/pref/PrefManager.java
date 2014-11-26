@@ -96,6 +96,7 @@ public final class PrefManager {
         String status = "";
         String duplicate = "";
         String confidence = "";
+        String username = "";
         String appName = "";
         String appVersion = "";
         String osName = "";
@@ -112,10 +113,11 @@ public final class PrefManager {
             type = filter.getType();
             status = filter.getStatus() != null ? filter.getStatus().name() : 
                 null;
-            duplicate = filter.getDuplicateOf() != null ? 
-                    filter.getDuplicateOf().toString() : null;
-            confidence = filter.getConfidence() != null ? 
-                    filter.getConfidence().toString() : NULL;
+            duplicate = filter.getDuplicateOf() != null ? filter.getDuplicateOf().
+                    toString() : null;
+            confidence = filter.getConfidence() != null ? filter.getConfidence().
+                    toString() : NULL;
+            username = filter.getUsername();
             if (filter.getApp() != null) {
                 appName = filter.getApp().getName();
                 appVersion = filter.getApp().getVersion();
@@ -131,6 +133,7 @@ public final class PrefManager {
         Main.pref.put(Keys.TYPE, type);
         Main.pref.put(Keys.DUPLICATE, duplicate);
         Main.pref.put(Keys.CONFIDENCE, confidence);
+        Main.pref.put(Keys.FLT_USERNAME, username);
         Main.pref.put(Keys.APP_NAME, appName);
         Main.pref.put(Keys.APP_VERSION, appVersion);
         Main.pref.put(Keys.OS_NAME, osName);
@@ -146,6 +149,7 @@ public final class PrefManager {
         String type = Main.pref.get(Keys.TYPE);
         String statusStr = Main.pref.get(Keys.STATUS);
         String confidenceStr = Main.pref.get(Keys.CONFIDENCE);
+        String username = Main.pref.get(Keys.FLT_USERNAME);
         String appName = Main.pref.get(Keys.APP_NAME);
         String appVersion = Main.pref.get(Keys.APP_VERSION);
         String osName = Main.pref.get(Keys.OS_NAME);
@@ -169,14 +173,14 @@ public final class PrefManager {
         
         return new SearchFilter(new TimestampFilter(from, to), type, status,
                 duplicate, confidence, new Application(appName, appVersion),
-                new Device(osName, osVersion));
+                new Device(osName, osVersion), username);
     }
     
     private Long loadLongValue(String key) {
         String valueStr = Main.pref.get(key);
         valueStr = valueStr.trim();
-        return (valueStr != null && !valueStr.isEmpty()) ? Long.valueOf(valueStr) 
-                : null;
+        return (valueStr != null && !valueStr.isEmpty()) ? Long
+                .valueOf(valueStr) : null;
     }
     
     /**

@@ -74,6 +74,7 @@ public final class GuiCnf {
     /* filter dialog texts */
     private final String dlgFilterTitle;
     private final String lblTimeInt;
+    private final String lblUsername;
     
     private final String dlgCommentTitle;
     private final String txtUsernameWarning;
@@ -137,10 +138,11 @@ public final class GuiCnf {
         /* filter dialog texts */
         dlgFilterTitle = CnfUtil.readProperty(properties, "filter.title");
         lblTimeInt = CnfUtil.readProperty(properties, "filter.int");
+        lblUsername = CnfUtil.readProperty(properties, "filter.username");
         
         dlgCommentTitle = CnfUtil.readProperty(properties, "comment.title");
-        txtUsernameWarning =
-                CnfUtil.readProperty(properties, "warning.missing.username");
+        txtUsernameWarning = CnfUtil.readProperty(properties, 
+                "warning.missing.username");
         
         /* commonly used texts */
         lblType = CnfUtil.readProperty(properties, "type");
@@ -154,27 +156,25 @@ public final class GuiCnf {
         btnReset = CnfUtil.readProperty(properties, "btn.reset");
         btnCancel = CnfUtil.readProperty(properties, "bnt.cancel");
         
-        dlgWarningTitle =
-                CnfUtil.readProperty(properties, "warning.general.title");
-        txtDuplIdInvalid =
-                CnfUtil.readProperty(properties, "warning.invalid.dupl");
-        txtConfInvalid =
-                CnfUtil.readProperty(properties, "warning.invalid.conf");
-        txtCommentInvalid =
-                CnfUtil.readProperty(properties, "warning.invalid.comment");
+        dlgWarningTitle = CnfUtil.readProperty(properties, 
+                "warning.general.title");
+        txtDuplIdInvalid = CnfUtil.readProperty(properties, 
+                "warning.invalid.dupl");
+        txtConfInvalid = CnfUtil.readProperty(properties, 
+                "warning.invalid.conf");
+        txtCommentInvalid = CnfUtil.readProperty(properties,
+                "warning.invalid.comment");
         
         /* menu item texts */
         txtMenuSolve = CnfUtil.readProperty(properties, "edit.menu.solve");
         txtMenuInvalid = CnfUtil.readProperty(properties, "edit.menu.invalid");
-        txtMenuDuplicate =
-                CnfUtil.readProperty(properties, "edit.meuu.duplicate");
+        txtMenuDuplicate = CnfUtil.readProperty(properties, "edit.meuu.duplicate");
         txtMenuReopen = CnfUtil.readProperty(properties, "edit.menu.reopen");
         
         dlgSolveTitle = CnfUtil.readProperty(properties, "edit.dialog.solve");
-        dlgInvalidTitle =
-                CnfUtil.readProperty(properties, "edit.dialog.invalid");
-        dlgDuplicateTitle =
-                CnfUtil.readProperty(properties, "edit.dialog.duplicate");
+        dlgInvalidTitle = CnfUtil.readProperty(properties, "edit.dialog.invalid");
+        dlgDuplicateTitle = CnfUtil.readProperty(properties, 
+                "edit.dialog.duplicate");
         dlgReopenTitle = CnfUtil.readProperty(properties, "edit.dialog.reopen");
     }
     
@@ -257,6 +257,10 @@ public final class GuiCnf {
     
     public String getLblTimeInt() {
         return lblTimeInt;
+    }
+    
+    public String getLblUsername() {
+        return lblUsername;
     }
     
     public String getDlgCommentTitle() {

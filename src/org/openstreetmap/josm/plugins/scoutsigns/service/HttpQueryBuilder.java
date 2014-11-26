@@ -82,8 +82,7 @@ class HttpQueryBuilder {
             addApplicationCtiteria(filter.getApp());
             addDeviceFilter(filter.getDevice());
             
-            // TODO not supported yet
-            addUsernameFilter(null);
+            addUsernameFilter(filter.getUsername());
         }
     }
     

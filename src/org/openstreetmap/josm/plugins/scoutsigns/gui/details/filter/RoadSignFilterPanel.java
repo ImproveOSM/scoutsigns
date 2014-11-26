@@ -74,6 +74,7 @@ class RoadSignFilterPanel extends JPanel {
     private JList<String> listTypes;
     private JTextField txtDupl;
     private JTextField txtConf;
+    private JTextField txtUsername;
     private JTextField txtOsName;
     private JTextField txtOsVers;
     private JTextField txtAppName;
@@ -93,6 +94,7 @@ class RoadSignFilterPanel extends JPanel {
         addTypeFilter(filter.getType());
         addDuplicateFilter(filter.getDuplicateOf());
         addConfidenceFilter(filter.getConfidence());
+        addUsernameFilter(filter.getUsername());
         addDeviceFilter(filter.getDevice());
         addAppFilter(filter.getApp());
     }
@@ -155,6 +157,13 @@ class RoadSignFilterPanel extends JPanel {
         add(lblConfError, Constraints.LBL_CONF_ERROR);
     }
     
+    private void addUsernameFilter(String username) {
+        add(Builder.buildLabel(GuiCnf.getInstance().getLblUsername(),
+                FontUtil.BOLD_12, null), Constraints.LBL_USERNAME);
+        txtUsername = Builder.buildTextField(username, null, Color.white);
+        add(txtUsername, Constraints.TXT_USERNAME);
+    }
+    
     private void addDeviceFilter(Device device) {
         add(Builder.buildLabel(GuiCnf.getInstance().getLblDevice(),
                 FontUtil.BOLD_12, null), Constraints.LBL_DEV);
@@ -195,6 +204,7 @@ class RoadSignFilterPanel extends JPanel {
         listTypes.clearSelection();
         txtDupl.setText("");
         txtConf.setText("" + SearchFilter.DEF_CONFIDENCE);
+        txtUsername.setText("");
         txtAppName.setText("");
         txtAppVers.setText("");
         txtOsName.setText("");
@@ -211,27 +221,26 @@ class RoadSignFilterPanel extends JPanel {
         String fromStr = (String) cbboxStart.getSelectedItem();
         Date fromDate = DateUtil.parseDay(fromStr);
         Long from = fromDate != null ? fromDate.getTime() : null;
-        
         String toStr = (String) cbboxEnd.getSelectedItem();
         Date toDate = DateUtil.parseDay(toStr);
         Long to = toDate != null ? toDate.getTime() : null;
-        
         Status status = pnlStatus.getSelection();
         String type = listTypes.getSelectedValue();
         String duplicateStr = txtDupl.getText().trim();
         Long duplicate = !duplicateStr.isEmpty() ? Long.parseLong(duplicateStr) 
                 : null;
         String confidenceStr = txtConf.getText().trim();
-        Short confidence = !confidenceStr.isEmpty() ? Short.parseShort(confidenceStr)
-                : null;
-        String appName = txtAppName.getText();
-        String appVersion = txtAppVers.getText();
-        String osName = txtOsName.getText();
-        String osVersion = txtOsVers.getText();
+        Short confidence = !confidenceStr.isEmpty() ? Short.parseShort(
+                confidenceStr) : null;
+        String appName = txtAppName.getText().trim();
+        String appVersion = txtAppVers.getText().trim();
+        String osName = txtOsName.getText().trim();
+        String osVersion = txtOsVers.getText().trim();
+        String username = txtUsername.getText().trim();
         
         return new SearchFilter(new TimestampFilter(from, to), type, status,
                 duplicate, confidence, new Application(appName, appVersion),
-                new Device(osName, osVersion));
+                new Device(osName, osVersion), username);
     }
     
     
@@ -283,25 +292,33 @@ class RoadSignFilterPanel extends JPanel {
                 new GridBagConstraints(2, 4, 1, 1, 1, 0, GridBagConstraints.CENTER,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
+        private static final GridBagConstraints LBL_USERNAME = new GridBagConstraints(
+                0, 5, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
+                GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
+        private static final GridBagConstraints TXT_USERNAME =
+                new GridBagConstraints(1, 5, 1, 1, 1, 0,
+                        GridBagConstraints.CENTER,
+                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
+                        0, 0);
         private static final GridBagConstraints LBL_DEV = new GridBagConstraints(
-                0, 5, 1, 1, 1, 0, GridBagConstraints.PAGE_START, 
+                0, 6, 1, 1, 1, 0, GridBagConstraints.PAGE_START, 
                 GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
         private static final GridBagConstraints TXT_OS_NAME = new GridBagConstraints(
-                1, 5, 1, 1, 1, 0, GridBagConstraints.CENTER,
+                1, 6, 1, 1, 1, 0, GridBagConstraints.CENTER,
                 GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
         private static final GridBagConstraints TXT_OS_VERS =
-                new GridBagConstraints(2, 5, 1, 1, 1, 0, GridBagConstraints.CENTER,
+                new GridBagConstraints(2, 6, 1, 1, 1, 0, GridBagConstraints.CENTER,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
         private static final GridBagConstraints LBL_APP = new GridBagConstraints(
-                0, 6, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
+                0, 7, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
                 GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
         private static final GridBagConstraints TXT_APP_NAME =
-                new GridBagConstraints(1, 6, 1, 1, 1, 0, GridBagConstraints.CENTER,
+                new GridBagConstraints(1, 7, 1, 1, 1, 0, GridBagConstraints.CENTER,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
         private static final GridBagConstraints TXT_APP_VERS = 
-                new GridBagConstraints(2, 6, 1, 1, 1, 0, GridBagConstraints.CENTER,
+                new GridBagConstraints(2, 7, 1, 1, 1, 0, GridBagConstraints.CENTER,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
     }
