@@ -64,7 +64,7 @@ public class ConfidenceVerifier extends JTextFieldVerifier {
             try {
                 Short shortValue = Short.parseShort(value);
                 valid = shortValue >= MIN_VAL && shortValue <= MAX_VAL;
-            } catch (@SuppressWarnings("unused") NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 valid = false;
             }
         }

@@ -66,7 +66,7 @@ public class DuplicateIdVerifier extends JTextFieldVerifier {
             try {
                 Long longValue = Long.parseLong(value);
                 valid = longValue > MIN_VAL;
-            } catch (@SuppressWarnings("unused") NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 valid = false;
             }
         }

@@ -83,7 +83,7 @@ public final class TypeIconFactory {
             try {
                 icon = ImageProvider.get(IconCnf.getInstance().getTypeIconPath() 
                         + type + EXT);
-            } catch (RuntimeException ex) {
+            } catch (RuntimeException e) {
                 icon = ImageProvider.get(IconCnf.getInstance().getTypeIconPath() 
                         + IconCnf.getInstance().getDefTypeIconName() + EXT);
             }
