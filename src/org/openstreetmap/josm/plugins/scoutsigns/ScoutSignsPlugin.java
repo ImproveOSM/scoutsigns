@@ -94,7 +94,7 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
     public ScoutSignsPlugin(PluginInformation info) {
         super(info);
         PrefManager.getInstance().saveSupressErrorFlag(false);
-        searchFilter = null;
+        searchFilter = PrefManager.getInstance().loadSearchFilter();
     }
     
     
