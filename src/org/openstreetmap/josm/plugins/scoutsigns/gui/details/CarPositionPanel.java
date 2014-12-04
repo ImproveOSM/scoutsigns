@@ -43,8 +43,8 @@ class CarPositionPanel extends InfoPanel<CarPosition> {
         y = 0;
         pnlWidth = 0;
         int widthLbl = getMaxWidth(FontUtil.FM_BOLD_12, getGuiCnf().getLblPoint(),
-                getGuiCnf().getLblType(), getGuiCnf().getLblHeading(),
-                getGuiCnf().getLblAcc());
+                getGuiCnf().getLblType(), getGuiCnf().getLblHeading(), 
+                getGuiCnf().getLblDirection(), getGuiCnf().getLblAcc());
         addPoint(obj.getPosition(), widthLbl);
         addType(obj.getType(), widthLbl);
         if (obj.getHeading() != null) {
