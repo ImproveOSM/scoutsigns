@@ -62,6 +62,9 @@ public final class GuiCnf {
     private final String lblConf;
     private final String lblCreated;
     private final String lblHeading;
+    private final String lblDirection;
+    private final String lblForward;
+    private final String lblBackward;
     private final String lblAcc;
     private final String lblMode;
     private final String lblProfile;
@@ -126,6 +129,9 @@ public final class GuiCnf {
         lblConf = CnfUtil.readProperty(properties, "details.conf");
         lblCreated = CnfUtil.readProperty(properties, "details.created");
         lblHeading = CnfUtil.readProperty(properties, "details.heading");
+        lblDirection = CnfUtil.readProperty(properties, "details.dir");
+        lblForward = CnfUtil.readProperty(properties, "details.dir.fwd");
+        lblBackward = CnfUtil.readProperty(properties, "details.dir.bwd");
         lblAcc = CnfUtil.readProperty(properties, "details.acc");
         lblMode = CnfUtil.readProperty(properties, "details.mode");
         lblProfile = CnfUtil.readProperty(properties, "details.profile");
@@ -139,7 +145,6 @@ public final class GuiCnf {
         dlgFilterTitle = CnfUtil.readProperty(properties, "filter.title");
         lblTimeInt = CnfUtil.readProperty(properties, "filter.int");
         lblUsername = CnfUtil.readProperty(properties, "filter.username");
-        
         dlgCommentTitle = CnfUtil.readProperty(properties, "comment.title");
         txtUsernameWarning = CnfUtil.readProperty(properties, 
                 "warning.missing.username");
@@ -162,13 +167,14 @@ public final class GuiCnf {
                 "warning.invalid.dupl");
         txtConfInvalid = CnfUtil.readProperty(properties, 
                 "warning.invalid.conf");
-        txtCommentInvalid = CnfUtil.readProperty(properties,
+        txtCommentInvalid = CnfUtil.readProperty(properties, 
                 "warning.invalid.comment");
         
         /* menu item texts */
         txtMenuSolve = CnfUtil.readProperty(properties, "edit.menu.solve");
         txtMenuInvalid = CnfUtil.readProperty(properties, "edit.menu.invalid");
-        txtMenuDuplicate = CnfUtil.readProperty(properties, "edit.meuu.duplicate");
+        txtMenuDuplicate = CnfUtil.readProperty(properties, 
+                "edit.meuu.duplicate");
         txtMenuReopen = CnfUtil.readProperty(properties, "edit.menu.reopen");
         
         dlgSolveTitle = CnfUtil.readProperty(properties, "edit.dialog.solve");
@@ -225,6 +231,18 @@ public final class GuiCnf {
     
     public String getLblHeading() {
         return lblHeading;
+    }
+    
+    public String getLblDirection() {
+        return lblDirection;
+    }
+    
+    public String getLblForward() {
+        return lblForward;
+    }
+    
+    public String getLblBackward() {
+        return lblBackward;
     }
     
     public String getLblAcc() {

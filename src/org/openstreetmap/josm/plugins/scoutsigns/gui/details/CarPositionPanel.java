@@ -31,6 +31,9 @@ import org.openstreetmap.josm.plugins.scoutsigns.gui.Formatter;
 class CarPositionPanel extends InfoPanel<CarPosition> {
     
     private static final long serialVersionUID = -1633702812150337414L;
+    
+    private static final int LIMIT = 180;
+    
     private int y = 0;
     private int pnlWidth = 0;
     
@@ -44,7 +47,10 @@ class CarPositionPanel extends InfoPanel<CarPosition> {
                 getGuiCnf().getLblAcc());
         addPoint(obj.getPosition(), widthLbl);
         addType(obj.getType(), widthLbl);
-        addHeading(obj.getHeading(), widthLbl);
+        if (obj.getHeading() != null) {
+            addHeading(obj.getHeading(), widthLbl);
+            addDirection(obj.getHeading(), widthLbl);
+        }
         addAccuracy(obj.getAccuracy(), widthLbl);
         int pnlHeight = y + SPACE_Y;
         setPreferredSize(new Dimension(pnlWidth + SPACE_Y, pnlHeight));
@@ -76,17 +82,26 @@ class CarPositionPanel extends InfoPanel<CarPosition> {
     }
     
     private void addHeading(Integer heading, int widthLbl) {
-        if (heading != null) {
-            add(Builder.buildLabel(getGuiCnf().getLblHeading(),
-                    FontUtil.BOLD_12, new Rectangle(RECT_X, y, widthLbl,
-                            LHEIGHT)));
-            String headingStr = heading.toString();
-            int widthVal = FontUtil.FM_PLAIN_12.stringWidth(headingStr);
-            add(Builder.buildLabel(headingStr, FontUtil.PLAIN_12,
-                    new Rectangle(widthLbl, y, widthVal, LHEIGHT)));
-            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
-            y = y + LHEIGHT;
-        }
+        add(Builder.buildLabel(getGuiCnf().getLblHeading(), FontUtil.BOLD_12,
+                new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
+        String headingStr = heading.toString();
+        int widthVal = FontUtil.FM_PLAIN_12.stringWidth(headingStr);
+        add(Builder.buildLabel(headingStr, FontUtil.PLAIN_12, new Rectangle(
+                widthLbl, y, widthVal, LHEIGHT)));
+        pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
+        y = y + LHEIGHT;
+    }
+    
+    private void addDirection(Integer heading, int widthLbl) {
+        add(Builder.buildLabel(getGuiCnf().getLblDirection(), FontUtil.BOLD_12,
+                new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
+        String direction = heading < LIMIT ? getGuiCnf().getLblForward() : 
+            getGuiCnf().getLblBackward();
+        int widthVal = FontUtil.FM_PLAIN_12.stringWidth(direction);
+        add(Builder.buildLabel(direction, FontUtil.PLAIN_12, new Rectangle(
+                widthLbl, y, widthVal, LHEIGHT)));
+        pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
+        y = y + LHEIGHT;
     }
     
     private void addAccuracy(Integer accuracy, int widthLbl) {
