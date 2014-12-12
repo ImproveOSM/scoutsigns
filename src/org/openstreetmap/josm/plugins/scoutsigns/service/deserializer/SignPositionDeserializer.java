@@ -60,7 +60,11 @@ public class SignPositionDeserializer implements JsonDeserializer<SignPosition> 
         JsonObject obj = (JsonObject) jsonElement;
         double lat = obj.get(LATITUDE).getAsDouble();
         double lon = obj.get(LONGITUDE).getAsDouble();
-        double height = obj.get(HEIGHT).getAsDouble();
+        
+        // height is null for searchSign responses
+        JsonElement heightElement = obj.get(HEIGHT);
+        Double height = heightElement != null ? heightElement.getAsDouble() : 
+            null;
         return new SignPosition(new LatLon(lat, lon), height);
     }
 }
