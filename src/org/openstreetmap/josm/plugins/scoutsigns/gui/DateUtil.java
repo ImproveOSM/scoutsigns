@@ -49,6 +49,7 @@ public final class DateUtil {
     private static final String MONTH = "MMMM yyyy";
     private static final String DAY = "MMM d, yyyy";
     private static final String TSTP = "yyyy-MM-dd HH:mm:ss";
+    private static final Long UNIX_TSTP = 1000L;
     
     private DateUtil() {}
     
@@ -63,10 +64,10 @@ public final class DateUtil {
     public static String formatTimestamp(Long timestamp) {
         SimpleDateFormat dateTimeFormat = new SimpleDateFormat(TSTP);
         dateTimeFormat.setTimeZone(TimeZone.getDefault());
-        Date date = new Date(timestamp );
+        Date date = new Date(timestamp * UNIX_TSTP);
         return date != null ? dateTimeFormat.format(date) : "";
     }
-    
+
     /**
      * Formats the given month, using the following pattern:'MMMM yyyy'.
      * 
