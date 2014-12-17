@@ -34,6 +34,7 @@ package org.openstreetmap.josm.plugins.scoutsigns.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.CarPosition;
@@ -41,6 +42,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.SignPosition;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.service.deserializer.CarPositionDeserializer;
+import org.openstreetmap.josm.plugins.scoutsigns.service.deserializer.LatLonDeserializer;
 import org.openstreetmap.josm.plugins.scoutsigns.service.deserializer.SignPositionDeserializer;
 import org.openstreetmap.josm.plugins.scoutsigns.service.deserializer.StatusDeserializer;
 import org.openstreetmap.josm.plugins.scoutsigns.service.entity.Root;
@@ -70,6 +72,7 @@ public class FcdSignService {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(SignPosition.class, new SignPositionDeserializer());
         builder.registerTypeAdapter(CarPosition.class, new CarPositionDeserializer());
+        builder.registerTypeAdapter(LatLon.class, new LatLonDeserializer());
         builder.registerTypeAdapter(Status.class, new StatusDeserializer());
         this.gson = builder.create();
     }

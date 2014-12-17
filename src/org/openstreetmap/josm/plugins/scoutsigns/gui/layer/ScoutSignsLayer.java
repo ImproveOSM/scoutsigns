@@ -92,6 +92,19 @@ public class ScoutSignsLayer extends Layer {
         return roadSign;
     }
     
+    /**
+     * Updates the currently selected road sign data.
+     * 
+     * @param roadSign
+     */
+    public void updateSelRoadSign(RoadSign roadSign) {
+        int idx = selRoadSigns.indexOf(roadSign);
+        if (idx > -1) {
+            selRoadSigns.remove(roadSign);
+            selRoadSigns.add(idx, roadSign);
+        }
+    }
+    
     @Override
     public Icon getIcon() {
         return IconCnf.getInstance().getLayerIcon();
@@ -152,12 +165,12 @@ public class ScoutSignsLayer extends Layer {
         this.roadSigns = roadSigns;
         
         // check previously selected elements
-        checkSelRoadSigns(); 
+        checkSelRoadSigns();
     }
     
     private void checkSelRoadSigns() {
         if (!selRoadSigns.isEmpty() && roadSigns != null) {
-            for (RoadSign elem: roadSigns) {
+            for (RoadSign elem : roadSigns) {
                 if (!this.roadSigns.contains(elem)) {
                     selRoadSigns.remove(elem);
                 }

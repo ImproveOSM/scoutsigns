@@ -103,7 +103,8 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
         if (Main.map != null) {
             dialog = new ScoutSignsDetailsDialog();
             newMapFrame.addToggleDialog(dialog);
-            dialog.getButton().addActionListener(new ToggleButtonActionListener());
+            dialog.getButton().addActionListener(
+                    new ToggleButtonActionListener());
             registerListeners();
             addLayer();
         }
@@ -123,7 +124,7 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         Main.worker.execute(new UpdateThread());
-                        }  
+                        }
                     });
                 zoomTimer.setRepeats(false);
                 zoomTimer.start();
@@ -177,8 +178,7 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
     public void mouseClicked(MouseEvent event) {
         if (Main.map.mapView.getActiveLayer() == layer && !layer.isTripView()) {
             boolean multiSelect = event.isShiftDown();
-            RoadSign roadSign = layer.nearbyRoadSign(event.getPoint(), 
-                    multiSelect);
+            RoadSign roadSign = layer.nearbyRoadSign(event.getPoint(), multiSelect);
             
             if (roadSign != null) {
                 // a road sign was selected
@@ -282,13 +282,14 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
     }
     
     private void retrieveSign(Long signId) {
-        final RoadSign roadSign =
-                ServiceHandler.getInstance().retrieveSign(signId);
+        final RoadSign roadSign = ServiceHandler.getInstance().retrieveSign(
+                signId);
         SwingUtilities.invokeLater(new Runnable() {
             
             @Override
             public void run() {
                 dialog.updateData(roadSign);
+                layer.updateSelRoadSign(roadSign);
                 Main.map.repaint();
             }
         });
@@ -344,8 +345,9 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
                 BoundingBox bbox = Util.buildBBox(Main.map.mapView);
                 if (bbox != null) {
                     int zoom = OsmUrlToBounds.getZoom(Main.map.mapView.getRealBounds());
-                    final List<RoadSign> roadSigns = ServiceHandler.getInstance().
-                            searchSigns(bbox, searchFilter, zoom);
+                    final List<RoadSign> roadSigns = 
+                            ServiceHandler.getInstance().searchSigns(bbox,
+                                    searchFilter, zoom);
                     SwingUtilities.invokeLater(new Runnable() {
                         
                         @Override
@@ -360,10 +362,11 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
                 }
             }
         }
+        
         private boolean removeSelection(List<RoadSign> roadSigns) {
             RoadSign selRoadSign = layer.lastSelRoadSign();
-            return selRoadSign!=null && roadSigns!=null && !roadSigns.contains(
-                    selRoadSign);
+            return selRoadSign != null && roadSigns != null
+                    && !roadSigns.contains(selRoadSign);
         }
     }
     
@@ -397,5 +400,4 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
             }
         }
     }
-    
 }

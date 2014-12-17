@@ -83,14 +83,17 @@ class PaintHandler {
     }
     
     /**
-     * Draws the given road sign along with the trip data (nearby positions) 
-     * to the map.
+     * Draws the given road sign along with the trip data (nearby positions) to
+     * the map.
      * 
      * @param g2D the {@code Graphics2D} used to draw
      * @param mv the current {@code MapView}
      * @param roadSign the {@code RoadSign} to be drawn
      */
     void drawTripData(Graphics2D g2D, MapView mv, RoadSign roadSign) {
+        // draw road sign
+        drawRoadSign(g2D, mv, roadSign, true);
+        
         // draw positions
         g2D.setComposite(POS_COMP);
         if (roadSign.getNearbyPos() != null) {
@@ -101,10 +104,7 @@ class PaintHandler {
                 }
             }
         }
-        // draw road sign
         g2D.setComposite(COMP);
-        drawRoadSign(g2D, mv, roadSign, true);
-        
     }
     
     private void drawRoadSign(Graphics2D g2D, MapView mv, RoadSign roadSign,
@@ -129,7 +129,7 @@ class PaintHandler {
             }
         });
     }
-
+    
     private void drawCircle(Graphics2D g2D, Point point, Color color,
             Double radius) {
         Ellipse2D.Double circle = new Ellipse2D.Double(point.x - radius / 2, 
