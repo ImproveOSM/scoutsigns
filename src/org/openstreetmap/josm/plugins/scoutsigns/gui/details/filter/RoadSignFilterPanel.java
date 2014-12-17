@@ -213,112 +213,154 @@ class RoadSignFilterPanel extends JPanel {
     }
     
     /**
-     * Returns the selected filters.
+     * Returns the selected filters. If the user's input is invalid the method
+     * return null.
      * 
      * @return a {@code SearchFilter} object.
      */
     SearchFilter getSelectedFilter() {
-        String fromStr = (String) cbboxStart.getSelectedItem();
-        Date fromDate = DateUtil.parseDay(fromStr);
-        Long from = fromDate != null ? fromDate.getTime() : null;
-        String toStr = (String) cbboxEnd.getSelectedItem();
-        Date toDate = DateUtil.parseDay(toStr);
-        Long to = toDate != null ? toDate.getTime() : null;
-        Status status = pnlStatus.getSelection();
-        String type = listTypes.getSelectedValue();
-        String duplicateStr = txtDupl.getText().trim();
-        Long duplicate = !duplicateStr.isEmpty() ? Long.parseLong(duplicateStr) 
-                : null;
-        String confidenceStr = txtConf.getText().trim();
-        Short confidence = !confidenceStr.isEmpty() ? Short.parseShort(
-                confidenceStr) : null;
-        String appName = txtAppName.getText().trim();
-        String appVersion = txtAppVers.getText().trim();
-        String osName = txtOsName.getText().trim();
-        String osVersion = txtOsVers.getText().trim();
-        String username = txtUsername.getText().trim();
-        
-        return new SearchFilter(new TimestampFilter(from, to), type, status,
-                duplicate, confidence, new Application(appName, appVersion),
-                new Device(osName, osVersion), username);
+        // verify text inputs
+        SearchFilter filter = null;
+        if (verifyInput()) {
+            String fromStr = (String) cbboxStart.getSelectedItem();
+            Date fromDate = DateUtil.parseDay(fromStr);
+            Long from = fromDate != null ? fromDate.getTime() : null;
+            String toStr = (String) cbboxEnd.getSelectedItem();
+            Date toDate = DateUtil.parseDay(toStr);
+            Long to = toDate != null ? toDate.getTime() : null;
+            Status status = pnlStatus.getSelection();
+            String type = listTypes.getSelectedValue();
+            String duplicateStr = txtDupl.getText().trim();
+            Long duplicate = !duplicateStr.isEmpty() ? 
+                    Long.parseLong(duplicateStr) : null;
+            String confidenceStr = txtConf.getText().trim();
+            Short confidence = !confidenceStr.isEmpty() ? 
+                    Short.parseShort(confidenceStr) : null;
+            String appName = txtAppName.getText().trim();
+            String appVersion = txtAppVers.getText().trim();
+            String osName = txtOsName.getText().trim();
+            String osVersion = txtOsVers.getText().trim();
+            String username = txtUsername.getText().trim();
+            
+            filter = new SearchFilter(new TimestampFilter(from, to), type,
+                    status, duplicate, confidence, new Application(appName, 
+                            appVersion), new Device(osName, osVersion), username);
+        }
+        return filter;
     }
     
+    private boolean verifyInput() {
+        return txtDupl.getInputVerifier().verify(txtDupl)
+                && txtConf.getInputVerifier().verify(txtConf);
+    }
     
     private static final class Constraints {
         
         private Constraints() {}
         
-        private static final GridBagConstraints LBL_INT = new GridBagConstraints(
-                0, 0, 1, 1, 1, 1, GridBagConstraints.PAGE_START,
-                GridBagConstraints.HORIZONTAL, new Insets(7, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints CBB_START = new GridBagConstraints(
-                1, 0, 1, 1, 1, 0, GridBagConstraints.PAGE_START, 
-                GridBagConstraints.HORIZONTAL, new Insets(7, 5, 2, 5), 0, 0);
-        private static final GridBagConstraints CBB_END = new GridBagConstraints(
-                2, 0, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
-                GridBagConstraints.HORIZONTAL, new Insets(7, 5, 2, 5), 0, 0);
-        private static final GridBagConstraints LBL_STATUS = new GridBagConstraints(
-                0, 1, 1, 1, 1, 1, GridBagConstraints.PAGE_START, 
-                GridBagConstraints.HORIZONTAL, new Insets(7, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints PNL_STATUS = 
-                new GridBagConstraints(1, 1, 3, 1, 1, 0, GridBagConstraints.PAGE_START,
+        private static final GridBagConstraints LBL_INT =
+                new GridBagConstraints(0, 0, 1, 1, 1, 1,
+                        GridBagConstraints.PAGE_START,
+                        GridBagConstraints.HORIZONTAL, new Insets(7, 5, 3, 5),
+                        0, 0);
+        private static final GridBagConstraints CBB_START =
+                new GridBagConstraints(1, 0, 1, 1, 1, 0,
+                        GridBagConstraints.PAGE_START,
+                        GridBagConstraints.HORIZONTAL, new Insets(7, 5, 2, 5),
+                        0, 0);
+        private static final GridBagConstraints CBB_END =
+                new GridBagConstraints(2, 0, 1, 1, 1, 0,
+                        GridBagConstraints.PAGE_START,
+                        GridBagConstraints.HORIZONTAL, new Insets(7, 5, 2, 5),
+                        0, 0);
+        private static final GridBagConstraints LBL_STATUS =
+                new GridBagConstraints(0, 1, 1, 1, 1, 1,
+                        GridBagConstraints.PAGE_START,
+                        GridBagConstraints.HORIZONTAL, new Insets(7, 5, 3, 5),
+                        0, 0);
+        private static final GridBagConstraints PNL_STATUS =
+                new GridBagConstraints(1, 1, 3, 1, 1, 0,
+                        GridBagConstraints.PAGE_START,
                         GridBagConstraints.HORIZONTAL, new Insets(0, 0, 3, 3),
                         0, 0);
-        private static final GridBagConstraints LBL_TYPE = new GridBagConstraints(
-                0, 2, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
-                GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints LIST_TYPE = new GridBagConstraints(
-                1, 2, 2, 1, 1, 0, GridBagConstraints.CENTER,
-                GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 110);
-        private static final GridBagConstraints LBL_DUPL = new GridBagConstraints(
-                0, 3, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
-                GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints TXT_DUPL = new GridBagConstraints(
-                1, 3, 1, 1, 1, 0, GridBagConstraints.CENTER,
-                GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints LBL_DUPL_ERROR =
-                new GridBagConstraints(2, 3, 1, 1, 1, 0, GridBagConstraints.CENTER,
+        private static final GridBagConstraints LBL_TYPE =
+                new GridBagConstraints(0, 2, 1, 1, 1, 0,
+                        GridBagConstraints.PAGE_START,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
-        private static final GridBagConstraints LBL_CONF = new GridBagConstraints(
-                0, 4, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
-                GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
+        private static final GridBagConstraints LIST_TYPE =
+                new GridBagConstraints(1, 2, 2, 1, 1, 0,
+                        GridBagConstraints.CENTER,
+                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
+                        0, 110);
+        private static final GridBagConstraints LBL_DUPL =
+                new GridBagConstraints(0, 3, 1, 1, 1, 0,
+                        GridBagConstraints.PAGE_START,
+                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
+                        0, 0);
+        private static final GridBagConstraints TXT_DUPL =
+                new GridBagConstraints(1, 3, 1, 1, 1, 0,
+                        GridBagConstraints.CENTER,
+                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
+                        0, 0);
+        private static final GridBagConstraints LBL_DUPL_ERROR =
+                new GridBagConstraints(2, 3, 1, 1, 1, 0,
+                        GridBagConstraints.CENTER,
+                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
+                        0, 0);
+        private static final GridBagConstraints LBL_CONF =
+                new GridBagConstraints(0, 4, 1, 1, 1, 0,
+                        GridBagConstraints.PAGE_START,
+                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
+                        0, 0);
         private static final GridBagConstraints TXT_CONF =
                 new GridBagConstraints(1, 4, 1, 1, 1, 0,
                         GridBagConstraints.CENTER,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
         private static final GridBagConstraints LBL_CONF_ERROR =
-                new GridBagConstraints(2, 4, 1, 1, 1, 0, GridBagConstraints.CENTER,
+                new GridBagConstraints(2, 4, 1, 1, 1, 0,
+                        GridBagConstraints.CENTER,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
-        private static final GridBagConstraints LBL_USERNAME = new GridBagConstraints(
-                0, 5, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
-                GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
+        private static final GridBagConstraints LBL_USERNAME =
+                new GridBagConstraints(0, 5, 1, 1, 1, 0,
+                        GridBagConstraints.PAGE_START,
+                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
+                        0, 0);
         private static final GridBagConstraints TXT_USERNAME =
                 new GridBagConstraints(1, 5, 1, 1, 1, 0,
                         GridBagConstraints.CENTER,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
-        private static final GridBagConstraints LBL_DEV = new GridBagConstraints(
-                0, 6, 1, 1, 1, 0, GridBagConstraints.PAGE_START, 
-                GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints TXT_OS_NAME = new GridBagConstraints(
-                1, 6, 1, 1, 1, 0, GridBagConstraints.CENTER,
-                GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
+        private static final GridBagConstraints LBL_DEV =
+                new GridBagConstraints(0, 6, 1, 1, 1, 0,
+                        GridBagConstraints.PAGE_START,
+                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
+                        0, 0);
+        private static final GridBagConstraints TXT_OS_NAME =
+                new GridBagConstraints(1, 6, 1, 1, 1, 0,
+                        GridBagConstraints.CENTER,
+                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
+                        0, 0);
         private static final GridBagConstraints TXT_OS_VERS =
-                new GridBagConstraints(2, 6, 1, 1, 1, 0, GridBagConstraints.CENTER,
+                new GridBagConstraints(2, 6, 1, 1, 1, 0,
+                        GridBagConstraints.CENTER,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
-        private static final GridBagConstraints LBL_APP = new GridBagConstraints(
-                0, 7, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
-                GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
+        private static final GridBagConstraints LBL_APP =
+                new GridBagConstraints(0, 7, 1, 1, 1, 0,
+                        GridBagConstraints.PAGE_START,
+                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
+                        0, 0);
         private static final GridBagConstraints TXT_APP_NAME =
-                new GridBagConstraints(1, 7, 1, 1, 1, 0, GridBagConstraints.CENTER,
+                new GridBagConstraints(1, 7, 1, 1, 1, 0,
+                        GridBagConstraints.CENTER,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
-        private static final GridBagConstraints TXT_APP_VERS = 
-                new GridBagConstraints(2, 7, 1, 1, 1, 0, GridBagConstraints.CENTER,
+        private static final GridBagConstraints TXT_APP_VERS =
+                new GridBagConstraints(2, 7, 1, 1, 1, 0,
+                        GridBagConstraints.CENTER,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
     }

@@ -98,14 +98,16 @@ class ButtonPanel extends JPanel {
                 // apply filters
                 PrefManager prefManager = PrefManager.getInstance();
                 SearchFilter newFilter = parent.getSelectedFilters();
-                SearchFilter oldFilter = prefManager.loadSearchFilter();
-                if (oldFilter.equals(newFilter)) {
-                    prefManager.saveFiltersChangedFlag(false);
-                } else {
-                    prefManager.saveSearchFilter(newFilter);
-                    prefManager.saveFiltersChangedFlag(true);
+                if (newFilter != null) {
+                    SearchFilter oldFilter = prefManager.loadSearchFilter();
+                    if (oldFilter.equals(newFilter)) {
+                        prefManager.saveFiltersChangedFlag(false);
+                    } else {
+                        prefManager.saveSearchFilter(newFilter);
+                        prefManager.saveFiltersChangedFlag(true);
+                    }
+                    parent.dispose();
                 }
-                parent.dispose();
             }
         }
     }

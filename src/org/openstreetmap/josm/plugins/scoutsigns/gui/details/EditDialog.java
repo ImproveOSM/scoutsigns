@@ -137,8 +137,8 @@ class EditDialog extends JDialog implements StatusChangeObservable {
     }
     
     private void addBtnPnl() {
-        lblCommentError = Builder.buildLabel(GuiCnf.getInstance().
-                getTxtCommentInvalid(), FontUtil.BOLD_12, Color.red, false);
+        lblCommentError = Builder.buildLabel(GuiCnf.getInstance().getTxtCommentInvalid(),
+                FontUtil.BOLD_12, Color.red, false);
         
         JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.TRAILING));
         pnlBtn.add(Builder.buildButton(new AddCommentAction(), GuiCnf
@@ -176,17 +176,11 @@ class EditDialog extends JDialog implements StatusChangeObservable {
         
         @Override
         public void actionPerformed(ActionEvent event) {
-            // read duplicateId if necessary
-            Long duplicateId = null;
-            if (status == Status.DUPLICATE) {
-                duplicateId = Long.parseLong(txtDuplicateId.getText().trim());
-            }
-            
-            // read comment text
-            String comment = txtComment.getText().trim();
-            if (comment.isEmpty()) {
-                lblCommentError.setVisible(true);
-            } else {
+            // if input is valid load username & create comment
+            if (validInput()) {
+                Long duplicateId = (status == Status.DUPLICATE) ? 
+                        Long.parseLong(txtDuplicateId.getText().trim()) : null;
+                
                 if (lblCommentError.isVisible()) {
                     lblCommentError.setVisible(false);
                 }
@@ -195,19 +189,34 @@ class EditDialog extends JDialog implements StatusChangeObservable {
                 // load username
                 String username = PrefManager.getInstance().loadOsmUsername();
                 if (username.isEmpty()) {
-                    String nemUsername = JOptionPane.showInputDialog(Main.parent,
+                    String nemUsername = JOptionPane.showInputDialog(Main.parent, 
                             GuiCnf.getInstance().getTxtUsernameWarning(),
                             GuiCnf.getInstance().getDlgWarningTitle(),
                             JOptionPane.WARNING_MESSAGE);
                     if (nemUsername != null && !nemUsername.isEmpty()) {
                         PrefManager.getInstance().saveOsmUsername(nemUsername);
-                        notifyObserver(nemUsername, comment, status,
-                                duplicateId);
+                        notifyObserver(nemUsername, txtComment.getText().trim(), 
+                                status, duplicateId);
                     }
                 } else {
-                    notifyObserver(username, comment, status, duplicateId);
+                    notifyObserver(username, txtComment.getText().trim(),
+                            status, duplicateId);
                 }
             }
+        }
+        
+        private boolean validInput() {
+            boolean valid = true;
+            if (status == Status.DUPLICATE && 
+                    !txtDuplicateId.getInputVerifier().verify(txtDuplicateId)) {
+                valid = false;
+            }
+            
+            if (txtComment.getText().trim().isEmpty()) {
+                lblCommentError.setVisible(true);
+                valid = false;
+            }
+            return valid;
         }
     }
 }
