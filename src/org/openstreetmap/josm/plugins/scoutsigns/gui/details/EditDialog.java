@@ -40,7 +40,6 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -53,6 +52,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.CancelAction;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
+import org.openstreetmap.josm.plugins.scoutsigns.gui.ModalDialog;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.DuplicateIdVerifier;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObservable;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
@@ -66,7 +66,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
  * @author Beata
  * @version $Revision$
  */
-class EditDialog extends JDialog implements StatusChangeObservable {
+class EditDialog extends ModalDialog implements StatusChangeObservable {
     
     private static final long serialVersionUID = 4145954527837092488L;
     
@@ -88,20 +88,19 @@ class EditDialog extends JDialog implements StatusChangeObservable {
      * Builds a new {@code CommentDialog} object
      */
     EditDialog(Status status, String title, Image image) {
+        super(title, image, DIM);
         this.status = status;
-        setIconImage(image);
-        setTitle(title);
-        setLayout(new BorderLayout());
-        setModal(true);
-        setMinimumSize(DIM);
-        
+    }
+    
+    
+    @Override
+    protected void createComponents() {
         if (status == Status.DUPLICATE) {
             addDuplicateId();
         }
         addComment();
         addBtnPnl();
     }
-    
     
     private void addDuplicateId() {
         txtDuplicateId = Builder.buildTextField(null, null, Color.white);
@@ -137,8 +136,8 @@ class EditDialog extends JDialog implements StatusChangeObservable {
     }
     
     private void addBtnPnl() {
-        lblCommentError = Builder.buildLabel(GuiCnf.getInstance().getTxtCommentInvalid(),
-                FontUtil.BOLD_12, Color.red, false);
+        lblCommentError = Builder.buildLabel(GuiCnf.getInstance().
+                getTxtCommentInvalid(), FontUtil.BOLD_12, Color.red, false);
         
         JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.TRAILING));
         pnlBtn.add(Builder.buildButton(new AddCommentAction(), GuiCnf
@@ -195,8 +194,9 @@ class EditDialog extends JDialog implements StatusChangeObservable {
                             JOptionPane.WARNING_MESSAGE);
                     if (nemUsername != null && !nemUsername.isEmpty()) {
                         PrefManager.getInstance().saveOsmUsername(nemUsername);
-                        notifyObserver(nemUsername, txtComment.getText().trim(), 
-                                status, duplicateId);
+                        notifyObserver(nemUsername,
+                                txtComment.getText().trim(), status,
+                                duplicateId);
                     }
                 } else {
                     notifyObserver(username, txtComment.getText().trim(),
@@ -207,8 +207,8 @@ class EditDialog extends JDialog implements StatusChangeObservable {
         
         private boolean validInput() {
             boolean valid = true;
-            if (status == Status.DUPLICATE && 
-                    !txtDuplicateId.getInputVerifier().verify(txtDuplicateId)) {
+            if (status == Status.DUPLICATE && !txtDuplicateId.getInputVerifier().
+                    verify(txtDuplicateId)) {
                 valid = false;
             }
             
