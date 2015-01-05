@@ -59,6 +59,7 @@ public class RoadSignFilterDialog extends ModalDialog {
     public RoadSignFilterDialog() {
         super(GuiCnf.getInstance().getDlgFilterTitle(), IconCnf.getInstance()
                 .getFilterIcon().getImage(), DIM);
+        createComponents();
     }
     
     

@@ -90,6 +90,7 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
     EditDialog(Status status, String title, Image image) {
         super(title, image, DIM);
         this.status = status;
+        createComponents();
     }
     
     
