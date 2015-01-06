@@ -65,8 +65,6 @@ public abstract class ModalDialog extends JDialog {
         setIconImage(icon);
         setSize(size);
         setMinimumSize(size);
-        
-        createComponents();
     }
     
     

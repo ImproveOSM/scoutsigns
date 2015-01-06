@@ -31,6 +31,7 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.gui.verifier;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 
 
@@ -40,7 +41,7 @@ import javax.swing.JLabel;
  * @author Beata
  * @version $Revision$
  */
-public class DuplicateIdVerifier extends JTextFieldVerifier {
+public class DuplicateIdVerifier extends AbstractVerifier {
     
     private static final int MIN_VAL = 0;
     
@@ -49,13 +50,25 @@ public class DuplicateIdVerifier extends JTextFieldVerifier {
     /**
      * Builds a {@code DuplicateIdVerifier} object with the given arguments.
      * 
-     * @param lblError the {@code JLabel} to display if the user entered input
-     * is not valid
-     * @param required specifies how to handle empty value
+     * @param component the {@code JComponent} that is validated
+     * @param message a {@code String} to be displayed if the user input is
+     * invalid. This string is displayed as a tool-tip.
      */
-    public DuplicateIdVerifier(JLabel lblError, boolean required) {
-        super(lblError);
-        this.required = required;
+    public DuplicateIdVerifier(JComponent component, String message) {
+        super(component, message);
+        this.required = false;
+    }
+    
+    /**
+     * Builds a {@code DuplicateIdVerifier} object with the given arguments.
+     * 
+     * @param component the {@code JComponent} that is validated
+     * @param lblMessage a {@code JLabel} to be displayed if the user input is
+     * invalid. This string is displayed as a tool-tip.
+     */
+    public DuplicateIdVerifier(JComponent component, JLabel lblMessage) {
+        super(component, lblMessage);
+        this.required = true;
     }
     
     

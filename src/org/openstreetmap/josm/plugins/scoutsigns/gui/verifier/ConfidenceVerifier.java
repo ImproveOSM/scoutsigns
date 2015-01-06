@@ -31,7 +31,7 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.gui.verifier;
 
-import javax.swing.JLabel;
+import javax.swing.JComponent;
 
 
 /**
@@ -40,25 +40,25 @@ import javax.swing.JLabel;
  * @author Beata
  * @version $Revision$
  */
-public class ConfidenceVerifier extends JTextFieldVerifier {
+public class ConfidenceVerifier extends AbstractVerifier {
     
     private static final int MIN_VAL = 0;
     private static final int MAX_VAL = 100;
     
-    
     /**
-     * Builds a new {@code ConfidenceVerifier} with the given argument.
+     * Builds a new {@code ConfidenceVerifier} with the given arguments.
      * 
-     * @param lblError the {@code JLabel} to display if the user entered input
-     * is not valid
+     * @param component the {@code JComponent} that is validated
+     * @param message a {@code String} to be displayed if the user input is
+     * invalid. This string is displayed as a tool-tip.
      */
-    public ConfidenceVerifier(JLabel lblError) {
-        super(lblError);
+    public ConfidenceVerifier(JComponent component, String message) {
+        super(component, message);
     }
     
     
     @Override
-    boolean validate(String value) {
+    protected boolean validate(String value) {
         boolean valid = true;
         if (!value.isEmpty()) {
             try {

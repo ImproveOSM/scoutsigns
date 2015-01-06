@@ -73,6 +73,9 @@ public final class IconCnf {
     private final String typeIconPath;
     private final String defTypeIconName;
     
+    /* calendar icon */
+    private final ImageIcon calendarIcon;
+    
     
     private IconCnf() {
         Properties properties = CnfUtil.load(CNF_FILE);
@@ -91,6 +94,7 @@ public final class IconCnf {
         typeIconPath = CnfUtil.readProperty(properties, "sign.types.path");
         selRoadSignBg = getIcon(properties, "sign.sel.bg");
         defTypeIconName = CnfUtil.readProperty(properties, "sign.types.def");
+        calendarIcon = getIcon(properties, "calendar.icon"); 
     }
     
     
@@ -160,5 +164,9 @@ public final class IconCnf {
     
     public String getDefTypeIconName() {
         return defTypeIconName;
+    }
+
+    public ImageIcon getCalendarIcon() {
+        return calendarIcon;
     }
 }

@@ -108,9 +108,9 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
         txtDuplicateId.setBorder(BorderFactory.createLineBorder(Color.gray));
         
         JLabel lblDuplError = Builder.buildLabel(GuiCnf.getInstance().
-                getTxtDuplIdInvalid(), FontUtil.BOLD_12, Color.red, false);
-        txtDuplicateId.setInputVerifier(new DuplicateIdVerifier(lblDuplError,
-                true));
+                getTxtDuplIdInvalid(),FontUtil.BOLD_12, Color.red, false);
+        txtDuplicateId.setInputVerifier(new DuplicateIdVerifier(txtDuplicateId,
+                lblDuplError));
         
         JPanel pnlDuplicate = new JPanel(new GridLayout(1, 0, 1, 1));
         pnlDuplicate.add(txtDuplicateId);
@@ -138,7 +138,7 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
     
     private void addBtnPnl() {
         lblCommentError = Builder.buildLabel(GuiCnf.getInstance().
-                getTxtCommentInvalid(), FontUtil.BOLD_12, Color.red, false);
+                getTxtCommentInvalid(),FontUtil.BOLD_12, Color.red, false);
         
         JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.TRAILING));
         pnlBtn.add(Builder.buildButton(new AddCommentAction(), GuiCnf
@@ -195,9 +195,8 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
                             JOptionPane.WARNING_MESSAGE);
                     if (nemUsername != null && !nemUsername.isEmpty()) {
                         PrefManager.getInstance().saveOsmUsername(nemUsername);
-                        notifyObserver(nemUsername,
-                                txtComment.getText().trim(), status,
-                                duplicateId);
+                        notifyObserver(nemUsername, txtComment.getText().trim(), 
+                                status, duplicateId);
                     }
                 } else {
                     notifyObserver(username, txtComment.getText().trim(),
@@ -208,8 +207,8 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
         
         private boolean validInput() {
             boolean valid = true;
-            if (status == Status.DUPLICATE && !txtDuplicateId.getInputVerifier().
-                    verify(txtDuplicateId)) {
+            if (status == Status.DUPLICATE && 
+                    !txtDuplicateId.getInputVerifier().verify(txtDuplicateId)) {
                 valid = false;
             }
             

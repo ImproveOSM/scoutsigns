@@ -89,6 +89,7 @@
 		<jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
 			<zipfileset src="${plugin.lib.dir}/gson-2.2.4.jar" />
 			<zipfileset src="${plugin.lib.dir}/commons-io-2.4.jar" />
+			<zipfileset src="${plugin.lib.dir}/swingx-all-1.6.5.jar" />
 			<manifest>
 				<attribute name="Author" value="telenav" />
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.scoutsigns.ScoutSignsPlugin" />

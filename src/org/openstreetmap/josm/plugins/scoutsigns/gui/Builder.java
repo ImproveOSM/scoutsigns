@@ -39,6 +39,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeListener;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -48,6 +51,8 @@ import javax.swing.DefaultListModel;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField.AbstractFormatter;
+import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
@@ -59,6 +64,7 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import org.jdesktop.swingx.JXDatePicker;
 
 
 /**
@@ -70,6 +76,9 @@ import javax.swing.SwingConstants;
 public final class Builder {
     
     private static final int HEADER_WIDTH = 12;
+    
+    private static final Dimension PICKER_DIM = new Dimension(120, 20);
+    private static final Dimension PICKER_BTN_DIM = new Dimension(20, 20);
     
     private Builder() {}
     
@@ -386,5 +395,46 @@ public final class Builder {
         list.setSelectionMode(selModel);
         list.setSelectedValue(selData, true);
         return list;
+    }
+    
+    /**
+     * Builds a new {@code JXDatePicker} with the given arguments.
+     * 
+     * @param icon the {@code Icon} to be displayed on the action button
+     * @param formatter custom {@code AbstractFormatter} used for formatting
+     * the user's input
+     * @param changeListener {@code PropertyChangeListener} defining the action
+     * to be executed when the controller's value is changed
+     * @param lowerDate the lower {@code Date} limit to be set
+     * @param upperDate the upper {@code Date} limit to be set
+     * @return a {@code JXDatePicker} object
+     */
+    public static JXDatePicker buildDatePicker(Icon icon,
+            AbstractFormatter formatter, PropertyChangeListener changeListener,
+            Date lowerDate, Date upperDate) {
+        JXDatePicker picker = new JXDatePicker();
+        
+        picker.setPreferredSize(PICKER_DIM);
+        
+        // customize month view
+        picker.getMonthView().setTodayBackground(Color.darkGray);
+        picker.getMonthView().setDayForeground(Calendar.SATURDAY, Color.red);
+        picker.getMonthView().setShowingLeadingDays(true);
+        picker.getMonthView().setShowingTrailingDays(true);
+        picker.getMonthView().setLowerBound(lowerDate);
+        picker.getMonthView().setUpperBound(upperDate);
+        
+        // customize button
+        ((JButton) picker.getComponent(1)).setIcon(icon);
+        ((JButton) picker.getComponent(1)).setPreferredSize(PICKER_BTN_DIM);
+        
+        // customize editor
+        picker.getEditor().setFormatterFactory(
+                new DefaultFormatterFactory(formatter));
+        
+        // add listener
+        picker.addPropertyChangeListener(changeListener);
+        
+        return picker;
     }
 }

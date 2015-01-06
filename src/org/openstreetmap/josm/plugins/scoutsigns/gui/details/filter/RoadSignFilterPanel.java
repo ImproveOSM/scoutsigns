@@ -35,25 +35,30 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Calendar;
 import java.util.Date;
-import javax.swing.JLabel;
+import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import org.jdesktop.swingx.JXDatePicker;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.TimestampFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Application;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Device;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.DateUtil;
+import org.openstreetmap.josm.plugins.scoutsigns.gui.DateFormatter;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.calendar.CalendarComboBox;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.ConfidenceVerifier;
+import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.DateVerifier;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.DuplicateIdVerifier;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ServiceCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
 
@@ -68,8 +73,8 @@ class RoadSignFilterPanel extends JPanel {
     
     private static final long serialVersionUID = 31048161544787922L;
     
-    private CalendarComboBox cbboxStart;
-    private CalendarComboBox cbboxEnd;
+    private JXDatePicker pickerTo;
+    private JXDatePicker pickerFrom;
     private StatusFilterPanel pnlStatus;
     private JList<String> listTypes;
     private JTextField txtDupl;
@@ -103,12 +108,28 @@ class RoadSignFilterPanel extends JPanel {
     private void addTimeIntervalFilter(TimestampFilter tstampFilter) {
         add(Builder.buildLabel(GuiCnf.getInstance().getLblTimeInt(),
                 FontUtil.BOLD_12, null), Constraints.LBL_INT);
-        Long from = tstampFilter != null ? tstampFilter.getFrom() : null;
-        cbboxStart = new CalendarComboBox(from);
-        add(cbboxStart, Constraints.CBB_START);
-        Long to = tstampFilter != null ? tstampFilter.getTo() : null;
-        cbboxEnd = new CalendarComboBox(to);
-        add(cbboxEnd, Constraints.CBB_END);
+        
+        Date currentDate = Calendar.getInstance().getTime();
+        Date lowerDate = tstampFilter != null && tstampFilter.getFrom() != null 
+                ? new Date(tstampFilter.getFrom()) : null;
+        Date upperDate = tstampFilter != null && tstampFilter.getTo() != null ?
+                new Date(tstampFilter.getTo()) : currentDate;
+                
+        ImageIcon icon = IconCnf.getInstance().getCalendarIcon();
+        
+        pickerFrom = Builder.buildDatePicker(icon, new DateFormatter(),
+                new FromChangeListener(), lowerDate, upperDate);
+        DateVerifier fromVerifier = new DateVerifier(pickerFrom.getEditor(),
+                GuiCnf.getInstance().getTxtDateInvalid());
+        pickerFrom.getEditor().setInputVerifier(fromVerifier);
+        add(pickerFrom, Constraints.CBB_START);
+        
+        pickerTo = Builder.buildDatePicker(icon, new DateFormatter(),
+                new ToChangeListener(), lowerDate, upperDate);
+        DateVerifier toVerifier = new DateVerifier(pickerTo.getEditor(),
+                GuiCnf.getInstance().getTxtDateInvalid());
+        pickerTo.getEditor().setInputVerifier(toVerifier);
+        add(pickerTo, Constraints.CBB_END);
     }
     
     private void addStatusFilter(Status status) {
@@ -135,12 +156,8 @@ class RoadSignFilterPanel extends JPanel {
         String txt = duplicate != null ? duplicate.toString() : "";
         txtDupl = Builder.buildTextField(txt, null, Color.white);
         add(txtDupl, Constraints.TXT_DUPL);
-        
-        // visible only if invalid value is entered
-        JLabel lblDuplError = Builder.buildLabel(GuiCnf.getInstance().
-                getTxtDuplIdInvalid(), FontUtil.BOLD_12, Color.red, false);
-        add(lblDuplError, Constraints.LBL_DUPL_ERROR);
-        txtDupl.setInputVerifier(new DuplicateIdVerifier(lblDuplError, false));
+        txtDupl.setInputVerifier(new DuplicateIdVerifier(txtDupl, GuiCnf
+                .getInstance().getTxtDuplIdInvalid()));
     }
     
     private void addConfidenceFilter(Short confidence) {
@@ -148,13 +165,9 @@ class RoadSignFilterPanel extends JPanel {
                 FontUtil.BOLD_12, null), Constraints.LBL_CONF);
         String txt = confidence != null ? confidence.toString() : "";
         txtConf = Builder.buildTextField(txt, null, Color.white);
+        txtConf.setInputVerifier(new ConfidenceVerifier(txtConf, GuiCnf
+                .getInstance().getTxtConfInvalid()));
         add(txtConf, Constraints.TXT_CONF);
-        
-        // visible only if invalid value is entered
-        JLabel lblConfError = Builder.buildLabel(GuiCnf.getInstance().
-                getTxtConfInvalid(), FontUtil.BOLD_12, Color.red, false);
-        txtConf.setInputVerifier(new ConfidenceVerifier(lblConfError));
-        add(lblConfError, Constraints.LBL_CONF_ERROR);
     }
     
     private void addUsernameFilter(String username) {
@@ -198,8 +211,8 @@ class RoadSignFilterPanel extends JPanel {
      * Resets the filters to the default one.
      */
     void resetFilters() {
-        cbboxStart.setSelectedIndex(-1);
-        cbboxEnd.setSelectedIndex(-1);
+        pickerFrom.setDate(null);
+        pickerTo.setDate(null);
         pnlStatus.clearSelection();
         listTypes.clearSelection();
         txtDupl.setText("");
@@ -222,36 +235,73 @@ class RoadSignFilterPanel extends JPanel {
         // verify text inputs
         SearchFilter filter = null;
         if (verifyInput()) {
-            String fromStr = (String) cbboxStart.getSelectedItem();
-            Date fromDate = DateUtil.parseDay(fromStr);
-            Long from = fromDate != null ? fromDate.getTime() : null;
-            String toStr = (String) cbboxEnd.getSelectedItem();
-            Date toDate = DateUtil.parseDay(toStr);
-            Long to = toDate != null ? toDate.getTime() : null;
+            Long from = pickerFrom.getDate() != null ? 
+                    pickerFrom.getDate().getTime() : null;
+            
+            Long to = pickerTo.getDate() != null ? pickerTo.getDate().getTime() 
+                    : null;
             Status status = pnlStatus.getSelection();
             String type = listTypes.getSelectedValue();
             String duplicateStr = txtDupl.getText().trim();
             Long duplicate = !duplicateStr.isEmpty() ? 
                     Long.parseLong(duplicateStr) : null;
+                    
             String confidenceStr = txtConf.getText().trim();
-            Short confidence = !confidenceStr.isEmpty() ? 
+            Short confidence = !confidenceStr.isEmpty() ?
                     Short.parseShort(confidenceStr) : null;
+                    
             String appName = txtAppName.getText().trim();
             String appVersion = txtAppVers.getText().trim();
+            
             String osName = txtOsName.getText().trim();
             String osVersion = txtOsVers.getText().trim();
+            
             String username = txtUsername.getText().trim();
             
             filter = new SearchFilter(new TimestampFilter(from, to), type,
-                    status, duplicate, confidence, new Application(appName, 
+                    status, duplicate, confidence, new Application(appName,
                             appVersion), new Device(osName, osVersion), username);
         }
         return filter;
     }
     
     private boolean verifyInput() {
-        return txtDupl.getInputVerifier().verify(txtDupl)
-                && txtConf.getInputVerifier().verify(txtConf);
+        return txtDupl.getInputVerifier().verify(txtDupl) && 
+                txtConf.getInputVerifier().verify(txtConf) && 
+                pickerFrom.getEditor().getInputVerifier().verify(
+                        pickerFrom.getEditor()) && 
+                pickerTo.getEditor().getInputVerifier().verify(
+                        pickerTo.getEditor());
+    }
+    
+    
+    /*
+     * Listens to from date change value events.
+     */
+    private final class FromChangeListener implements PropertyChangeListener {
+        
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (evt.getPropertyName().equals("date")) {
+                pickerTo.getMonthView().setLowerBound(pickerFrom.getDate());
+            }
+        }
+        
+    }
+    
+    
+    /*
+     * Listens to to date change value events.
+     */
+    private final class ToChangeListener implements PropertyChangeListener {
+        
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (evt.getPropertyName().equals("date")) {
+                pickerFrom.getMonthView().setUpperBound(pickerTo.getDate());
+            }
+        }
+        
     }
     
     private static final class Constraints {
@@ -274,92 +324,82 @@ class RoadSignFilterPanel extends JPanel {
                         GridBagConstraints.HORIZONTAL, new Insets(7, 5, 2, 5),
                         0, 0);
         private static final GridBagConstraints LBL_STATUS =
-                new GridBagConstraints(0, 1, 1, 1, 1, 1,
+                new GridBagConstraints(0, 2, 1, 1, 1, 1,
                         GridBagConstraints.PAGE_START,
                         GridBagConstraints.HORIZONTAL, new Insets(7, 5, 3, 5),
                         0, 0);
         private static final GridBagConstraints PNL_STATUS =
-                new GridBagConstraints(1, 1, 3, 1, 1, 0,
+                new GridBagConstraints(1, 2, 3, 1, 1, 0,
                         GridBagConstraints.PAGE_START,
                         GridBagConstraints.HORIZONTAL, new Insets(0, 0, 3, 3),
                         0, 0);
         private static final GridBagConstraints LBL_TYPE =
-                new GridBagConstraints(0, 2, 1, 1, 1, 0,
-                        GridBagConstraints.PAGE_START,
-                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
-                        0, 0);
-        private static final GridBagConstraints LIST_TYPE =
-                new GridBagConstraints(1, 2, 2, 1, 1, 0,
-                        GridBagConstraints.CENTER,
-                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
-                        0, 110);
-        private static final GridBagConstraints LBL_DUPL =
                 new GridBagConstraints(0, 3, 1, 1, 1, 0,
                         GridBagConstraints.PAGE_START,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
-        private static final GridBagConstraints TXT_DUPL =
-                new GridBagConstraints(1, 3, 1, 1, 1, 0,
+        private static final GridBagConstraints LIST_TYPE =
+                new GridBagConstraints(1, 3, 2, 1, 1, 0,
                         GridBagConstraints.CENTER,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
-                        0, 0);
-        private static final GridBagConstraints LBL_DUPL_ERROR =
-                new GridBagConstraints(2, 3, 1, 1, 1, 0,
-                        GridBagConstraints.CENTER,
-                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
-                        0, 0);
-        private static final GridBagConstraints LBL_CONF =
+                        0, 110);
+        private static final GridBagConstraints LBL_DUPL =
                 new GridBagConstraints(0, 4, 1, 1, 1, 0,
                         GridBagConstraints.PAGE_START,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
-        private static final GridBagConstraints TXT_CONF =
+        private static final GridBagConstraints TXT_DUPL =
                 new GridBagConstraints(1, 4, 1, 1, 1, 0,
                         GridBagConstraints.CENTER,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
-        private static final GridBagConstraints LBL_CONF_ERROR =
-                new GridBagConstraints(2, 4, 1, 1, 1, 0,
-                        GridBagConstraints.CENTER,
-                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
-                        0, 0);
-        private static final GridBagConstraints LBL_USERNAME =
+        private static final GridBagConstraints LBL_CONF =
                 new GridBagConstraints(0, 5, 1, 1, 1, 0,
                         GridBagConstraints.PAGE_START,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
-        private static final GridBagConstraints TXT_USERNAME =
+        private static final GridBagConstraints TXT_CONF =
                 new GridBagConstraints(1, 5, 1, 1, 1, 0,
                         GridBagConstraints.CENTER,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
-        private static final GridBagConstraints LBL_DEV =
+        private static final GridBagConstraints LBL_USERNAME =
                 new GridBagConstraints(0, 6, 1, 1, 1, 0,
                         GridBagConstraints.PAGE_START,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
-        private static final GridBagConstraints TXT_OS_NAME =
+        private static final GridBagConstraints TXT_USERNAME =
                 new GridBagConstraints(1, 6, 1, 1, 1, 0,
                         GridBagConstraints.CENTER,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
-        private static final GridBagConstraints TXT_OS_VERS =
-                new GridBagConstraints(2, 6, 1, 1, 1, 0,
-                        GridBagConstraints.CENTER,
-                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
-                        0, 0);
-        private static final GridBagConstraints LBL_APP =
+        private static final GridBagConstraints LBL_DEV =
                 new GridBagConstraints(0, 7, 1, 1, 1, 0,
                         GridBagConstraints.PAGE_START,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
-        private static final GridBagConstraints TXT_APP_NAME =
+        private static final GridBagConstraints TXT_OS_NAME =
                 new GridBagConstraints(1, 7, 1, 1, 1, 0,
                         GridBagConstraints.CENTER,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);
-        private static final GridBagConstraints TXT_APP_VERS =
+        private static final GridBagConstraints TXT_OS_VERS =
                 new GridBagConstraints(2, 7, 1, 1, 1, 0,
+                        GridBagConstraints.CENTER,
+                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
+                        0, 0);
+        private static final GridBagConstraints LBL_APP =
+                new GridBagConstraints(0, 8, 1, 1, 1, 0,
+                        GridBagConstraints.PAGE_START,
+                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
+                        0, 0);
+        private static final GridBagConstraints TXT_APP_NAME =
+                new GridBagConstraints(1, 8, 1, 1, 1, 0,
+                        GridBagConstraints.CENTER,
+                        GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
+                        0, 0);
+        private static final GridBagConstraints TXT_APP_VERS =
+                new GridBagConstraints(2, 8, 1, 1, 1, 0,
                         GridBagConstraints.CENTER,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
                         0, 0);

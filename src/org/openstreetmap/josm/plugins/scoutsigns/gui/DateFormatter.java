@@ -26,55 +26,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Nov 24, 2014 by Beata
+ * Created on Jan 6, 2015 by Beata
  * Modified on $DateTime$ by $Author$
  */
-package org.openstreetmap.josm.plugins.scoutsigns.gui.verifier;
+package org.openstreetmap.josm.plugins.scoutsigns.gui;
 
-import javax.swing.InputVerifier;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+import java.text.ParseException;
+import java.util.Date;
+import javax.swing.JFormattedTextField.AbstractFormatter;
 
 
 /**
- * Holds common functionality for {@code JTextField} input verifiers. Custom
- * {@code JTextField} verifiers should extend this class.
+ * Date formatter for text fields.
  * 
  * @author Beata
  * @version $Revision$
  */
-abstract class JTextFieldVerifier extends InputVerifier {
+public final class DateFormatter extends AbstractFormatter {
     
-    private JLabel lblError;
-    
-    /**
-     * Builds a new {@code JTextFieldVerifier} with the given argument.
-     * 
-     * @param lblError the {@code JLabel} to display if the user entered input
-     * is not valid
-     */
-    JTextFieldVerifier(JLabel lblError) {
-        this.lblError = lblError;
-    }
+    private static final long serialVersionUID = -1900706805089814228L;
     
     
     @Override
-    public boolean verify(JComponent input) {
-        JTextField txtField = (JTextField) input;
-        String valueStr = txtField.getText().trim();
-        
-        boolean valid = validate(valueStr);
-        if (valid) {
-            if (lblError.isVisible()) {
-                lblError.setVisible(false);
-            }
-        } else {
-            txtField.setText("");
-            lblError.setVisible(true);
-        }
-        return valid;
+    public Object stringToValue(String text) {
+        return DateUtil.parseDay(text);
     }
     
-    abstract boolean validate(String value);
+    @Override
+    public String valueToString(Object value) throws ParseException {
+        return DateUtil.formatDay((Date) value);
+    }
 }

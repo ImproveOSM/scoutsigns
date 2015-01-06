@@ -26,26 +26,45 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Sep 24, 2014 by Beata
+ * Created on Jan 6, 2015 by Beata
  * Modified on $DateTime$ by $Author$
  */
-package org.openstreetmap.josm.plugins.scoutsigns.gui.calendar;
+package org.openstreetmap.josm.plugins.scoutsigns.gui.verifier;
 
 import java.util.Date;
+import javax.swing.JComponent;
+import org.openstreetmap.josm.plugins.scoutsigns.gui.DateUtil;
 
 
 /**
- * Observes the calendar day selection user action.
+ * Input verifier for the date text field.
  * 
  * @author Beata
  * @version $Revision$
  */
-interface DaySelectionObserver {
+public class DateVerifier extends AbstractVerifier {
     
     /**
-     * Sets the selected day based on the given argument.
+     * Builds a new {@code DateVerifier} with the given arguments.
      * 
-     * @param day the day to be selected
+     * @param component the {@code JComponent} that is validated
+     * @param message a {@code String} to be displayed if the user input is
+     * invalid. This string is displayed as a tool-tip.
      */
-    void setDay(Date day);
+    public DateVerifier(JComponent component, String message) {
+        super(component, message);
+    }
+    
+    
+    @Override
+    protected boolean validate(String value) {
+        boolean valid = true;
+        if (!value.isEmpty()) {
+            Date date = DateUtil.parseDay(value);
+            if (date == null) {
+                valid = false;
+            }
+        }
+        return valid;
+    }
 }
