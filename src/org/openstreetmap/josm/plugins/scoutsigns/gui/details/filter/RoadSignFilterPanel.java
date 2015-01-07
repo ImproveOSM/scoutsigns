@@ -53,6 +53,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.Device;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.DateFormatter;
+import org.openstreetmap.josm.plugins.scoutsigns.gui.DateUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.ConfidenceVerifier;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.DateVerifier;
@@ -109,24 +110,25 @@ class RoadSignFilterPanel extends JPanel {
         add(Builder.buildLabel(GuiCnf.getInstance().getLblTimeInt(),
                 FontUtil.BOLD_12, null), Constraints.LBL_INT);
         
-        Date currentDate = Calendar.getInstance().getTime();
         Date lowerDate = tstampFilter != null && tstampFilter.getFrom() != null 
                 ? new Date(tstampFilter.getFrom()) : null;
-        Date upperDate = tstampFilter != null && tstampFilter.getTo() != null ?
-                new Date(tstampFilter.getTo()) : currentDate;
-                
+        Date upperDate = tstampFilter != null && tstampFilter.getTo() != null ? 
+                new Date(tstampFilter.getTo()) : Calendar.getInstance().getTime();
+        
         ImageIcon icon = IconCnf.getInstance().getCalendarIcon();
         
         pickerFrom = Builder.buildDatePicker(icon, new DateFormatter(),
                 new FromChangeListener(), lowerDate, upperDate);
-        DateVerifier fromVerifier = new DateVerifier(pickerFrom.getEditor(),
+        pickerFrom.getEditor().setText(DateUtil.formatDay(tstampFilter.getFrom()));
+        DateVerifier fromVerifier = new DateVerifier(pickerFrom.getEditor(), 
                 GuiCnf.getInstance().getTxtDateInvalid());
         pickerFrom.getEditor().setInputVerifier(fromVerifier);
         add(pickerFrom, Constraints.CBB_START);
         
         pickerTo = Builder.buildDatePicker(icon, new DateFormatter(),
                 new ToChangeListener(), lowerDate, upperDate);
-        DateVerifier toVerifier = new DateVerifier(pickerTo.getEditor(),
+        pickerTo.getEditor().setText(DateUtil.formatDay(tstampFilter.getTo()));
+        DateVerifier toVerifier = new DateVerifier(pickerTo.getEditor(), 
                 GuiCnf.getInstance().getTxtDateInvalid());
         pickerTo.getEditor().setInputVerifier(toVerifier);
         add(pickerTo, Constraints.CBB_END);
@@ -211,7 +213,9 @@ class RoadSignFilterPanel extends JPanel {
      * Resets the filters to the default one.
      */
     void resetFilters() {
+        pickerFrom.getEditor().setText("");
         pickerFrom.setDate(null);
+        pickerTo.getEditor().setText("");
         pickerTo.setDate(null);
         pnlStatus.clearSelection();
         listTypes.clearSelection();
@@ -235,21 +239,21 @@ class RoadSignFilterPanel extends JPanel {
         // verify text inputs
         SearchFilter filter = null;
         if (verifyInput()) {
-            Long from = pickerFrom.getDate() != null ? 
-                    pickerFrom.getDate().getTime() : null;
+            Long from = pickerFrom.getDate() != null ? pickerFrom.getDate().
+                    getTime() : null;
             
             Long to = pickerTo.getDate() != null ? pickerTo.getDate().getTime() 
                     : null;
             Status status = pnlStatus.getSelection();
             String type = listTypes.getSelectedValue();
             String duplicateStr = txtDupl.getText().trim();
-            Long duplicate = !duplicateStr.isEmpty() ? 
-                    Long.parseLong(duplicateStr) : null;
-                    
+            Long duplicate = !duplicateStr.isEmpty() ? Long.parseLong(duplicateStr) 
+                    : null;
+            
             String confidenceStr = txtConf.getText().trim();
-            Short confidence = !confidenceStr.isEmpty() ?
+            Short confidence = !confidenceStr.isEmpty() ? 
                     Short.parseShort(confidenceStr) : null;
-                    
+            
             String appName = txtAppName.getText().trim();
             String appVersion = txtAppVers.getText().trim();
             
@@ -259,14 +263,15 @@ class RoadSignFilterPanel extends JPanel {
             String username = txtUsername.getText().trim();
             
             filter = new SearchFilter(new TimestampFilter(from, to), type,
-                    status, duplicate, confidence, new Application(appName,
-                            appVersion), new Device(osName, osVersion), username);
+                    status, duplicate, confidence, 
+                    new Application(appName, appVersion), 
+                    new Device(osName, osVersion), username);
         }
         return filter;
     }
     
     private boolean verifyInput() {
-        return txtDupl.getInputVerifier().verify(txtDupl) && 
+        return txtDupl.getInputVerifier().verify(txtDupl)&& 
                 txtConf.getInputVerifier().verify(txtConf) && 
                 pickerFrom.getEditor().getInputVerifier().verify(
                         pickerFrom.getEditor()) && 

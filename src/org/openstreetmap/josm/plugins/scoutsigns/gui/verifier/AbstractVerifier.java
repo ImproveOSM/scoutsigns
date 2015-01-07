@@ -105,7 +105,7 @@ abstract class AbstractVerifier extends InputVerifier implements KeyListener {
             }
             valid = false;
         } else {
-            component.setBackground(Color.WHITE);
+            component.setBackground(Color.white);
             if (lblMessage != null) {
                 lblMessage.setVisible(true);
             } else {
@@ -118,9 +118,14 @@ abstract class AbstractVerifier extends InputVerifier implements KeyListener {
     
     @Override
     public void keyPressed(KeyEvent e) {
-        component.setToolTipText(null);
-        if (lblMessage != null) {
-            lblMessage.setVisible(false);
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            verify(component);
+        } else {
+            component.setBackground(Color.white);
+            component.setToolTipText(null);
+            if (lblMessage != null) {
+                lblMessage.setVisible(false);
+            }
         }
     }
     
@@ -133,5 +138,4 @@ abstract class AbstractVerifier extends InputVerifier implements KeyListener {
     public void keyReleased(KeyEvent e) {
         // not supported
     }
-    
 }

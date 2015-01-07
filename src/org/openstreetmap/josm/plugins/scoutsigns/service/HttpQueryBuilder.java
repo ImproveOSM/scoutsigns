@@ -53,6 +53,7 @@ class HttpQueryBuilder {
     private static final char EQ = '=';
     private static final char AND = '&';
     private StringBuilder query;
+    private static final Long UNIX_TSTP = 1000L;
     
     
     HttpQueryBuilder() {}
@@ -107,8 +108,8 @@ class HttpQueryBuilder {
      * @return a {@code String} object
      */
     String build(String method) {
-        StringBuilder url = new StringBuilder(
-                ServiceCnf.getInstance().getServiceUrl());
+        StringBuilder url =
+                new StringBuilder(ServiceCnf.getInstance().getServiceUrl());
         url.append(method).append(QUESTIONM);
         url.append(query);
         return url.toString();
@@ -139,11 +140,13 @@ class HttpQueryBuilder {
         if (tsFilter != null) {
             if (tsFilter.getFrom() != null) {
                 query.append(AND);
-                query.append(Constants.FROM).append(EQ).append(tsFilter.getFrom());
+                query.append(Constants.FROM).append(EQ);
+                query.append(tsFilter.getFrom() / UNIX_TSTP);
             }
             if (tsFilter.getTo() != null) {
                 query.append(AND);
-                query.append(Constants.TO).append(EQ).append(tsFilter.getTo());
+                query.append(Constants.TO).append(EQ);
+                query.append(tsFilter.getTo() / UNIX_TSTP);
             }
         }
     }
@@ -201,8 +204,8 @@ class HttpQueryBuilder {
                 query.append(Constants.OSNAME).append(EQ);
                 query.append(HttpUtil.utf8Encode(device.getOsName()));
             }
-            if (device.getOsVersion() != null
-                    && !device.getOsVersion().isEmpty()) {
+            
+            if (device.getOsVersion() != null && !device.getOsVersion().isEmpty()) {
                 query.append(AND);
                 query.append(Constants.OSVER).append(EQ);
                 query.append(HttpUtil.utf8Encode(device.getOsVersion()));
