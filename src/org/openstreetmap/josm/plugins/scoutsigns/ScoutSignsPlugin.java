@@ -152,22 +152,16 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
     @Override
     public void layerRemoved(Layer currentLayer) {
         if (currentLayer instanceof ScoutSignsLayer) {
-            SwingUtilities.invokeLater(new Runnable() {
-                
-                @Override
-                public void run() {
-                    // remove the layer & toggle dialog
-                    Main.map.mapView.removeLayer(layer);
-                    Main.map.remove(dialog);
-                    dialog.getButton().setSelected(false);
-                    dialog.setVisible(false);
-                    dialog.destroy();
-                    layer = null;
-                    
-                    // unregister listeners
-                    removeListeners();
-                }
-            });
+            // remove the layer & toggle dialog
+            Main.map.mapView.removeLayer(layer);
+            Main.map.remove(dialog);
+            dialog.getButton().setSelected(false);
+            dialog.setVisible(false);
+            dialog.destroy();
+            layer = null;
+            
+            // unregister listeners
+            removeListeners();
         }
     }
     
