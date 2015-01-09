@@ -42,9 +42,7 @@
     -->
 	<target name="compile" depends="init">
 		<echo message="compiling sources for  ${plugin.jar} ... " />
-		<javac srcdir="src" classpathref="classpath" debug="false" 
-			destdir="${plugin.build.dir}" includeantruntime="true" 
-			excludes="**/package-info.java">
+		<javac srcdir="src" classpathref="classpath" debug="false" destdir="${plugin.build.dir}" includeantruntime="true" excludes="**/package-info.java">
 			<compilerarg value="-Xlint:deprecation" />
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
@@ -57,8 +55,7 @@
     -->
 	<target name="javadoc">
 		<mkdir dir="${plugin.apidoc.dir}" />
-		<javadoc destdir="${plugin.apidoc.dir}" source="1.7" classpathref="classpath" 
-			windowtitle="scoutsigns plugin API">
+		<javadoc destdir="${plugin.apidoc.dir}" source="1.7" classpathref="classpath" windowtitle="scoutsigns plugin API">
 			<link href="http://java.sun.com/javase/7/docs/api/" />
 			<packageset dir="${plugin.src.dir}">
 			</packageset>
@@ -94,11 +91,12 @@
 				<attribute name="Author" value="telenav" />
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.scoutsigns.ScoutSignsPlugin" />
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}" />
-				<attribute name="Plugin-Description" value="The scoutsigns plugin
-					displays the captured road signs on the map." />
-				<attribute name="Plugin-Icon" value="images/scoutsigns_logo_50x50.png" />
-				<attribute name="Plugin-Mainversion" value="1" />
+				<attribute name="Plugin-Description" value="Displays the captured 
+					road signs on the map. This plugin is in beta stage, so there might be still bugs." />
+				<attribute name="Plugin-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/ScoutSigns" />
+				<attribute name="Plugin-Mainversion" value="12" />
 				<attribute name="Plugin-Version" value="${build-label}" />
+				<attribute name="Plugin-Icon" value="images/scoutsigns_logo_50x50.png" />
 			</manifest>
 		</jar>
 	</target>
@@ -110,8 +108,7 @@
     -->
 	<target name="install" depends="dist">
 		<property environment="env" />
-		<condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins"
-			else="${user.home}/.josm/plugins">
+		<condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins" else="${user.home}/.josm/plugins">
 			<and>
 				<os family="windows" />
 			</and>
