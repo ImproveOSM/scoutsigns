@@ -407,11 +407,12 @@ public final class Builder {
      * to be executed when the controller's value is changed
      * @param lowerDate the lower {@code Date} limit to be set
      * @param upperDate the upper {@code Date} limit to be set
+     * @param selDate the selected {@code Date}
      * @return a {@code JXDatePicker} object
      */
     public static JXDatePicker buildDatePicker(Icon icon,
             AbstractFormatter formatter, PropertyChangeListener changeListener,
-            Date lowerDate, Date upperDate) {
+            Date lowerDate, Date upperDate, Date selDate) {
         JXDatePicker picker = new JXDatePicker();
         
         picker.setPreferredSize(PICKER_DIM);
@@ -423,6 +424,7 @@ public final class Builder {
         picker.getMonthView().setShowingTrailingDays(true);
         picker.getMonthView().setLowerBound(lowerDate);
         picker.getMonthView().setUpperBound(upperDate);
+        picker.getMonthView().setSelectionDate(selDate);
         
         // customize button
         ((JButton) picker.getComponent(1)).setIcon(icon);

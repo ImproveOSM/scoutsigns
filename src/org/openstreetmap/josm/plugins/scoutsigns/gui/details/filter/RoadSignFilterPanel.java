@@ -118,7 +118,7 @@ class RoadSignFilterPanel extends JPanel {
         ImageIcon icon = IconCnf.getInstance().getCalendarIcon();
         
         pickerFrom = Builder.buildDatePicker(icon, new DateFormatter(),
-                new FromChangeListener(), lowerDate, upperDate);
+                new FromChangeListener(), null, upperDate, lowerDate);
         pickerFrom.getEditor().setText(DateUtil.formatDay(tstampFilter.getFrom()));
         DateVerifier fromVerifier = new DateVerifier(pickerFrom.getEditor(), 
                 GuiCnf.getInstance().getTxtDateInvalid());
@@ -126,7 +126,7 @@ class RoadSignFilterPanel extends JPanel {
         add(pickerFrom, Constraints.CBB_START);
         
         pickerTo = Builder.buildDatePicker(icon, new DateFormatter(),
-                new ToChangeListener(), lowerDate, upperDate);
+                new ToChangeListener(), lowerDate, upperDate, null);
         pickerTo.getEditor().setText(DateUtil.formatDay(tstampFilter.getTo()));
         DateVerifier toVerifier = new DateVerifier(pickerTo.getEditor(), 
                 GuiCnf.getInstance().getTxtDateInvalid());
