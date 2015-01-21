@@ -50,10 +50,6 @@ public final class TltCnf {
     private final String pluginTlt;
     private final String layerInfo;
     
-    /* calendar tool tips */
-    private final String prevMonth;
-    private final String nextMonth;
-    
     /* button panel tool tips */
     private final String btnFilter;
     private final String btnPhoto;
@@ -71,8 +67,6 @@ public final class TltCnf {
         Properties properties = CnfUtil.load(CNF_FILE);
         pluginTlt = CnfUtil.readProperty(properties, "plugin.tlt");
         layerInfo = CnfUtil.readProperty(properties, "layer.info");
-        prevMonth = CnfUtil.readProperty(properties, "cal.month.prev");
-        nextMonth = CnfUtil.readProperty(properties, "cal.month.next");
         btnFilter = CnfUtil.readProperty(properties, "btn.filter");
         btnPhoto = CnfUtil.readProperty(properties, "btn.photo");
         btnTrip = CnfUtil.readProperty(properties, "btn.trip");
@@ -96,14 +90,6 @@ public final class TltCnf {
     
     public String getLayerInfo() {
         return layerInfo;
-    }
-    
-    public String getPrevMonth() {
-        return prevMonth;
-    }
-    
-    public String getNextMonth() {
-        return nextMonth;
     }
     
     public String getBtnFilter() {

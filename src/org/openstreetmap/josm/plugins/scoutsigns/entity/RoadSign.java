@@ -32,6 +32,7 @@
 package org.openstreetmap.josm.plugins.scoutsigns.entity;
 
 import java.util.Collection;
+import java.util.List;
 import org.openstreetmap.josm.data.coor.LatLon;
 
 
@@ -50,7 +51,7 @@ public class RoadSign {
     private Short confidence;
     private CarPosition carPos;
     private SignPosition signPos;
-    private Collection<LatLon> nearbyPos;
+    private List<LatLon> nearbyPos;
     private Trip trip;
     private Status status;
     private Long duplicateOf;
@@ -101,7 +102,7 @@ public class RoadSign {
      */
     public RoadSign(Long id, String type, Long tstamp, Image image,
             Short confidence, CarPosition carPos, SignPosition signPos,
-            Collection<LatLon> nearbyPos, Trip trip, Status status,
+            List<LatLon> nearbyPos, Trip trip, Status status,
             Long duplicateOf, Collection<Comment> comments) {
         this(id, type, signPos, status);
         this.tstamp = tstamp;
@@ -143,7 +144,7 @@ public class RoadSign {
         return signPos;
     }
     
-    public Collection<LatLon> getNearbyPos() {
+    public List<LatLon> getNearbyPos() {
         return nearbyPos;
     }
     

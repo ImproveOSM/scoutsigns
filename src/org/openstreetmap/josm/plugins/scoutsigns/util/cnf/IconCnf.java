@@ -68,8 +68,9 @@ public final class IconCnf {
     private final ImageIcon invalidIcon;
     private final ImageIcon duplicateIcon;
     
-    /*  road sign icons & path names */
-    private final ImageIcon selRoadSignBg;
+    /* road sign icons & path names */
+    private final ImageIcon selRoadSignBgIcon;
+    private final ImageIcon roadSignClIcon;
     private final String typeIconPath;
     private final String defTypeIconName;
     
@@ -86,15 +87,16 @@ public final class IconCnf {
         tripIcon = getIcon(properties, "trip.icon");
         commentIcon = getIcon(properties, "comment.icon");
         moreActionIcon = getIcon(properties, "more.icon");
-        backIcon = getIcon(properties, "back.icon"); 
+        backIcon = getIcon(properties, "back.icon");
         openIcon = getIcon(properties, "status.open.icon");
         solvedIcon = getIcon(properties, "status.solved.icon");
-        invalidIcon =getIcon(properties, "status.invalid.icon");
+        invalidIcon = getIcon(properties, "status.invalid.icon");
         duplicateIcon = getIcon(properties, "status.duplicate.icon");
         typeIconPath = CnfUtil.readProperty(properties, "sign.types.path");
-        selRoadSignBg = getIcon(properties, "sign.sel.bg");
+        selRoadSignBgIcon = getIcon(properties, "sign.sel.bg");
+        roadSignClIcon = getIcon(properties, "sign.cl");
         defTypeIconName = CnfUtil.readProperty(properties, "sign.types.def");
-        calendarIcon = getIcon(properties, "calendar.icon"); 
+        calendarIcon = getIcon(properties, "calendar.icon");
     }
     
     
@@ -137,7 +139,7 @@ public final class IconCnf {
     public Icon getBackIcon() {
         return backIcon;
     }
-
+    
     public String getTypeIconPath() {
         return typeIconPath;
     }
@@ -157,15 +159,19 @@ public final class IconCnf {
     public ImageIcon getDuplicateIcon() {
         return duplicateIcon;
     }
-    
-    public ImageIcon getSelRoadSignBg() {
-        return selRoadSignBg;
+
+    public ImageIcon getSelRoadSignBgIcon() {
+        return selRoadSignBgIcon;
+    }
+
+    public ImageIcon getRoadSignClIcon() {
+        return roadSignClIcon;
     }
     
     public String getDefTypeIconName() {
         return defTypeIconName;
     }
-
+    
     public ImageIcon getCalendarIcon() {
         return calendarIcon;
     }

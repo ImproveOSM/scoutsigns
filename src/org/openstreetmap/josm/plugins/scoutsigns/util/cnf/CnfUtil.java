@@ -41,7 +41,7 @@ import java.util.Properties;
 
 
 /**
- * Utility class, holds runtime properties.
+ * Utility class, defines basic methods for loading run time properties.
  * 
  * @author Bea
  * @version $Revision$
@@ -90,15 +90,28 @@ final class CnfUtil {
         return properties.getProperty(key);
     }
     
+    /**
+     * Reads a list of properties identifier by the given key.
+     * 
+     * @param properties a {@code Properties} object
+     * @param key the key of the property list
+     * @return a list of values
+     */
     static List<String> readPropertiesList(Properties properties, String key) {
         String[] values = readPropertiesArray(properties, key);
         return values != null ? Arrays.asList(values) : new ArrayList<String>();
     }
     
+    /**
+     * Reads an array of properties identified by the given key.
+     * 
+     * @param properties a {@code Properties} object
+     * @param key the key of the property list
+     * @return an array of values
+     */
     static String[] readPropertiesArray(Properties properties, String key) {
         String values = properties.getProperty(key);
         return (values != null && !values.isEmpty()) ? values.split(SEPARATOR)
                 : null;
     }
-    
 }

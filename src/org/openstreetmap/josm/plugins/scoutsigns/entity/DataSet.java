@@ -26,72 +26,47 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Jul 29, 2014 by Beata
+ * Created on Jan 9, 2015 by Beata
  * Modified on $DateTime$ by $Author$
  */
-package org.openstreetmap.josm.plugins.scoutsigns.service.entity;
+package org.openstreetmap.josm.plugins.scoutsigns.entity;
 
+import java.util.ArrayList;
 import java.util.List;
-import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
-import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSignCluster;
 
 
 /**
- * Represents the root of the response content returned by the FcdSignService.
+ * Represents the data set of the {@code ScoutSignsLayer}.
  * 
  * @author Beata
  * @version $Revision$
  */
-public class Root {
+public class DataSet {
     
-    private Status status;
     private List<RoadSign> roadSigns;
     private List<RoadSignCluster> roadSignClusters;
-    private RoadSign roadSign;
     
     /**
-     * Builds an empty {@code Root}
+     * Builds an empty {@code DataSet}
      */
-    public Root() {}
-    
-    /**
-     * Builds a new {@code Root} with he given argument.
-     * 
-     * @param status represents the status information
-     */
-    public Root(Status status) {
-        this.status = status;
+    public DataSet() {
+        this.roadSigns = new ArrayList<>();
+        this.roadSignClusters = new ArrayList<>();
     }
     
     /**
-     * Builds a new {@code Root} with he given arguments.
+     * Builds a new @ code DataSet} with the given arguments.
      * 
-     * @param status represents the status information
-     * @param roadSigns a list of road signs
-     * @param roadSignClusters a list of road sign clusters
+     * @param roadSigns a list of {@code RoadSign}s.
+     * @param roadSignClusters a lit of {@code RoadSignCluster}s.
      */
-    public Root(Status status, List<RoadSign> roadSigns,
+    public DataSet(List<RoadSign> roadSigns,
             List<RoadSignCluster> roadSignClusters) {
-        this(status);
-        this.roadSigns = roadSigns;
-        this.roadSignClusters = roadSignClusters;
+        this.roadSigns = roadSigns != null ? roadSigns : new ArrayList<RoadSign>();
+        this.roadSignClusters = roadSignClusters != null ? roadSignClusters : 
+            new ArrayList<RoadSignCluster>();
     }
     
-    /**
-     * Builds a new {@code Root} with the given arguments.
-     * 
-     * @param status represents the status information
-     * @param roadSign a {@code RoadSign}
-     */
-    public Root(Status status, RoadSign roadSign) {
-        this.status = status;
-        this.roadSign = roadSign;
-    }
-    
-    
-    public Status getStatus() {
-        return status;
-    }
     
     public List<RoadSign> getRoadSigns() {
         return roadSigns;
@@ -99,9 +74,5 @@ public class Root {
     
     public List<RoadSignCluster> getRoadSignClusters() {
         return roadSignClusters;
-    }
-    
-    public RoadSign getRoadSign() {
-        return roadSign;
     }
 }

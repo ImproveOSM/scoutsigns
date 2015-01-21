@@ -43,6 +43,7 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.gui.dialogs.LayerListDialog;
 import org.openstreetmap.josm.gui.dialogs.LayerListPopup;
 import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.plugins.scoutsigns.entity.DataSet;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.util.Util;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
@@ -59,7 +60,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltCnf;
 public class ScoutSignsLayer extends Layer {
     
     private PaintHandler paintHandler;
-    private List<RoadSign> roadSigns;
+    private DataSet dataSet;
     private List<RoadSign> selRoadSigns;
     
     private boolean tripView;
@@ -82,7 +83,8 @@ public class ScoutSignsLayer extends Layer {
      * @return a {@code RoadSign}
      */
     public RoadSign nearbyRoadSign(Point point, boolean multiSelect) {
-        RoadSign roadSign = Util.nearbyRoadSign(roadSigns, point);
+        RoadSign roadSign = dataSet!= null ? Util.nearbyRoadSign(
+                dataSet.getRoadSigns(), point):null;
         if (!multiSelect) {
             selRoadSigns.clear();
         }
@@ -144,40 +146,55 @@ public class ScoutSignsLayer extends Layer {
     public void paint(Graphics2D g2D, MapView mv, Bounds bounds) {
         mv.setDoubleBuffered(true);
         if (tripView) {
+            // draw selected road sign's trip
             paintHandler.drawTripData(g2D, mv, selRoadSigns.get(0));
-        } else if (roadSigns != null) {
-            paintHandler.drawRoadSigns(g2D, mv, roadSigns, selRoadSigns);
+        } else if (dataSet != null) {
+            
+            if (!dataSet.getRoadSigns().isEmpty()) {
+                // draw road signs
+                paintHandler.drawRoadSigns(g2D, mv, dataSet.getRoadSigns(),
+                        selRoadSigns);
+            } else if (!dataSet.getRoadSignClusters().isEmpty()) {
+                // draw road sign clusters
+                paintHandler.drawRoadSignClusters(g2D, mv,
+                        dataSet.getRoadSignClusters());
+            }
         }
     }
-    
+   
     @Override
     public void visitBoundingBox(BoundingXYVisitor arg0) {
         // not supported
     }
     
     /**
-     * Sets the list of road signs. If there is any selected element, that is
-     * not present in the given list of road signs it will be removed.
+     * Updates the layer's data set with new data.
      * 
-     * @param roadSigns a list of {@code RoadSign}s
+     * @param dataSet the new data set
      */
-    public void setRoadSigns(List<RoadSign> roadSigns) {
-        this.roadSigns = roadSigns;
+    public void setDataSet(DataSet dataSet) {
+        this.dataSet = dataSet;
         
         // check previously selected elements
-        checkSelRoadSigns();
+        checkSelRoadSigns(); 
     }
     
     private void checkSelRoadSigns() {
-        if (!selRoadSigns.isEmpty() && roadSigns != null) {
-            for (RoadSign elem : roadSigns) {
-                if (!this.roadSigns.contains(elem)) {
+        if (!selRoadSigns.isEmpty() && dataSet.getRoadSigns() != null) {
+            for (RoadSign elem : dataSet.getRoadSigns()) {
+                if (!this.dataSet.getRoadSigns().contains(elem)) {
                     selRoadSigns.remove(elem);
                 }
             }
         }
     }
     
+    /**
+     * Returns the selected road signs. If no road sign(s) is selected the method
+     * return an empty list.
+     * 
+     * @return a list of {@code RoadSign}s
+     */
     public List<RoadSign> getSelRoadSigns() {
         return selRoadSigns;
     }

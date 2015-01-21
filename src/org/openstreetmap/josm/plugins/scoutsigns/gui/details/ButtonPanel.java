@@ -22,6 +22,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
@@ -31,7 +32,9 @@ import org.openstreetmap.josm.plugins.scoutsigns.observer.TripViewObservable;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.TripViewObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ServiceCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltCnf;
+import org.openstreetmap.josm.tools.OsmUrlToBounds;
 
 
 /**
@@ -76,20 +79,20 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         
         IconCnf iconCnf = IconCnf.getInstance();
         TltCnf tltCnf = TltCnf.getInstance();
-        btnFilter = Builder.buildButton(new DisplayFilterDialog(),
+        btnFilter = Builder.buildButton(new DisplayFilterDialog(), 
                 iconCnf.getFilterIcon(), tltCnf.getBtnFilter());
         btnBack = Builder.buildButton(new ExitTrip(), iconCnf.getBackIcon(),
                 tltCnf.getBtnBack());
         btnTrip = Builder.buildButton(new DisplayTrip(), iconCnf.getTripIcon(),
                 tltCnf.getBtnTrip());
         add(btnFilter);
-        add(Builder.buildButton(new DisplayImageFrame(),
-                iconCnf.getPhotoIcon(), tltCnf.getBtnPhoto()));
+        add(Builder.buildButton(new DisplayImageFrame(), iconCnf.getPhotoIcon(), 
+                tltCnf.getBtnPhoto()));
         add(btnTrip);
-        add(Builder.buildButton(new DisplayCommentDialog(),
-                iconCnf.getCommentIcon(), tltCnf.getBtnComment()));
-        add(Builder.buildButton(new DisplayEditMenu(),
-                iconCnf.getMoreActionIcon(), tltCnf.getBtnMoreAction()));
+        add(Builder.buildButton(new DisplayCommentDialog(), iconCnf.getCommentIcon(), 
+                tltCnf.getBtnComment()));
+        add(Builder.buildButton(new DisplayEditMenu(), iconCnf.getMoreActionIcon(), 
+                tltCnf.getBtnMoreAction()));
         setPreferredSize(DIM);
     }
     
@@ -121,7 +124,7 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     }
     
     
-    /* TripViewObservable implementation*/
+    /* TripViewObservable implementation */
     
     @Override
     public void registerObserver(TripViewObserver observer) {
@@ -139,7 +142,8 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     
     
     /*
-     * Displays the filter dialog window.
+     * Displays the filter dialog window. This dialog window is available only
+     * when road signs are displayed on the map. 
      */
     private final class DisplayFilterDialog extends AbstractAction {
         
@@ -147,8 +151,11 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         
         @Override
         public void actionPerformed(ActionEvent event) {
-            RoadSignFilterDialog dlgFilter = new RoadSignFilterDialog();
-            dlgFilter.setVisible(true);
+            int zoom = OsmUrlToBounds.getZoom(Main.map.mapView.getRealBounds());
+            if (zoom > ServiceCnf.getInstance().getMaxClusterZoom()) {
+                RoadSignFilterDialog dlgFilter = new RoadSignFilterDialog();
+                dlgFilter.setVisible(true);
+            }
         }
     }
     
@@ -223,9 +230,9 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         @Override
         public void actionPerformed(ActionEvent event) {
             if (roadSign != null) {
-                EditDialog dlgComment = new EditDialog(null, GuiCnf.getInstance().
-                        getDlgCommentTitle(), IconCnf.getInstance().
-                        getCommentIcon().getImage());
+                EditDialog dlgComment = new EditDialog(null, 
+                        GuiCnf.getInstance().getDlgCommentTitle(), 
+                        IconCnf.getInstance().getCommentIcon().getImage());
                 dlgComment.registerObserver(statusChangeObserver);
                 dlgComment.setVisible(true);
             }

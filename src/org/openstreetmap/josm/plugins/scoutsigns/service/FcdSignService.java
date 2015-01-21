@@ -31,13 +31,13 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.CarPosition;
+import org.openstreetmap.josm.plugins.scoutsigns.entity.DataSet;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.SignPosition;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
@@ -70,8 +70,10 @@ public class FcdSignService {
      */
     public FcdSignService() {
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(SignPosition.class, new SignPositionDeserializer());
-        builder.registerTypeAdapter(CarPosition.class, new CarPositionDeserializer());
+        builder.registerTypeAdapter(SignPosition.class,
+                new SignPositionDeserializer());
+        builder.registerTypeAdapter(CarPosition.class,
+                new CarPositionDeserializer());
         builder.registerTypeAdapter(LatLon.class, new LatLonDeserializer());
         builder.registerTypeAdapter(Status.class, new StatusDeserializer());
         this.gson = builder.create();
@@ -85,19 +87,18 @@ public class FcdSignService {
      * @param bbox a {@code BoundingBox} specifies the searching area
      * @param filter specifies the search filters
      * @param zoom the current zoom level
-     * @return a collection of {@code RoadSign}. If no road signs are found, the
-     * method returns an empty collection.
+     * @return a {@code DataSet} containing a list of road signs or a list of
+     * road sign clusters
      * @throws FcdSignServiceException if an error occurred during the
      * FcdSignService method execution
      */
-    public List<RoadSign> searchSigns(BoundingBox bbox, SearchFilter filter,
-            int zoom) throws FcdSignServiceException {
+    public DataSet searchSigns(BoundingBox bbox, SearchFilter filter, int zoom)
+            throws FcdSignServiceException {
         String url = new HttpQueryBuilder(bbox, filter, zoom).build(
                 Constants.SEARCH_SIGNS);
         Root root = executeGet(url);
         verifyStatus(root);
-        return root.getRoadSigns() != null ? root.getRoadSigns() : 
-            new ArrayList<RoadSign>();
+        return new DataSet(root.getRoadSigns(), root.getRoadSignClusters());
     }
     
     /**
@@ -130,7 +131,7 @@ public class FcdSignService {
      */
     public void addComment(Long signId, String username, String text,
             Status status, Long duplicateOf) throws FcdSignServiceException {
-        Map<String, String> content = new HttpContentBuilder(signId, username,
+        Map<String, String> content = new HttpContentBuilder(signId, username, 
                 text, status, duplicateOf).getContent();
         String url = new HttpQueryBuilder().build(Constants.ADD_COMMENT);
         Root root = executePost(url, content);

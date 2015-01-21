@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
+import org.openstreetmap.josm.plugins.scoutsigns.entity.DataSet;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.service.FcdSignService;
@@ -48,18 +49,21 @@ final class ServiceHandler {
     }
     
     /**
-     * Searches for the road signs from the given area that satisfy the given
-     * filters.
+     * Depending on the zoom levels either:
+     * <ul>
+     * <li>searches for the road sign clusters from the current bounding box</li>
+     * <li>searches for the road signs from the current bounding box, that
+     * satisfy the given filters</li>
+     * </ul>
      * 
      * @param bbox a {@code BoundingBox} specifies the searching area
      * @param filter specifies the search filters
      * @param zoom the current zoom level
-     * @return a collection of {@code RoadSign}. If no road signs are found, the
-     * method returns an empty collection.
+     * @return a {@code DataSet} representing the road signs/road sign clusters
+     * from the given bounding box
      */
-    List<RoadSign> searchSigns(BoundingBox bbox, SearchFilter filter,
-            int zoom) {
-        List<RoadSign> result = new ArrayList<>();
+    DataSet searchSigns(BoundingBox bbox, SearchFilter filter, int zoom) {
+        DataSet result = new DataSet();
         try {
             result = signService.searchSigns(bbox, filter, zoom);
         } catch (FcdSignServiceException ex) {
@@ -117,15 +121,14 @@ final class ServiceHandler {
      * @param duplicateOf specifies the parent road sign's identifier, it is
      * user only with {@code Status#DUPLICATE}
      */
-    void addComments(List<RoadSign> roadSigns, String username,
-            String text, Status status, Long duplicateOf) {
+    void addComments(List<RoadSign> roadSigns, String username, String text,
+            Status status, Long duplicateOf) {
         List<Long> signIds = new ArrayList<>();
         for (RoadSign roadSign : roadSigns) {
             signIds.add(roadSign.getId());
         }
         try {
-            signService.addComments(signIds, username, text, status,
-                    duplicateOf);
+            signService.addComments(signIds, username, text, status, duplicateOf);
         } catch (FcdSignServiceException ex) {
             handleException(ex, false);
         }
