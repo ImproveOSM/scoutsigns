@@ -36,10 +36,11 @@ import java.util.Properties;
 import java.util.TreeMap;
 import javax.swing.ImageIcon;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Pair;
 
 
 /**
- * Holds road sign cluster icons.
+ * Holds road sign cluster icon properties.
  * 
  * @author Beata
  * @version $Revision$
@@ -50,22 +51,28 @@ public final class ClusterIconCnf {
     
     private static final ClusterIconCnf INSTANCE = new ClusterIconCnf();
     
-    private final ImageIcon defIcon;
+    private final Pair<ImageIcon, Float> def;
     
-    private final Map<Integer, ImageIcon> map;
+    private final Map<Integer, Pair<ImageIcon, Float>> map;
     
     
     private ClusterIconCnf() {
         Properties properties = CnfUtil.load(CNF_FILE);
-        defIcon = ImageProvider.get(properties.getProperty("default"));
+        def = buildPair(properties.getProperty("default"));
         properties.remove("default");
-        map = new TreeMap<Integer, ImageIcon>();
+        map = new TreeMap<>();
         for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-            ImageIcon icon = new ImageProvider((String) entry.getValue()).get();
-            map.put(new Integer((String) entry.getKey()), icon);
+            Pair<ImageIcon, Float> pair = buildPair((String) entry.getValue());
+            map.put(new Integer((String) entry.getKey()), pair);
         }
     }
     
+    private Pair<ImageIcon, Float> buildPair(String value) {
+        String[] values = value.split(";");
+        ImageIcon icon = new ImageProvider(values[0]).get();
+        Float transparency = new Float(values[1]);
+        return new Pair<ImageIcon, Float>(icon, transparency);
+    }
     
     /**
      * Returns the instance of the {@code ClusterIconCnf}
@@ -77,19 +84,19 @@ public final class ClusterIconCnf {
     }
     
     /**
-     * Returns the icon corresponding to the given road sign count.
+     * Returns the icon and transparency corresponding to the given road sign count.
      * 
      * @param count a road sign count
-     * @return an {@code ImageIcon} object
+     * @return an {@code ImageIcon}, {@code Float} pair
      */
-    public ImageIcon getIcon(Integer count) {
-        ImageIcon icon = null;
+    public Pair<ImageIcon, Float> getIcon(Integer count) {
+        Pair<ImageIcon, Float> value = null;
         for (Integer key : map.keySet()) {
             if (count < key) {
-                icon = map.get(key);
+                value = map.get(key);
                 break;
             }
         }
-        return icon != null ? icon : defIcon;
+        return value != null ? value : def;
     }
 }

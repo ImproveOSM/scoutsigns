@@ -50,6 +50,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.TypeIconFactory;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ClusterIconCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
+import org.openstreetmap.josm.tools.Pair;
 
 
 /**
@@ -111,11 +112,14 @@ class PaintHandler {
             List<RoadSignCluster> clusterList) {
         for (RoadSignCluster cluster : clusterList) {
             Point point = mv.getPoint(cluster.getPosition());
-            ImageIcon icon = ClusterIconCnf.getInstance().getIcon(cluster.getCount());
-            drawIcon(g2D, icon, point);
+            Pair<ImageIcon, Float> pair = ClusterIconCnf.getInstance().getIcon(cluster.getCount());
+
+            g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pair.b));
+            drawIcon(g2D, pair.a, point);
             g2D.setColor(Color.black);
             drawString(g2D, "" + cluster.getCount(), point);
         }
+        g2D.setComposite(COMP);
     }
     
     /**
