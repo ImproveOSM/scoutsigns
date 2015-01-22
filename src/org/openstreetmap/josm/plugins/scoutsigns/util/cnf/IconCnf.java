@@ -70,7 +70,6 @@ public final class IconCnf {
     
     /* road sign icons & path names */
     private final ImageIcon selRoadSignBgIcon;
-    private final ImageIcon roadSignClIcon;
     private final String typeIconPath;
     private final String defTypeIconName;
     
@@ -94,7 +93,6 @@ public final class IconCnf {
         duplicateIcon = getIcon(properties, "status.duplicate.icon");
         typeIconPath = CnfUtil.readProperty(properties, "sign.types.path");
         selRoadSignBgIcon = getIcon(properties, "sign.sel.bg");
-        roadSignClIcon = getIcon(properties, "sign.cl");
         defTypeIconName = CnfUtil.readProperty(properties, "sign.types.def");
         calendarIcon = getIcon(properties, "calendar.icon");
     }
@@ -164,10 +162,6 @@ public final class IconCnf {
         return selRoadSignBgIcon;
     }
 
-    public ImageIcon getRoadSignClIcon() {
-        return roadSignClIcon;
-    }
-    
     public String getDefTypeIconName() {
         return defTypeIconName;
     }

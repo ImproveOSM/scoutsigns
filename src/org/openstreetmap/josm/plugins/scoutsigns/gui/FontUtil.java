@@ -53,11 +53,14 @@ public final class FontUtil {
     public static final Font PLAIN_12 = new Font(TYPE, Font.PLAIN, 12);
     
     /* bold fonts */
+    public static final Font BOLD_11 = new Font(TYPE, Font.BOLD, 11);
     public static final Font BOLD_12 = new Font(TYPE, Font.BOLD, 12);
     public static final Font BOLD_13 = new Font(TYPE, Font.BOLD, 13);
     public static final Font BOLD_14 = new Font(TYPE, Font.BOLD, 14);
     
     /* font metrics */
+    public static final FontMetrics FM_BOLD_11 = Main.map.mapView
+            .getGraphics().getFontMetrics(BOLD_11);
     public static final FontMetrics FM_PLAIN_12 = Main.map.mapView
             .getGraphics().getFontMetrics(PLAIN_12);
     public static final FontMetrics FM_BOLD_12 = Main.map.mapView.getGraphics()

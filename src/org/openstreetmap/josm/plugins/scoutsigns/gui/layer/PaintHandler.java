@@ -48,6 +48,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSignCluster;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.TypeIconFactory;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ClusterIconCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
 
 
@@ -110,7 +111,8 @@ class PaintHandler {
             List<RoadSignCluster> clusterList) {
         for (RoadSignCluster cluster : clusterList) {
             Point point = mv.getPoint(cluster.getPosition());
-            drawIcon(g2D, IconCnf.getInstance().getRoadSignClIcon(), point);
+            ImageIcon icon = ClusterIconCnf.getInstance().getIcon(cluster.getCount());
+            drawIcon(g2D, icon, point);
             g2D.setColor(Color.black);
             drawString(g2D, "" + cluster.getCount(), point);
         }
@@ -212,7 +214,7 @@ class PaintHandler {
 
     private void drawString(Graphics2D g2D, String txt, Point point) {
         g2D.setFont(FontUtil.BOLD_12);
-        java.awt.geom.Rectangle2D rect = FontUtil.FM_BOLD_12.getStringBounds(
+        java.awt.geom.Rectangle2D rect = FontUtil.FM_BOLD_11.getStringBounds(
                 txt, g2D);
         int textHeight = (int) (rect.getHeight());
         int textWidth = (int) (rect.getWidth());
