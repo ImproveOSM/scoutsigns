@@ -171,7 +171,8 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
     
     @Override
     public void mouseClicked(MouseEvent event) {
-        if (Main.map.mapView.getActiveLayer() == layer && !layer.isTripView()) {
+        if (Main.map.mapView.getActiveLayer() == layer && !layer.isTripView() 
+                && SwingUtilities.isLeftMouseButton(event)) {
             boolean multiSelect = event.isShiftDown();
             RoadSign roadSign = layer.nearbyRoadSign(event.getPoint(), multiSelect);
             
