@@ -107,7 +107,7 @@ abstract class AbstractVerifier extends InputVerifier implements KeyListener {
         } else {
             component.setBackground(Color.white);
             if (lblMessage != null) {
-                lblMessage.setVisible(true);
+                lblMessage.setVisible(false);
             } else {
                 component.setToolTipText(null);
             }
