@@ -32,6 +32,7 @@
 package org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -73,6 +74,8 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
 class RoadSignFilterPanel extends JPanel {
     
     private static final long serialVersionUID = 31048161544787922L;
+    
+    private static final Dimension TYPE_LIST_SIZE = new Dimension(300, 200);
     
     private JXDatePicker pickerTo;
     private JXDatePicker pickerFrom;
@@ -148,7 +151,7 @@ class RoadSignFilterPanel extends JPanel {
                 ListSelectionModel.SINGLE_SELECTION, JList.HORIZONTAL_WRAP, type);
         JScrollPane cmpTypes = Builder.buildScrollPane(listTypes, Color.white, 
                 false);
-        cmpTypes.setPreferredSize(listTypes.getPreferredSize());
+        cmpTypes.getViewport().setViewSize(TYPE_LIST_SIZE);
         add(cmpTypes, Constraints.LIST_TYPE);
     }
     

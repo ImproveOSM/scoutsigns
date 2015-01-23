@@ -64,6 +64,7 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import org.jdesktop.swingx.JXDatePicker;
 
 
@@ -383,20 +384,29 @@ public final class Builder {
      * @return a {@code JList} object
      */
     public static <T> JList<T> buildList(List<T> data, int selModel,
-            int orientation, T selData) {
+            int orientation, final T selData) {
         DefaultListModel<T> model = new DefaultListModel<>();
         for (T elem : data) {
             model.addElement(elem);
         }
-        JList<T> list = new JList<>(model);
+        final JList<T> list = new JList<>(model);
         list.setFont(FontUtil.PLAIN_12);
         list.setLayoutOrientation(orientation);
         list.setVisibleRowCount(-1);
         list.setSelectionMode(selModel);
-        list.setSelectedValue(selData, true);
+        SwingUtilities.invokeLater(new Runnable() {
+            
+            @Override
+            public void run() {
+                if (selData != null) {
+                    list.setSelectedValue(selData, true);
+                    list.ensureIndexIsVisible(list.getSelectedIndex());
+                }
+            }
+        });
         return list;
     }
-    
+
     /**
      * Builds a new {@code JXDatePicker} with the given arguments.
      * 
