@@ -46,21 +46,19 @@ public final class FontUtil {
     
     private FontUtil() {}
     
-    private static final String TYPE = "Times New Roman";
-    
     /* plain fonts */
-    public static final Font PLAIN_11 = new Font(TYPE, Font.PLAIN, 11);
-    public static final Font PLAIN_12 = new Font(TYPE, Font.PLAIN, 12);
+    public static final Font PLAIN_11 = new Font("Times New Roman", Font.PLAIN, 11);
+    public static final Font PLAIN_12 = new Font("Times New Roman", Font.PLAIN, 12);
     
     /* bold fonts */
-    public static final Font BOLD_11 = new Font(TYPE, Font.BOLD, 11);
-    public static final Font BOLD_12 = new Font(TYPE, Font.BOLD, 12);
-    public static final Font BOLD_13 = new Font(TYPE, Font.BOLD, 13);
-    public static final Font BOLD_14 = new Font(TYPE, Font.BOLD, 14);
+    public static final Font ARIAL_BOLD_11 = new Font("Arial", Font.BOLD, 11);
+    public static final Font BOLD_12 = new Font("Times New Roman", Font.BOLD, 12);
+    public static final Font BOLD_13 = new Font("Times New Roman", Font.BOLD, 13);
+    public static final Font BOLD_14 = new Font("Times New Roman", Font.BOLD, 14);
     
     /* font metrics */
-    public static final FontMetrics FM_BOLD_11 = Main.map.mapView
-            .getGraphics().getFontMetrics(BOLD_11);
+    public static final FontMetrics FM_ARIAL_BOLD_11 = Main.map.mapView
+            .getGraphics().getFontMetrics(ARIAL_BOLD_11);
     public static final FontMetrics FM_PLAIN_12 = Main.map.mapView
             .getGraphics().getFontMetrics(PLAIN_12);
     public static final FontMetrics FM_BOLD_12 = Main.map.mapView.getGraphics()

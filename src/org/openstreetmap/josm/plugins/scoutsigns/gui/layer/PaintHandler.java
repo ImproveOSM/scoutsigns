@@ -217,8 +217,8 @@ class PaintHandler {
     }
 
     private void drawString(Graphics2D g2D, String txt, Point point) {
-        g2D.setFont(FontUtil.BOLD_12);
-        java.awt.geom.Rectangle2D rect = FontUtil.FM_BOLD_11.getStringBounds(
+        g2D.setFont(FontUtil.ARIAL_BOLD_11);
+        java.awt.geom.Rectangle2D rect = FontUtil.FM_ARIAL_BOLD_11.getStringBounds(
                 txt, g2D);
         int textHeight = (int) (rect.getHeight());
         int textWidth = (int) (rect.getWidth());
