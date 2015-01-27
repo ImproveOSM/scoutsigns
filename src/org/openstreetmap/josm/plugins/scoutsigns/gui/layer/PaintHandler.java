@@ -46,7 +46,6 @@ import javax.swing.ImageIcon;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSignCluster;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.TypeIconFactory;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ClusterIconCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
@@ -74,10 +73,6 @@ class PaintHandler {
             AlphaComposite.SRC_OVER, 0.60f);
     private static final int HEADING = 180;
     private static final double PHI = Math.toRadians(55);
-    
-    // string drawing related constants
-    private static final int DIV = 2;
-    private static final int Y_DIV = 4;
     
     private TypeIconFactory iconFactory = TypeIconFactory.getInstance();
     
@@ -112,12 +107,11 @@ class PaintHandler {
             List<RoadSignCluster> clusterList) {
         for (RoadSignCluster cluster : clusterList) {
             Point point = mv.getPoint(cluster.getPosition());
-            Pair<ImageIcon, Float> pair = ClusterIconCnf.getInstance().getIcon(cluster.getCount());
-
-            g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pair.b));
+            Pair<ImageIcon, Float> pair = ClusterIconCnf.getInstance().getIcon(
+                    cluster.getCount());
+            g2D.setComposite(AlphaComposite.getInstance(
+                    AlphaComposite.SRC_OVER, pair.b));
             drawIcon(g2D, pair.a, point);
-            g2D.setColor(Color.black);
-            drawString(g2D, "" + cluster.getCount(), point);
         }
         g2D.setComposite(COMP);
     }
@@ -177,9 +171,8 @@ class PaintHandler {
     
     private void drawCircle(Graphics2D g2D, Point point, Color color,
             Double radius) {
-        Ellipse2D.Double circle =
-                new Ellipse2D.Double(point.x - radius / 2,
-                        point.y - radius / 2, radius, radius);
+        Ellipse2D.Double circle = new Ellipse2D.Double(point.x - radius / 2,
+                point.y - radius / 2, radius, radius);
         g2D.setColor(color);
         g2D.fill(circle);
         g2D.draw(circle);
@@ -203,9 +196,8 @@ class PaintHandler {
     }
     
     private void drawArrow(Graphics2D g2D, Point tip, Point tail) {
-        double theta =
-                Math.atan2((tip.getY() - tail.getY()),
-                        (tip.getX() - tail.getX()));
+        double theta = Math.atan2((tip.getY() - tail.getY()),
+                (tip.getX() - tail.getX()));
         double rho = theta + PHI;
         g2D.setStroke(ARROW_STROKE);
         for (int j = 0; j < 2; j++) {
@@ -214,15 +206,5 @@ class PaintHandler {
                     * Math.sin(rho)));
             rho = theta - PHI;
         }
-    }
-
-    private void drawString(Graphics2D g2D, String txt, Point point) {
-        g2D.setFont(FontUtil.ARIAL_BOLD_11);
-        java.awt.geom.Rectangle2D rect = FontUtil.FM_ARIAL_BOLD_11.getStringBounds(
-                txt, g2D);
-        int textHeight = (int) (rect.getHeight());
-        int textWidth = (int) (rect.getWidth());
-        g2D.drawString(txt, point.x - textWidth / DIV, point.y + textHeight
-                / Y_DIV);
     }
 }
