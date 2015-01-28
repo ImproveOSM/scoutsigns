@@ -36,6 +36,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import org.openstreetmap.josm.Main;
@@ -60,6 +61,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.gui.layer.ScoutSignsLayer;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.TripViewObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.util.Util;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ServiceCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.Keys;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
@@ -85,6 +87,8 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
     /** the filters applied to the search */
     private SearchFilter searchFilter;
     
+    private int prevZoom;
+    
     
     /**
      * Builds a new {@code ScoutSignsPlugin} object. This constructor is
@@ -107,6 +111,7 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
             dialog.getButton().addActionListener(new ToggleButtonActionListener());
             registerListeners();
             addLayer();
+            prevZoom = OsmUrlToBounds.getZoom(newMapFrame.mapView.getRealBounds());
         }
     }
     
@@ -124,6 +129,7 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
                     
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                       
                         Main.worker.execute(new UpdateThread()); 
                         }
                     });
@@ -339,13 +345,17 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
             if (Main.map != null && Main.map.mapView != null) {
                 BoundingBox bbox = Util.buildBBox(Main.map.mapView);
                 if (bbox != null) {
-                    int zoom = OsmUrlToBounds.getZoom(Main.map.mapView.getRealBounds());
+                    final int zoom = OsmUrlToBounds.getZoom(
+                            Main.map.mapView.getRealBounds());
                     final DataSet result = ServiceHandler.getInstance().
                             searchSigns(bbox, searchFilter, zoom);
                     SwingUtilities.invokeLater(new Runnable() {
                         
                         @Override
                         public void run() {
+                            displayClusterInfoDialog(zoom);
+                            prevZoom = zoom;
+                            dialog.enableButtons(zoom);
                             if (removeSelection(result.getRoadSigns())) {
                                 dialog.updateData(null);
                             }
@@ -357,12 +367,26 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
             }
         }
         
+        private void displayClusterInfoDialog(int zoom) {
+            if (Util.shouldDisplayClInfoDialog(zoom, prevZoom)) {
+                int val = JOptionPane.showOptionDialog(Main.map.mapView, 
+                        GuiCnf.getInstance().getInfoClusterTxt(), 
+                        GuiCnf.getInstance().getInfoClusterTitle(),
+                        JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, 
+                        null, null, null);
+                boolean flag = val == JOptionPane.YES_OPTION;
+                PrefManager.getInstance().saveSuppressClusterInfoFlag(flag); 
+            }
+        }
+       
         private boolean removeSelection(List<RoadSign> roadSigns) {
             RoadSign selRoadSign = layer.lastSelRoadSign();
             return selRoadSign != null && roadSigns != null
                     && !roadSigns.contains(selRoadSign);
         }
     }
+    
+    
     
     /*
      * Listens to toggle dialog button actions.

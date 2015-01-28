@@ -22,7 +22,6 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
@@ -34,7 +33,6 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ServiceCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltCnf;
-import org.openstreetmap.josm.tools.OsmUrlToBounds;
 
 
 /**
@@ -57,8 +55,11 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     private RoadSign roadSign;
     private ImageFrame imgFrame;
     
-    /* components that's state changes */
+    /* button panel comnponents */
     private JButton btnFilter;
+    private JButton btnImage;
+    private JButton btnComment;
+    private JButton btnMoreAction;
     private JButton btnBack;
     private JButton btnTrip;
     
@@ -75,24 +76,33 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     ButtonPanel() {
         super(new GridLayout(ROWS, COLS));
         
-        // add components
-        
+        // create components
         IconCnf iconCnf = IconCnf.getInstance();
         TltCnf tltCnf = TltCnf.getInstance();
-        btnFilter = Builder.buildButton(new DisplayFilterDialog(), 
+        btnFilter = Builder.buildButton(new DisplayFilterDialog(),
                 iconCnf.getFilterIcon(), tltCnf.getBtnFilter());
         btnBack = Builder.buildButton(new ExitTrip(), iconCnf.getBackIcon(),
                 tltCnf.getBtnBack());
         btnTrip = Builder.buildButton(new DisplayTrip(), iconCnf.getTripIcon(),
                 tltCnf.getBtnTrip());
+        btnImage = Builder.buildButton(new DisplayImageFrame(),
+                iconCnf.getPhotoIcon(), tltCnf.getBtnPhoto());
+        btnComment = Builder.buildButton(new DisplayCommentDialog(),
+                iconCnf.getCommentIcon(), tltCnf.getBtnComment());
+        btnMoreAction = Builder.buildButton(new DisplayEditMenu(),
+                iconCnf.getMoreActionIcon(), tltCnf.getBtnMoreAction());
+        
+        // disable actions 
+        btnFilter.setEnabled(false);
+        enableRoadSignActions(false);
+        
+        // add components
         add(btnFilter);
-        add(Builder.buildButton(new DisplayImageFrame(), iconCnf.getPhotoIcon(), 
-                tltCnf.getBtnPhoto()));
+        add(btnImage);
         add(btnTrip);
-        add(Builder.buildButton(new DisplayCommentDialog(), iconCnf.getCommentIcon(), 
-                tltCnf.getBtnComment()));
-        add(Builder.buildButton(new DisplayEditMenu(), iconCnf.getMoreActionIcon(), 
-                tltCnf.getBtnMoreAction()));
+        add(btnComment);
+        add(btnMoreAction);
+        
         setPreferredSize(DIM);
     }
     
@@ -105,12 +115,16 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     void setRoadSign(RoadSign roadSign) {
         this.roadSign = roadSign;
         
-        // restore possible statuses
+        // restore possible statuses & enable/disable selected road sign related
+        // actions
         if (statuses.size() != Status.VALUES_LIST.size()) {
             statuses = new ArrayList<>(Status.VALUES_LIST);
         }
         if (this.roadSign != null) {
             statuses.remove(this.roadSign.getStatus());
+            enableRoadSignActions(true);
+        } else {
+            enableRoadSignActions(false);
         }
     }
     
@@ -121,6 +135,32 @@ class ButtonPanel extends JPanel implements TripViewObservable {
      */
     void registerStatusChangeObserver(StatusChangeObserver observer) {
         statusChangeObserver = observer;
+    }
+    
+    /**
+     * Enables or disabled action buttons based on the given zoom level.
+     * 
+     * @param zoom the current zoom level.
+     */
+    void enableButtons(int zoom) {
+        if (zoom > ServiceCnf.getInstance().getMaxClusterZoom()) {
+            btnFilter.setEnabled(true);
+            if (roadSign != null) {
+                enableRoadSignActions(true);
+            } else {
+                enableRoadSignActions(false);
+            }
+        } else {
+            btnFilter.setEnabled(false);
+            enableRoadSignActions(false);
+        }
+    }
+    
+    private void enableRoadSignActions(boolean enable) {
+        btnImage.setEnabled(enable);
+        btnTrip.setEnabled(enable);
+        btnComment.setEnabled(enable);
+        btnMoreAction.setEnabled(enable);
     }
     
     
@@ -143,7 +183,7 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     
     /*
      * Displays the filter dialog window. This dialog window is available only
-     * when road signs are displayed on the map. 
+     * when road signs are displayed on the map.
      */
     private final class DisplayFilterDialog extends AbstractAction {
         
@@ -151,11 +191,8 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         
         @Override
         public void actionPerformed(ActionEvent event) {
-            int zoom = OsmUrlToBounds.getZoom(Main.map.mapView.getRealBounds());
-            if (zoom > ServiceCnf.getInstance().getMaxClusterZoom()) {
-                RoadSignFilterDialog dlgFilter = new RoadSignFilterDialog();
-                dlgFilter.setVisible(true);
-            }
+            RoadSignFilterDialog dlgFilter = new RoadSignFilterDialog();
+            dlgFilter.setVisible(true);
         }
     }
     
@@ -169,13 +206,11 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         
         @Override
         public void actionPerformed(ActionEvent event) {
-            if (roadSign != null) {
-                if (imgFrame != null && imgFrame.isVisible()) {
-                    imgFrame.dispose();
-                }
-                imgFrame = new ImageFrame(roadSign.getImage());
-                imgFrame.pack();
+            if (imgFrame != null && imgFrame.isVisible()) {
+                imgFrame.dispose();
             }
+            imgFrame = new ImageFrame(roadSign.getImage());
+            imgFrame.pack();
         }
     }
     
@@ -189,7 +224,7 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         
         @Override
         public void actionPerformed(ActionEvent event) {
-            if (roadSign != null && roadSign.getNearbyPos() != null) {
+            if (roadSign.getNearbyPos() != null) {
                 remove(0);
                 add(btnBack, 0);
                 btnTrip.setEnabled(false);
@@ -229,13 +264,11 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         
         @Override
         public void actionPerformed(ActionEvent event) {
-            if (roadSign != null) {
-                EditDialog dlgComment = new EditDialog(null, 
-                        GuiCnf.getInstance().getDlgCommentTitle(), 
-                        IconCnf.getInstance().getCommentIcon().getImage());
-                dlgComment.registerObserver(statusChangeObserver);
-                dlgComment.setVisible(true);
-            }
+            EditDialog dlgComment = new EditDialog(null, GuiCnf.getInstance().
+                    getDlgCommentTitle(), IconCnf.getInstance().getCommentIcon().
+                    getImage());
+            dlgComment.registerObserver(statusChangeObserver);
+            dlgComment.setVisible(true);
         }
     }
     
@@ -249,13 +282,11 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         
         @Override
         public void actionPerformed(ActionEvent event) {
-            if (roadSign != null) {
-                EditPopupMenu editMenu = new EditPopupMenu(statuses);
-                editMenu.registerStatusChangeObserver(statusChangeObserver);
-                editMenu.show(ButtonPanel.this, 0, 0);
-                Point point = getComponent(getComponentCount() - 1).getLocationOnScreen();
-                editMenu.setLocation(point.x, point.y - getHeight());
-            }
+            EditPopupMenu editMenu = new EditPopupMenu(statuses);
+            editMenu.registerStatusChangeObserver(statusChangeObserver);
+            editMenu.show(ButtonPanel.this, 0, 0);
+            Point point = getComponent(getComponentCount() - 1).getLocationOnScreen();
+            editMenu.setLocation(point.x, point.y - getHeight());
         }
     }
 }

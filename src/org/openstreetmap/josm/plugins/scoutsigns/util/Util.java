@@ -40,6 +40,8 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ServiceCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
 
 
 /**
@@ -61,8 +63,9 @@ public final class Util {
      * @return a {@code BoundingBox} object
      */
     public static BoundingBox buildBBox(MapView mapView) {
-        Bounds bounds = new Bounds(mapView.getLatLon(0, mapView.getHeight()),
-                mapView.getLatLon(mapView.getWidth(), 0));
+        Bounds bounds =
+                new Bounds(mapView.getLatLon(0, mapView.getHeight()),
+                        mapView.getLatLon(mapView.getWidth(), 0));
         return new BoundingBox(bounds.getMax().lat(), bounds.getMin().lat(),
                 bounds.getMax().lon(), bounds.getMin().lon());
     }
@@ -81,8 +84,7 @@ public final class Util {
         RoadSign result = null;
         if (roadSigns != null) {
             for (RoadSign roadSign : roadSigns) {
-                double dist =
-                        distance(point, roadSign.getSignPos().getPosition());
+                double dist = distance(point, roadSign.getSignPos().getPosition());
                 if (dist <= minDist && dist <= POZ_DIST) {
                     minDist = dist;
                     result = roadSign;
@@ -96,5 +98,22 @@ public final class Util {
         Point toPoint = Main.map.mapView.getPoint(toLatLon);
         return new Point2D.Double(fromPoint.getX(), fromPoint.getY())
                 .distance(toPoint);
+    }
+    
+    /**
+     * Verifies if the clustering view info dialog should be displayed or not.
+     * 
+     * @param zoom the current zoom level
+     * @param prevZoom the previous zoom level
+     * @return true if the dialog window needs to be displayed, false otherwise
+     */
+    public static boolean shouldDisplayClInfoDialog(int zoom, int prevZoom) {
+        boolean suppressMsg = PrefManager.getInstance().loadSuppressClusterInfoFlag();
+        boolean result = false;
+        if (!suppressMsg) {
+            int maxZoom = ServiceCnf.getInstance().getMaxClusterZoom();
+            result = zoom <= maxZoom && zoom < prevZoom;
+        }
+        return result;
     }
 }

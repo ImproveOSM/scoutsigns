@@ -72,7 +72,7 @@ public final class PrefManager {
      * @param value a boolean value
      */
     public void saveSupressErrorFlag(boolean value) {
-        Main.pref.put(Keys.ERROR_SUPRESS, value);
+        Main.pref.put(Keys.ERROR_SUPPRESS, value);
     }
     
     /**
@@ -81,7 +81,27 @@ public final class PrefManager {
      * @return a boolean value
      */
     public boolean loadSupressErrorFlag() {
-        return Main.pref.getBoolean(Keys.ERROR_SUPRESS);
+        return Main.pref.getBoolean(Keys.ERROR_SUPPRESS);
+    }
+    
+    /**
+     * Saves the given value to the global preference file. Based on this value
+     * an info message is displayed to the user when entering the clustered view.
+     * 
+     * @param value a boolean value
+     */
+    public void saveSuppressClusterInfoFlag(boolean value) {
+        Main.pref.put(Keys.CLUSTER_INFO_SUPPRESS, value);
+    }
+    
+    /**
+     * Loads the suppress cluster info flag.
+     * 
+     * @return a  boolean value
+     */
+    public boolean loadSuppressClusterInfoFlag() {
+        String flagVal = Main.pref.get(Keys.CLUSTER_INFO_SUPPRESS);
+        return flagVal.isEmpty() ? false : new Boolean(flagVal);
     }
     
     /**

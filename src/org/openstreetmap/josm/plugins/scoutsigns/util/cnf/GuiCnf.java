@@ -101,6 +101,10 @@ public final class GuiCnf {
     private final String txtCommentInvalid;
     private final String txtDateInvalid;
     
+    /* info texts */
+    private final String infoClusterTitle;
+    private final String infoClusterTxt;
+    
     private final String txtMenuSolve;
     private final String txtMenuInvalid;
     private final String txtMenuDuplicate;
@@ -147,8 +151,8 @@ public final class GuiCnf {
         lblTimeInt = CnfUtil.readProperty(properties, "filter.int");
         lblUsername = CnfUtil.readProperty(properties, "filter.username");
         dlgCommentTitle = CnfUtil.readProperty(properties, "comment.title");
-        txtUsernameWarning =
-                CnfUtil.readProperty(properties, "warning.missing.username");
+        txtUsernameWarning = CnfUtil.readProperty(properties, 
+                "warning.missing.username");
         
         /* commonly used texts */
         lblType = CnfUtil.readProperty(properties, "type");
@@ -162,29 +166,25 @@ public final class GuiCnf {
         btnReset = CnfUtil.readProperty(properties, "btn.reset");
         btnCancel = CnfUtil.readProperty(properties, "bnt.cancel");
         
-        dlgWarningTitle =
-                CnfUtil.readProperty(properties, "warning.general.title");
-        txtDuplIdInvalid =
-                CnfUtil.readProperty(properties, "warning.invalid.dupl");
-        txtConfInvalid =
-                CnfUtil.readProperty(properties, "warning.invalid.conf");
-        txtCommentInvalid =
-                CnfUtil.readProperty(properties, "warning.invalid.comment");
-        txtDateInvalid =
-                CnfUtil.readProperty(properties, "warning.invalid.date");
+        dlgWarningTitle = CnfUtil.readProperty(properties, "warning.general.title");
+        txtDuplIdInvalid = CnfUtil.readProperty(properties, "warning.invalid.dupl");
+        txtConfInvalid = CnfUtil.readProperty(properties, "warning.invalid.conf");
+        txtCommentInvalid = CnfUtil.readProperty(properties, 
+                "warning.invalid.comment");
+        txtDateInvalid = CnfUtil.readProperty(properties, "warning.invalid.date");
+        
+        infoClusterTitle = CnfUtil.readProperty(properties, "info.cluster.title");
+        infoClusterTxt = CnfUtil.readProperty(properties, "info.cluster.txt");
         
         /* menu item texts */
         txtMenuSolve = CnfUtil.readProperty(properties, "edit.menu.solve");
         txtMenuInvalid = CnfUtil.readProperty(properties, "edit.menu.invalid");
-        txtMenuDuplicate =
-                CnfUtil.readProperty(properties, "edit.meuu.duplicate");
+        txtMenuDuplicate = CnfUtil.readProperty(properties, "edit.meuu.duplicate");
         txtMenuReopen = CnfUtil.readProperty(properties, "edit.menu.reopen");
         
         dlgSolveTitle = CnfUtil.readProperty(properties, "edit.dialog.solve");
-        dlgInvalidTitle =
-                CnfUtil.readProperty(properties, "edit.dialog.invalid");
-        dlgDuplicateTitle =
-                CnfUtil.readProperty(properties, "edit.dialog.duplicate");
+        dlgInvalidTitle = CnfUtil.readProperty(properties, "edit.dialog.invalid");
+        dlgDuplicateTitle = CnfUtil.readProperty(properties, "edit.dialog.duplicate");
         dlgReopenTitle = CnfUtil.readProperty(properties, "edit.dialog.reopen");
     }
     
@@ -343,6 +343,14 @@ public final class GuiCnf {
     
     public String getTxtDateInvalid() {
         return txtDateInvalid;
+    }
+    
+    public String getInfoClusterTitle() {
+        return infoClusterTitle;
+    }
+    
+    public String getInfoClusterTxt() {
+        return infoClusterTxt;
     }
     
     public String getTxtMenuSolve() {

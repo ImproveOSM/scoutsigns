@@ -100,6 +100,15 @@ public class ScoutSignsDetailsDialog extends ToggleDialog {
     }
     
     /**
+     * Enables button panel action buttons based on the given zoom level.
+     * 
+     * @param zoom the current zoom level.
+     */
+    public void enableButtons(int zoom) {
+        pnlBtn.enableButtons(zoom);
+    }
+    
+    /**
      * Registers the given observer.
      * 
      * @param observer a {@code StatusChangeObserver}

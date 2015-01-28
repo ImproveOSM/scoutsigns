@@ -43,7 +43,8 @@ public final class Keys {
     
     private Keys() {}
     
-    static final String ERROR_SUPRESS = "scoutsigns.error.supress";
+    static final String ERROR_SUPPRESS = "scoutsigns.error.suppress";
+    static final String CLUSTER_INFO_SUPPRESS= "scoutsigns.cluster.info.suppress";
     public static final String FILTERS_CHANGED = "scoutsigns.filter.changed";
     static final String FROM = "scoutsigns.filter.from";
     static final String TO = "scoutsigns.filter.to";
