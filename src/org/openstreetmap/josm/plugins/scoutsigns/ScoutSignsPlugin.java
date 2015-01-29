@@ -300,6 +300,7 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
     
     @Override
     public void enterTripView() {
+        NavigatableComponent.removeZoomChangeListener(this);
         layer.setTripView(true);
         Main.map.repaint();
     }
@@ -308,6 +309,7 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
     public void exitTripView() {
         layer.setTripView(false);
         Main.worker.execute(new UpdateThread());
+        NavigatableComponent.addZoomChangeListener(this);
     }
     
     
