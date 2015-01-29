@@ -152,7 +152,7 @@ class HttpQueryBuilder {
     }
     
     private void addTypeFilter(String type) {
-        if (type != null) {
+        if (type != null && !type.isEmpty()) {
             query.append(AND);
             query.append(Constants.TYPE).append(EQ);
             query.append(HttpUtil.utf8Encode(type));
