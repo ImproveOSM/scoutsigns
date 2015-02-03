@@ -64,6 +64,7 @@ class PaintHandler {
             AlphaComposite.SRC_OVER, 1f);
     
     // trip view related constants
+    private static final int ARROW_FREQ = 2;
     private static final double RADIUS = 15.0;
     private static final float ARROW_WIDTH = 6f;
     private static final BasicStroke LINE_STROKE = new BasicStroke(1f,
@@ -132,10 +133,13 @@ class PaintHandler {
         g2D.setComposite(POS_COMP);
         if (roadSign.getNearbyPos() != null) {
             Point prevPoint = mv.getPoint(roadSign.getNearbyPos().get(0));
-            for (int i = 0; i < roadSign.getNearbyPos().size(); i++) {
+            for (int i = 1; i < roadSign.getNearbyPos().size(); i++) {
                 Point point = mv.getPoint(roadSign.getNearbyPos().get(i));
                 Boolean direction = roadSign.getCarPos().getHeading() < HEADING;
-                drawDirectedLine(g2D, prevPoint, point, direction);
+                if (!prevPoint.equals(point)) {
+                    boolean drawArrow = i % ARROW_FREQ == 0;
+                    drawLine(g2D, prevPoint, point, direction, drawArrow);
+                }
                 drawCircle(g2D, prevPoint, Color.red, RADIUS);
                 prevPoint = point;
             }
@@ -178,13 +182,14 @@ class PaintHandler {
         g2D.draw(circle);
     }
     
-    private void drawDirectedLine(Graphics2D g2D, Point start, Point end,
-            boolean forward) {
+    private void drawLine(Graphics2D g2D, Point start, Point end,
+            boolean forward, boolean drawArrow) {
         g2D.setColor(Color.black);
         g2D.setStroke(LINE_STROKE);
         // draw line
         g2D.draw(new Line2D.Double(start.getX(), start.getY(), end.getX(), end
                 .getY()));
+        if (drawArrow) {
         Point midPoint =
                 new Point((start.x + end.x) / 2, (start.y + end.y) / 2);
         if (forward) {
@@ -192,7 +197,7 @@ class PaintHandler {
         } else {
             drawArrow(g2D, midPoint, start);
         }
-        
+        }
     }
     
     private void drawArrow(Graphics2D g2D, Point tip, Point tail) {
