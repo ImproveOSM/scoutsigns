@@ -339,7 +339,7 @@ class RoadSignFilterPanel extends JPanel {
         private static final GridBagConstraints PNL_STATUS =
                 new GridBagConstraints(1, 2, 3, 1, 1, 0,
                         GridBagConstraints.PAGE_START,
-                        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 3, 3),
+                        GridBagConstraints.HORIZONTAL, new Insets(0, 0, 2, 3),
                         0, 0);
         private static final GridBagConstraints LBL_TYPE =
                 new GridBagConstraints(0, 3, 1, 1, 1, 0,
@@ -350,7 +350,7 @@ class RoadSignFilterPanel extends JPanel {
                 new GridBagConstraints(1, 3, 2, 1, 1, 0,
                         GridBagConstraints.CENTER,
                         GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5),
-                        0, 110);
+                        0, 94);
         private static final GridBagConstraints LBL_DUPL =
                 new GridBagConstraints(0, 4, 1, 1, 1, 0,
                         GridBagConstraints.PAGE_START,
