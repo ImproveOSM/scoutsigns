@@ -83,8 +83,8 @@ class RoadSignPanel extends InfoPanel<RoadSign> {
         if (height != null) {
             add(Builder.buildLabel(getGuiCnf().getLblHeight(), FontUtil.BOLD_12, 
                     new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
-            String heightStr = Formatter.formatDecimal(height, DecFormat.SHORT) 
-                    + " m";
+            String heightStr =
+                    Formatter.formatDecimal(height, DecFormat.SHORT) + " m";
             int widthVal = FontUtil.FM_PLAIN_12.stringWidth(heightStr);
             add(Builder.buildLabel(heightStr, FontUtil.PLAIN_12, new Rectangle(
                     widthLbl, y, widthVal, LHEIGHT)));
@@ -94,44 +94,52 @@ class RoadSignPanel extends InfoPanel<RoadSign> {
     }
     
     private void addType(String type, int widthLbl) {
-        add(Builder.buildLabel(getGuiCnf().getLblType(), FontUtil.BOLD_12,
-                new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
-        int widthVal = FontUtil.FM_PLAIN_12.stringWidth(type);
-        add(Builder.buildLabel(type,FontUtil.PLAIN_12, new Rectangle(widthLbl, y, 
-                widthVal, LHEIGHT)));
-        pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
-        y = y + LHEIGHT;
+        if (type != null) {
+            add(Builder.buildLabel(getGuiCnf().getLblType(), FontUtil.BOLD_12,
+                    new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
+            int widthVal = FontUtil.FM_PLAIN_12.stringWidth(type);
+            add(Builder.buildLabel(type, FontUtil.PLAIN_12, new Rectangle(
+                    widthLbl, y, widthVal, LHEIGHT)));
+            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
+            y = y + LHEIGHT;
+        }
     }
     
     private void addStatus(Status status, int widthLbl) {
-        add(Builder.buildLabel(getGuiCnf().getLblStatus(), FontUtil.BOLD_12,
-                new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
-        int widthVal = FontUtil.FM_PLAIN_12.stringWidth(status.name());
-        add(Builder.buildLabel(status.name(), FontUtil.PLAIN_12, new Rectangle(
-                widthLbl, y, widthVal, LHEIGHT)));
-        pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
-        y = y + LHEIGHT;
+        if (status != null) {
+            add(Builder.buildLabel(getGuiCnf().getLblStatus(), FontUtil.BOLD_12, 
+                    new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
+            int widthVal = FontUtil.FM_PLAIN_12.stringWidth(status.name());
+            add(Builder.buildLabel(status.name(), FontUtil.PLAIN_12,
+                    new Rectangle(widthLbl, y, widthVal, LHEIGHT)));
+            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
+            y = y + LHEIGHT;
+        }
     }
     
     private void addConfidence(Short confidence, int widthLbl) {
-        add(Builder.buildLabel(getGuiCnf().getLblConf(), FontUtil.BOLD_12,
-                new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
-        int widthVal = FontUtil.FM_PLAIN_12.stringWidth(confidence.toString());
-        add(Builder.buildLabel(confidence.toString(), FontUtil.PLAIN_12, 
-                new Rectangle(widthLbl, y, widthVal, LHEIGHT)));
-        pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
-        y = y + LHEIGHT;
+        if (confidence != null) {
+            add(Builder.buildLabel(getGuiCnf().getLblConf(), FontUtil.BOLD_12,
+                    new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
+            int widthVal = FontUtil.FM_PLAIN_12.stringWidth(confidence.toString());
+            add(Builder.buildLabel(confidence.toString(), FontUtil.PLAIN_12,
+                    new Rectangle(widthLbl, y, widthVal, LHEIGHT)));
+            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
+            y = y + LHEIGHT;
+        }
     }
     
     private void addCreated(Long created, int widthLbl) {
-        add(Builder.buildLabel(getGuiCnf().getLblCreated(), FontUtil.BOLD_12,
-                new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
-        String createdStr = DateUtil.formatTimestamp(created);
-        int widthVal = FontUtil.FM_PLAIN_12.stringWidth(createdStr);
-        add(Builder.buildLabel(createdStr, FontUtil.PLAIN_12, new Rectangle(
-                widthLbl, y, widthVal, LHEIGHT)));
-        pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
-        y = y + LHEIGHT;
+        if (created != null) {
+            add(Builder.buildLabel(getGuiCnf().getLblCreated(), FontUtil.BOLD_12, 
+                    new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
+            String createdStr = DateUtil.formatTimestamp(created);
+            int widthVal = FontUtil.FM_PLAIN_12.stringWidth(createdStr);
+            add(Builder.buildLabel(createdStr, FontUtil.PLAIN_12,
+                    new Rectangle(widthLbl, y, widthVal, LHEIGHT)));
+            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
+            y = y + LHEIGHT;
+        }
     }
     
     private void addDupl(Long duplicateOf, int widthLbl) {

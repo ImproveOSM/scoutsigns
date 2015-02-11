@@ -94,11 +94,13 @@ public class ScoutSignsDetailsDialog extends ToggleDialog {
      * @param roadSign the currently selected {@code RoadSign}
      */
     public void updateData(RoadSign roadSign) {
-        pnlDetails.updateData(roadSign);
-        pnlBtn.setRoadSign(roadSign);
-        repaint();
+        synchronized (this) {
+            pnlDetails.updateData(roadSign);
+            pnlBtn.setRoadSign(roadSign);
+            repaint();
+        }
     }
-    
+
     /**
      * Enables button panel action buttons based on the given zoom level.
      * 

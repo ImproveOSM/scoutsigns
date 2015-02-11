@@ -118,7 +118,7 @@ class StatusFilterPanel extends JPanel {
                     cboxSolved.setSelected(true);
                     break;
                 case INVALID:
-                    cboxInvalid.setSelected(false);
+                    cboxInvalid.setSelected(true);
                     break;
                 default:
                     cboxDuplicate.setSelected(true);

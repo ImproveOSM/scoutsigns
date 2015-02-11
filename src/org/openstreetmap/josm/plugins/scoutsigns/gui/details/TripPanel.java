@@ -54,16 +54,18 @@ class TripPanel extends InfoPanel<Trip> {
     }
     
     private void addId(String id, int widthLbl) {
-        add(Builder.buildLabel(getGuiCnf().getLblId(), FontUtil.BOLD_12,
-                new Rectangle(RECT_X, RECT_Y, widthLbl, LHEIGHT)));
-        add(Builder.buildTextArea(id, false, FontUtil.PLAIN_12, getBackground(),
-                new Rectangle(widthLbl, RECT_Y, ID_WIDTH, ID_HEIGHT)));
-        pnlWidth = pnlWidth + widthLbl + ID_WIDTH;
-        y = RECT_Y + ID_HEIGHT;
+        if (id != null) {
+            add(Builder.buildLabel(getGuiCnf().getLblId(), FontUtil.BOLD_12,
+                    new Rectangle(RECT_X, RECT_Y, widthLbl, LHEIGHT)));
+            add(Builder.buildTextArea(id, false, FontUtil.PLAIN_12, getBackground(), 
+                    new Rectangle(widthLbl, RECT_Y, ID_WIDTH, ID_HEIGHT)));
+            pnlWidth = pnlWidth + widthLbl + ID_WIDTH;
+            y = RECT_Y + ID_HEIGHT;
+        }
     }
     
     private void addMode(String mode, int widthLbl) {
-        if (mode != null && ! mode.isEmpty()) {
+        if (mode != null && !mode.isEmpty()) {
             add(Builder.buildLabel(getGuiCnf().getLblMode(), FontUtil.BOLD_12,
                     new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
             int widthVal = FontUtil.FM_PLAIN_12.stringWidth(mode);
@@ -101,7 +103,7 @@ class TripPanel extends InfoPanel<Trip> {
     
     private void addDevice(Device device, int widthLbl) {
         if (device != null) {
-            add(Builder.buildLabel(getGuiCnf().getLblDevice(), FontUtil.BOLD_12,
+            add(Builder.buildLabel(getGuiCnf().getLblDevice(), FontUtil.BOLD_12, 
                     new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
             String deviceStr = device.toString();
             int widthVal = FontUtil.FM_PLAIN_12.stringWidth(deviceStr);

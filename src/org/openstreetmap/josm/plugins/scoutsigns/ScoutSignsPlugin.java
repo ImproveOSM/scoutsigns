@@ -355,13 +355,15 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
                         
                         @Override
                         public void run() {
-                            displayClusterInfoDialog(zoom);
-                            prevZoom = zoom;
-                            updateSelection(result);
-                            dialog.enableButtons(zoom);
-                            
-                            layer.setDataSet(result);
-                            Main.map.repaint();
+                            synchronized (this) {
+                                displayClusterInfoDialog(zoom);
+                                prevZoom = zoom;
+                                updateSelection(result);
+                                dialog.enableButtons(zoom);
+                                
+                                layer.setDataSet(result);
+                                Main.map.repaint();
+                            }
                         }
                     });
                 }
@@ -370,13 +372,11 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
         
         private void displayClusterInfoDialog(int zoom) {
             if (Util.shouldDisplayClInfoDialog(zoom, prevZoom)) {
-                int val =
-                        JOptionPane.showOptionDialog(Main.map.mapView, GuiCnf
-                                .getInstance().getInfoClusterTxt(), GuiCnf
-                                .getInstance().getInfoClusterTitle(),
-                                JOptionPane.YES_NO_OPTION,
-                                JOptionPane.INFORMATION_MESSAGE, null, null,
-                                null);
+                int val = JOptionPane.showOptionDialog(Main.map.mapView, 
+                        GuiCnf.getInstance().getInfoClusterTxt(), 
+                        GuiCnf.getInstance().getInfoClusterTitle(),
+                        JOptionPane.YES_NO_OPTION, 
+                        JOptionPane.INFORMATION_MESSAGE, null, null, null);
                 boolean flag = val == JOptionPane.YES_OPTION;
                 PrefManager.getInstance().saveSuppressClusterInfoFlag(flag);
             }
@@ -390,7 +390,6 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener,
             }
         }
     }
-    
     
     
     /*
