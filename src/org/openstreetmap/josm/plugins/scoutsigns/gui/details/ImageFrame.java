@@ -57,7 +57,8 @@ class ImageFrame extends JFrame {
     private static final long serialVersionUID = -4511721458975966411L;
     
     private static final Dimension DIM = new Dimension(250, 200);
-    
+    private JLabel lblImage;
+    private JPanel pnlImage;
     
     /**
      * Builds a new frame for the given image.
@@ -78,19 +79,39 @@ class ImageFrame extends JFrame {
     
     
     private void addComponent(Image image) {
-        JLabel lbl;
         if (image == null) {
-            lbl = new JLabel(GuiCnf.getInstance().getLblPhotoMissing());
+            lblImage = new JLabel(GuiCnf.getInstance().getLblPhotoMissing());
         } else {
-            try { BufferedImage bi = ImageUtil.base64ToImage(image.getData(),
-                    image.getWidth(), image.getHeight());
-                lbl = new JLabel(new ImageIcon(bi));
+            try {
+                BufferedImage bi = ImageUtil.base64ToImage(image.getData(),
+                        image.getWidth(), image.getHeight());
+                lblImage = new JLabel(new ImageIcon(bi));
             } catch (IOException e) {
-                lbl = new JLabel(GuiCnf.getInstance().getLblPhotoError());
+                lblImage = new JLabel(GuiCnf.getInstance().getLblPhotoError());
             }
         }
-        JPanel pnl = new JPanel(new BorderLayout());
-        pnl.add(lbl, BorderLayout.CENTER);
-        add(pnl);
+        pnlImage = new JPanel(new BorderLayout());
+        pnlImage.add(lblImage, BorderLayout.CENTER);
+        add(pnlImage);
+    }
+    
+    /**
+     * Updates the image frame with the new image.
+     * 
+     * @param image a {@code Image} object
+     */
+    void update(Image image) {
+        if (image == null) {
+            lblImage.setText(GuiCnf.getInstance().getLblPhotoMissing());
+        } else {
+            try {
+                BufferedImage bi = ImageUtil.base64ToImage(image.getData(),
+                        image.getWidth(), image.getHeight());
+                lblImage.setIcon(new ImageIcon(bi));
+            } catch (IOException e) {
+                lblImage.setText(GuiCnf.getInstance().getLblPhotoError());
+            }
+        }
+        pnlImage.repaint();
     }
 }

@@ -81,18 +81,18 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         TltCnf tltCnf = TltCnf.getInstance();
         btnFilter = Builder.buildButton(new DisplayFilterDialog(),
                 iconCnf.getFilterIcon(), tltCnf.getBtnFilter());
-        btnBack = Builder.buildButton(new ExitTrip(), iconCnf.getBackIcon(),
+        btnBack = Builder.buildButton(new ExitTrip(), iconCnf.getBackIcon(), 
                 tltCnf.getBtnBack());
         btnTrip = Builder.buildButton(new DisplayTrip(), iconCnf.getTripIcon(),
                 tltCnf.getBtnTrip());
-        btnImage = Builder.buildButton(new DisplayImageFrame(),
-                iconCnf.getPhotoIcon(), tltCnf.getBtnPhoto());
-        btnComment = Builder.buildButton(new DisplayCommentDialog(),
+        btnImage = Builder.buildButton(new DisplayImageFrame(), iconCnf.getPhotoIcon(), 
+                tltCnf.getBtnPhoto());
+        btnComment = Builder.buildButton(new DisplayCommentDialog(), 
                 iconCnf.getCommentIcon(), tltCnf.getBtnComment());
-        btnMoreAction = Builder.buildButton(new DisplayEditMenu(),
+        btnMoreAction = Builder.buildButton(new DisplayEditMenu(), 
                 iconCnf.getMoreActionIcon(), tltCnf.getBtnMoreAction());
         
-        // disable actions 
+        // disable actions
         btnFilter.setEnabled(false);
         enableRoadSignActions(false);
         
@@ -123,6 +123,12 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         if (this.roadSign != null) {
             statuses.remove(this.roadSign.getStatus());
             enableRoadSignActions(true);
+            
+            // reload image
+            if (imgFrame != null && imgFrame.isVisible()) {
+                imgFrame.update(roadSign.getImage());
+                imgFrame.repaint();
+            }
         } else {
             enableRoadSignActions(false);
         }
@@ -162,7 +168,6 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         btnComment.setEnabled(enable);
         btnMoreAction.setEnabled(enable);
     }
-    
     
     /* TripViewObservable implementation */
     
@@ -207,10 +212,12 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         @Override
         public void actionPerformed(ActionEvent event) {
             if (imgFrame != null && imgFrame.isVisible()) {
-                imgFrame.dispose();
+                imgFrame.update(roadSign.getImage());
+                imgFrame.repaint();
+            } else {
+                imgFrame = new ImageFrame(roadSign.getImage());
+                imgFrame.pack();
             }
-            imgFrame = new ImageFrame(roadSign.getImage());
-            imgFrame.pack();
         }
     }
     
