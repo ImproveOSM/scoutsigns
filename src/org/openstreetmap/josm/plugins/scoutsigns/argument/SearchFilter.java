@@ -39,7 +39,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 
 /**
  * Defines the filters that can be applied to the "searchSings" method.
- * 
+ *
  * @author Beata
  * @version $Revision$
  */
