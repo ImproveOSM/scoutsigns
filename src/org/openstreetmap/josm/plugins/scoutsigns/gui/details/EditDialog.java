@@ -62,38 +62,100 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
 
 /**
  * Dialog window that displays a comment panel.
- * 
+ *
  * @author Beata
  * @version $Revision$
  */
 class EditDialog extends ModalDialog implements StatusChangeObservable {
-    
+
+    /*
+     * Creates a new comment for the selected road sign. A comment is created only if the comment component contains a
+     * text.
+     */
+    private final class AddCommentAction extends AbstractAction {
+
+        private static final long serialVersionUID = -5351629052918137710L;
+
+        @Override
+        public void actionPerformed(final ActionEvent event) {
+            // if input is valid load username & create comment
+            if (validInput()) {
+                final Long duplicateId =
+                        (status == Status.DUPLICATE) ? Long.parseLong(txtDuplicateId.getText().trim()) : null;
+
+                if (lblCommentError.isVisible()) {
+                    lblCommentError.setVisible(false);
+                }
+                dispose();
+
+                // load username
+                final String username = PrefManager.getInstance().loadOsmUsername();
+                if (username.isEmpty()) {
+                    final String nemUsername =
+                            JOptionPane.showInputDialog(Main.parent, GuiCnf.getInstance().getTxtUsernameWarning(),
+                                    GuiCnf.getInstance().getDlgWarningTitle(), JOptionPane.WARNING_MESSAGE);
+                    if (nemUsername != null && !nemUsername.isEmpty()) {
+                        PrefManager.getInstance().saveOsmUsername(nemUsername);
+                        notifyObserver(nemUsername, txtComment.getText().trim(), status, duplicateId);
+                    }
+                } else {
+                    notifyObserver(username, txtComment.getText().trim(), status, duplicateId);
+                }
+            }
+        }
+
+        private boolean validInput() {
+            boolean valid = true;
+            if (status == Status.DUPLICATE && !txtDuplicateId.getInputVerifier().verify(txtDuplicateId)) {
+                valid = false;
+            }
+
+            if (txtComment.getText().trim().isEmpty()) {
+                lblCommentError.setVisible(true);
+                valid = false;
+            }
+            return valid;
+        }
+    }
+
     private static final long serialVersionUID = 4145954527837092488L;
-    
+
     /* minimum dimension */
     private static final Dimension DIM = new Dimension(300, 200);
-    
+
     /* border to be added around the comment text component */
     private static final Border BORDER = new EmptyBorder(5, 5, 2, 5);
-    
     private StatusChangeObserver observer;
     private JLabel lblCommentError;
     private JTextField txtDuplicateId;
+
     private JTextArea txtComment;
-    
-    private Status status;
-    
-    
+
+
+    private final Status status;
+
+
     /**
      * Builds a new {@code CommentDialog} object
      */
-    EditDialog(Status status, String title, Image image) {
+    EditDialog(final Status status, final String title, final Image image) {
         super(title, image, DIM);
         this.status = status;
         createComponents();
     }
-    
-    
+
+    @Override
+    public void notifyObserver(final String username, final String text, final Status status, final Long duplicateOf) {
+        if (observer != null) {
+            observer.statusChanged(username, text, status, duplicateOf);
+        }
+    }
+
+    @Override
+    public void registerObserver(final StatusChangeObserver observer) {
+        this.observer = observer;
+    }
+
     @Override
     protected void createComponents() {
         if (status == Status.DUPLICATE) {
@@ -102,121 +164,49 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
         addComment();
         addBtnPnl();
     }
-    
-    private void addDuplicateId() {
-        txtDuplicateId = Builder.buildTextField(null, null, Color.white);
-        txtDuplicateId.setBorder(BorderFactory.createLineBorder(Color.gray));
-        
-        JLabel lblDuplError = Builder.buildLabel(GuiCnf.getInstance().
-                getTxtDuplIdInvalid(),FontUtil.BOLD_12, Color.red, false);
-        txtDuplicateId.setInputVerifier(new DuplicateIdVerifier(txtDuplicateId,
-                lblDuplError));
-        
-        JPanel pnlDuplicate = new JPanel(new GridLayout(1, 0, 1, 1));
-        pnlDuplicate.add(txtDuplicateId);
-        pnlDuplicate.add(lblDuplError);
-        
-        JPanel pnlNorth = new JPanel(new BorderLayout());
-        pnlNorth.setBorder(BORDER);
-        pnlNorth.add(Builder.buildLabel(GuiCnf.getInstance().getLblDupl(),
-                FontUtil.BOLD_12, null), BorderLayout.LINE_START);
-        pnlNorth.add(pnlDuplicate, BorderLayout.CENTER);
-        add(pnlNorth, BorderLayout.NORTH);
-    }
-    
-    private void addComment() {
-        txtComment = Builder.buildTextArea(null, true, FontUtil.PLAIN_12,
-                Color.white, null);
-        
-        JPanel pnlComment = new JPanel(new BorderLayout());
-        pnlComment.setBorder(BORDER);
-        pnlComment.add(Builder.buildScrollPane(txtComment, Color.white, true),
-                BorderLayout.CENTER);
-        pnlComment.setVerifyInputWhenFocusTarget(true);
-        add(pnlComment, BorderLayout.CENTER);
-    }
-    
+
     private void addBtnPnl() {
-        lblCommentError = Builder.buildLabel(GuiCnf.getInstance().
-                getTxtCommentInvalid(),FontUtil.BOLD_12, Color.red, false);
-        
-        JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.TRAILING));
-        pnlBtn.add(Builder.buildButton(new AddCommentAction(), GuiCnf
-                .getInstance().getBtnOk()));
-        pnlBtn.add(Builder.buildButton(new CancelAction(this), GuiCnf
-                .getInstance().getBtnCancel()));
-        
-        JPanel pnlSouth = new JPanel(new BorderLayout());
+        lblCommentError =
+                Builder.buildLabel(GuiCnf.getInstance().getTxtCommentInvalid(), FontUtil.BOLD_12, Color.red, false);
+
+        final JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.TRAILING));
+        pnlBtn.add(Builder.buildButton(new AddCommentAction(), GuiCnf.getInstance().getBtnOk()));
+        pnlBtn.add(Builder.buildButton(new CancelAction(this), GuiCnf.getInstance().getBtnCancel()));
+
+        final JPanel pnlSouth = new JPanel(new BorderLayout());
         pnlSouth.add(lblCommentError, BorderLayout.LINE_START);
         pnlSouth.add(pnlBtn, BorderLayout.LINE_END);
         add(pnlSouth, BorderLayout.SOUTH);
     }
-    
-    @Override
-    public void registerObserver(StatusChangeObserver observer) {
-        this.observer = observer;
+
+    private void addComment() {
+        txtComment = Builder.buildTextArea(null, true, FontUtil.PLAIN_12, Color.white, null);
+
+        final JPanel pnlComment = new JPanel(new BorderLayout());
+        pnlComment.setBorder(BORDER);
+        pnlComment.add(Builder.buildScrollPane(txtComment, Color.white, true), BorderLayout.CENTER);
+        pnlComment.setVerifyInputWhenFocusTarget(true);
+        add(pnlComment, BorderLayout.CENTER);
     }
-    
-    @Override
-    public void notifyObserver(String username, String text, Status status,
-            Long duplicateOf) {
-        if (observer != null) {
-            observer.statusChanged(username, text, status, duplicateOf);
-        }
-    }
-    
-    
-    /*
-     * Creates a new comment for the selected road sign. A comment is created
-     * only if the comment component contains a text.
-     */
-    private final class AddCommentAction extends AbstractAction {
-        
-        private static final long serialVersionUID = -5351629052918137710L;
-        
-        @Override
-        public void actionPerformed(ActionEvent event) {
-            // if input is valid load username & create comment
-            if (validInput()) {
-                Long duplicateId = (status == Status.DUPLICATE) ? 
-                        Long.parseLong(txtDuplicateId.getText().trim()) : null;
-                
-                if (lblCommentError.isVisible()) {
-                    lblCommentError.setVisible(false);
-                }
-                dispose();
-                
-                // load username
-                String username = PrefManager.getInstance().loadOsmUsername();
-                if (username.isEmpty()) {
-                    String nemUsername = JOptionPane.showInputDialog(Main.parent, 
-                            GuiCnf.getInstance().getTxtUsernameWarning(),
-                            GuiCnf.getInstance().getDlgWarningTitle(),
-                            JOptionPane.WARNING_MESSAGE);
-                    if (nemUsername != null && !nemUsername.isEmpty()) {
-                        PrefManager.getInstance().saveOsmUsername(nemUsername);
-                        notifyObserver(nemUsername, txtComment.getText().trim(), 
-                                status, duplicateId);
-                    }
-                } else {
-                    notifyObserver(username, txtComment.getText().trim(),
-                            status, duplicateId);
-                }
-            }
-        }
-        
-        private boolean validInput() {
-            boolean valid = true;
-            if (status == Status.DUPLICATE && 
-                    !txtDuplicateId.getInputVerifier().verify(txtDuplicateId)) {
-                valid = false;
-            }
-            
-            if (txtComment.getText().trim().isEmpty()) {
-                lblCommentError.setVisible(true);
-                valid = false;
-            }
-            return valid;
-        }
+
+
+    private void addDuplicateId() {
+        txtDuplicateId = Builder.buildTextField(null, null, Color.white);
+        txtDuplicateId.setBorder(BorderFactory.createLineBorder(Color.gray));
+
+        final JLabel lblDuplError =
+                Builder.buildLabel(GuiCnf.getInstance().getTxtDuplIdInvalid(), FontUtil.BOLD_12, Color.red, false);
+        txtDuplicateId.setInputVerifier(new DuplicateIdVerifier(txtDuplicateId, lblDuplError));
+
+        final JPanel pnlDuplicate = new JPanel(new GridLayout(1, 0, 1, 1));
+        pnlDuplicate.add(txtDuplicateId);
+        pnlDuplicate.add(lblDuplError);
+
+        final JPanel pnlNorth = new JPanel(new BorderLayout());
+        pnlNorth.setBorder(BORDER);
+        pnlNorth.add(Builder.buildLabel(GuiCnf.getInstance().getLblDupl(), FontUtil.BOLD_12, null),
+                BorderLayout.LINE_START);
+        pnlNorth.add(pnlDuplicate, BorderLayout.CENTER);
+        add(pnlNorth, BorderLayout.NORTH);
     }
 }

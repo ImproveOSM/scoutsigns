@@ -41,60 +41,74 @@ import javax.swing.JTextField;
 
 
 /**
- * Defines common functionality for validation of a {@code JTextField} UI
- * component. Specific a {@code JTextField} validators can extend this class.
- * 
+ * Defines common functionality for validation of a {@code JTextField} UI component. Specific a {@code JTextField}
+ * validators can extend this class.
+ *
  * @author Beata
  * @version $Revision$
  */
 abstract class AbstractVerifier extends InputVerifier implements KeyListener {
-    
-    private JComponent component;
+
+    private final JComponent component;
     private String message;
     private JLabel lblMessage;
-    
-    
-    private AbstractVerifier(JComponent component) {
-        this.component = component;
-        this.component.addKeyListener(this);
-    }
-    
+
+
     /**
      * Builds a new object based on the given arguments.
-     * 
+     *
      * @param component the {@code JComponent} that is validated
-     * @param message a {@code String} to be displayed if the user input is
-     * invalid. This string is displayed as a tool-tip.
+     * @param lblMessage a {@code JLabel} to be displayed if the user input is invalid
      */
-    public AbstractVerifier(JComponent component, String message) {
-        this(component);
-        this.message = message;
-    }
-    
-    /**
-     * Builds a new object based on the given arguments.
-     * 
-     * @param component the {@code JComponent} that is validated
-     * @param lblMessage a {@code JLabel} to be displayed if the user input is
-     * invalid
-     */
-    public AbstractVerifier(JComponent component, JLabel lblMessage) {
+    public AbstractVerifier(final JComponent component, final JLabel lblMessage) {
         this(component);
         this.lblMessage = lblMessage;
     }
-    
+
     /**
-     * Validates the given value.
-     * 
-     * @param value a {@code String} representing the user's input.
-     * @return true if the value is valid, false otherwise
+     * Builds a new object based on the given arguments.
+     *
+     * @param component the {@code JComponent} that is validated
+     * @param message a {@code String} to be displayed if the user input is invalid. This string is displayed as a
+     * tool-tip.
      */
-    abstract boolean validate(String value);
-    
+    public AbstractVerifier(final JComponent component, final String message) {
+        this(component);
+        this.message = message;
+    }
+
+    private AbstractVerifier(final JComponent component) {
+        this.component = component;
+        this.component.addKeyListener(this);
+    }
+
     @Override
-    public boolean verify(JComponent component) {
-        String valueStr = ((JTextField) component).getText().trim();
-        
+    public void keyPressed(final KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            verify(component);
+        } else {
+            component.setBackground(Color.white);
+            component.setToolTipText(null);
+            if (lblMessage != null) {
+                lblMessage.setVisible(false);
+            }
+        }
+    }
+
+    @Override
+    public void keyReleased(final KeyEvent e) {
+        // not supported
+    }
+
+    @Override
+    public void keyTyped(final KeyEvent e) {
+        // not supported
+    }
+
+    @Override
+    public boolean verify(final JComponent component) {
+        final String valueStr = ((JTextField) component).getText().trim();
+
         boolean valid;
         if (!validate(valueStr)) {
             if (lblMessage != null) {
@@ -115,27 +129,12 @@ abstract class AbstractVerifier extends InputVerifier implements KeyListener {
         }
         return valid;
     }
-    
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            verify(component);
-        } else {
-            component.setBackground(Color.white);
-            component.setToolTipText(null);
-            if (lblMessage != null) {
-                lblMessage.setVisible(false);
-            }
-        }
-    }
-    
-    @Override
-    public void keyTyped(KeyEvent e) {
-        // not supported
-    }
-    
-    @Override
-    public void keyReleased(KeyEvent e) {
-        // not supported
-    }
+
+    /**
+     * Validates the given value.
+     *
+     * @param value a {@code String} representing the user's input.
+     * @return true if the value is valid, false otherwise
+     */
+    abstract boolean validate(String value);
 }

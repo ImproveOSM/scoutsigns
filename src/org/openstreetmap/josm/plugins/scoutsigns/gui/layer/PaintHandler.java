@@ -54,90 +54,82 @@ import org.openstreetmap.josm.tools.Pair;
 
 /**
  * Handles the drawing operations of the layer data.
- * 
+ *
  * @author Beata
  * @version $Revision$
  */
 class PaintHandler {
-    
-    private static final Composite COMP = AlphaComposite.getInstance(
-            AlphaComposite.SRC_OVER, 1f);
-    
+
+    private static final Composite COMP = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f);
+
     // trip view related constants
     private static final int ARROW_FREQ = 2;
     private static final double RADIUS = 15.0;
     private static final float ARROW_WIDTH = 6f;
-    private static final BasicStroke LINE_STROKE = new BasicStroke(1f,
-            BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
+    private static final BasicStroke LINE_STROKE = new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
     private static final BasicStroke ARROW_STROKE = new BasicStroke(2f);
-    private static final Composite POS_COMP = AlphaComposite.getInstance(
-            AlphaComposite.SRC_OVER, 0.60f);
+    private static final Composite POS_COMP = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.60f);
     private static final int HEADING = 180;
     private static final double PHI = Math.toRadians(55);
-    
-    private TypeIconFactory iconFactory = TypeIconFactory.getInstance();
-    
-    
+
+    private final TypeIconFactory iconFactory = TypeIconFactory.getInstance();
+
+
     /**
-     * Draws the given road signs to the map. A road sign is represented by an
-     * icon corresponding to its type. The selected road signs are highlighted.
-     * 
+     * Draws the given road signs clusters to the map. A road sign cluster is represented by an icon and the road sign
+     * count drawn in the middle of the icon.
+     *
+     * @param g2D the {@code Graphics2D} used to draw
+     * @param mv the current {@code MapView}
+     * @param clusterList the list of {@code RoadSignCluster}s to be drawn
+     */
+    void drawRoadSignClusters(final Graphics2D g2D, final MapView mv, final List<RoadSignCluster> clusterList) {
+        for (final RoadSignCluster cluster : clusterList) {
+            final Point point = mv.getPoint(cluster.getPosition());
+            final Pair<ImageIcon, Float> pair = ClusterIconCnf.getInstance().getIcon(cluster.getCount());
+            g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pair.b));
+            drawIcon(g2D, pair.a, point);
+        }
+        g2D.setComposite(COMP);
+    }
+
+    /**
+     * Draws the given road signs to the map. A road sign is represented by an icon corresponding to its type. The
+     * selected road signs are highlighted.
+     *
      * @param g2D the {@code Graphics2D} used to draw
      * @param mv the current {@code MapView}
      * @param roadSignList the list of {@code RoadSign}s
      * @param selRoadSignList the list of selected {@code RoadSigns}
      */
-    void drawRoadSigns(Graphics2D g2D, MapView mv, List<RoadSign> roadSignList,
-            List<RoadSign> selRoadSignList) {
-        for (RoadSign roadSign : roadSignList) {
-            boolean selected = selRoadSignList.contains(roadSign);
+    void drawRoadSigns(final Graphics2D g2D, final MapView mv, final List<RoadSign> roadSignList,
+            final List<RoadSign> selRoadSignList) {
+        for (final RoadSign roadSign : roadSignList) {
+            final boolean selected = selRoadSignList.contains(roadSign);
             drawRoadSign(g2D, mv, roadSign, selected);
         }
     }
-    
+
     /**
-     * Draws the given road signs clusters to the map. A road sign cluster is
-     * represented by an icon and the road sign count drawn in the middle of the
-     * icon.
-     * 
-     * @param g2D the {@code Graphics2D} used to draw
-     * @param mv the current {@code MapView}
-     * @param clusterList the list of {@code RoadSignCluster}s to be drawn
-     */
-    void drawRoadSignClusters(Graphics2D g2D, MapView mv,
-            List<RoadSignCluster> clusterList) {
-        for (RoadSignCluster cluster : clusterList) {
-            Point point = mv.getPoint(cluster.getPosition());
-            Pair<ImageIcon, Float> pair = ClusterIconCnf.getInstance().getIcon(
-                    cluster.getCount());
-            g2D.setComposite(AlphaComposite.getInstance(
-                    AlphaComposite.SRC_OVER, pair.b));
-            drawIcon(g2D, pair.a, point);
-        }
-        g2D.setComposite(COMP);
-    }
-    
-    /**
-     * Draws the given road sign along with the trip data (nearby positions) to
-     * the map.
-     * 
+     * Draws the given road sign along with the trip data (nearby positions) to the map.
+     *
      * @param g2D the {@code Graphics2D} used to draw
      * @param mv the current {@code MapView}
      * @param roadSign the {@code RoadSign} to be drawn
      */
-    void drawTripData(Graphics2D g2D, MapView mv, RoadSign roadSign) {
+    void drawTripData(final Graphics2D g2D, final MapView mv, final RoadSign roadSign) {
         // draw road sign
         drawRoadSign(g2D, mv, roadSign, true);
-        
+
         // draw positions
         g2D.setComposite(POS_COMP);
         if (roadSign.getNearbyPos() != null) {
             Point prevPoint = mv.getPoint(roadSign.getNearbyPos().get(0));
             for (int i = 1; i < roadSign.getNearbyPos().size(); i++) {
-                Point point = mv.getPoint(roadSign.getNearbyPos().get(i));
-                Boolean direction = roadSign.getCarPos().getHeading() < HEADING;
+                final Point point = mv.getPoint(roadSign.getNearbyPos().get(i));
+                final Boolean direction = roadSign.getCarPos().getHeading() < HEADING;
                 if (!prevPoint.equals(point)) {
-                    boolean drawArrow = i % ARROW_FREQ == 0;
+                    final boolean drawArrow = i % ARROW_FREQ == 0;
                     drawLine(g2D, prevPoint, point, direction, drawArrow);
                 }
                 drawCircle(g2D, prevPoint, Color.red, RADIUS);
@@ -147,69 +139,62 @@ class PaintHandler {
         }
         g2D.setComposite(COMP);
     }
-    
-    
-    private void drawRoadSign(Graphics2D g2D, MapView mv, RoadSign roadSign,
-            boolean selected) {
-        Point point = mv.getPoint(roadSign.getSignPos().getPosition());
-        if (mv.contains(point)) {
-            if (selected) {
-                drawIcon(g2D, IconCnf.getInstance().getSelRoadSignBgIcon(),
-                        point);
-            }
-            drawIcon(g2D, iconFactory.getIcon(roadSign.getType()), point);
+
+
+    private void drawArrow(final Graphics2D g2D, final Point tip, final Point tail) {
+        final double theta = Math.atan2((tip.getY() - tail.getY()), (tip.getX() - tail.getX()));
+        double rho = theta + PHI;
+        g2D.setStroke(ARROW_STROKE);
+        for (int j = 0; j < 2; j++) {
+            g2D.draw(new Line2D.Double(tip.getX(), tip.getY(), tip.getX() - ARROW_WIDTH * Math.cos(rho), tip.getY()
+                    - ARROW_WIDTH * Math.sin(rho)));
+            rho = theta - PHI;
         }
     }
-    
-    private void drawIcon(Graphics2D g2D, ImageIcon icon, Point p) {
-        g2D.drawImage(icon.getImage(), p.x - (icon.getIconWidth() / 2), p.y
-                - (icon.getIconHeight() / 2), new ImageObserver() {
-            
-            @Override
-            public boolean imageUpdate(Image img, int infoflags, int x, int y,
-                    int width, int height) {
-                return false;
-            }
-        });
-    }
-    
-    private void drawCircle(Graphics2D g2D, Point point, Color color,
-            Double radius) {
-        Ellipse2D.Double circle = new Ellipse2D.Double(point.x - radius / 2,
-                point.y - radius / 2, radius, radius);
+
+    private void drawCircle(final Graphics2D g2D, final Point point, final Color color, final Double radius) {
+        final Ellipse2D.Double circle =
+                new Ellipse2D.Double(point.x - radius / 2, point.y - radius / 2, radius, radius);
         g2D.setColor(color);
         g2D.fill(circle);
         g2D.draw(circle);
     }
-    
-    private void drawLine(Graphics2D g2D, Point start, Point end,
-            boolean forward, boolean drawArrow) {
+
+    private void drawIcon(final Graphics2D g2D, final ImageIcon icon, final Point p) {
+        g2D.drawImage(icon.getImage(), p.x - (icon.getIconWidth() / 2), p.y - (icon.getIconHeight() / 2),
+                new ImageObserver() {
+
+                    @Override
+                    public boolean imageUpdate(final Image img, final int infoflags, final int x, final int y,
+                            final int width, final int height) {
+                        return false;
+                    }
+                });
+    }
+
+    private void drawLine(final Graphics2D g2D, final Point start, final Point end, final boolean forward,
+            final boolean drawArrow) {
         g2D.setColor(Color.black);
         g2D.setStroke(LINE_STROKE);
         // draw line
-        g2D.draw(new Line2D.Double(start.getX(), start.getY(), end.getX(), end
-                .getY()));
+        g2D.draw(new Line2D.Double(start.getX(), start.getY(), end.getX(), end.getY()));
         if (drawArrow) {
-        Point midPoint =
-                new Point((start.x + end.x) / 2, (start.y + end.y) / 2);
-        if (forward) {
-            drawArrow(g2D, midPoint, end);
-        } else {
-            drawArrow(g2D, midPoint, start);
-        }
+            final Point midPoint = new Point((start.x + end.x) / 2, (start.y + end.y) / 2);
+            if (forward) {
+                drawArrow(g2D, midPoint, end);
+            } else {
+                drawArrow(g2D, midPoint, start);
+            }
         }
     }
-    
-    private void drawArrow(Graphics2D g2D, Point tip, Point tail) {
-        double theta = Math.atan2((tip.getY() - tail.getY()),
-                (tip.getX() - tail.getX()));
-        double rho = theta + PHI;
-        g2D.setStroke(ARROW_STROKE);
-        for (int j = 0; j < 2; j++) {
-            g2D.draw(new Line2D.Double(tip.getX(), tip.getY(), tip.getX()
-                    - ARROW_WIDTH * Math.cos(rho), tip.getY() - ARROW_WIDTH
-                    * Math.sin(rho)));
-            rho = theta - PHI;
+
+    private void drawRoadSign(final Graphics2D g2D, final MapView mv, final RoadSign roadSign, final boolean selected) {
+        final Point point = mv.getPoint(roadSign.getSignPos().getPosition());
+        if (mv.contains(point)) {
+            if (selected) {
+                drawIcon(g2D, IconCnf.getInstance().getSelRoadSignBgIcon(), point);
+            }
+            drawIcon(g2D, iconFactory.getIcon(roadSign.getType()), point);
         }
     }
 }

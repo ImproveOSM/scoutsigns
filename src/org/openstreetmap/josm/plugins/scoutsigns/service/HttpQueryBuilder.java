@@ -43,36 +43,36 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.http.HttpUtil;
 
 /**
  * Helper class, builds HTTP request queries.
- * 
+ *
  * @author Beata
  * @version $Revision$
  */
 class HttpQueryBuilder {
-    
+
     private static final char QUESTIONM = '?';
     private static final char EQ = '=';
     private static final char AND = '&';
-    private StringBuilder query;
     private static final Long UNIX_TSTP = 1000L;
-    
-    
+    private StringBuilder query;
+
+
     HttpQueryBuilder() {}
-    
+
     /**
      * Creates a {@code HttpQueryBuilder} with the given arguments.
-     * 
+     *
      * @param bbox specify the current search area
      * @param filter specify the current search filters
      * @param zoom specify the current zoom level
      */
-    HttpQueryBuilder(BoundingBox bbox, SearchFilter filter, int zoom) {
+    HttpQueryBuilder(final BoundingBox bbox, final SearchFilter filter, final int zoom) {
         query = new StringBuilder();
-        
+
         // add mandatory filters
         addFormatFilter();
         addBBoxFilter(bbox);
         addZoomFilter(zoom);
-        
+
         // add optional filters
         if (filter != null) {
             addTimestampFilter(filter.getTimestampFilter());
@@ -82,45 +82,55 @@ class HttpQueryBuilder {
             addConfidenceFilter(filter.getConfidence());
             addApplicationCtiteria(filter.getApp());
             addDeviceFilter(filter.getDevice());
-            
+
             addUsernameFilter(filter.getUsername());
         }
     }
-    
+
     /**
      * Creates a new builder with the given argument.
-     * 
+     *
      * @param id a unique identifier
      */
-    HttpQueryBuilder(Long id) {
+    HttpQueryBuilder(final Long id) {
         query = new StringBuilder();
-        
+
         addFormatFilter();
         addIdFilter(id);
     }
-    
-    
+
+
     /**
-     * Builds a new HTTP query for the specified method with the currently set
-     * fields.
-     * 
+     * Builds a new HTTP query for the specified method with the currently set fields.
+     *
      * @param method specifies a valid FcdSignService method
      * @return a {@code String} object
      */
-    String build(String method) {
-        StringBuilder url =
-                new StringBuilder(ServiceCnf.getInstance().getServiceUrl());
+    String build(final String method) {
+        final StringBuilder url = new StringBuilder(ServiceCnf.getInstance().getServiceUrl());
         url.append(method).append(QUESTIONM);
         url.append(query);
         return url.toString();
     }
-    
-    
-    private void addFormatFilter() {
-        query.append(Constants.FORMAT).append(EQ).append(Constants.FORMAT_VAL);
+
+
+    private void addApplicationCtiteria(final Application app) {
+        if (app != null) {
+            if (app.getName() != null && !app.getName().isEmpty()) {
+                query.append(AND);
+                query.append(Constants.APPNAME).append(EQ);
+                query.append(HttpUtil.utf8Encode(app.getName()));
+            }
+
+            if (app.getVersion() != null && !app.getVersion().isEmpty()) {
+                query.append(AND);
+                query.append(Constants.APPVER).append(EQ);
+                query.append(HttpUtil.utf8Encode(app.getVersion()));
+            }
+        }
     }
-    
-    private void addBBoxFilter(BoundingBox bbox) {
+
+    private void addBBoxFilter(final BoundingBox bbox) {
         query.append(AND);
         query.append(Constants.NORTH).append(EQ).append(bbox.getNorth());
         query.append(AND);
@@ -130,13 +140,55 @@ class HttpQueryBuilder {
         query.append(AND);
         query.append(Constants.WEST).append(EQ).append(bbox.getWest());
     }
-    
-    private void addZoomFilter(int zoom) {
-        query.append(AND);
-        query.append(Constants.ZOOM).append(EQ).append(zoom);
+
+    private void addConfidenceFilter(final Short confidence) {
+        if (confidence != null) {
+            query.append(AND);
+            query.append(Constants.CONFIDENCE).append(EQ).append(confidence);
+        }
     }
-    
-    private void addTimestampFilter(TimestampFilter tsFilter) {
+
+    private void addDeviceFilter(final Device device) {
+        if (device != null) {
+            if (device.getOsName() != null && !device.getOsName().isEmpty()) {
+                query.append(AND);
+                query.append(Constants.OSNAME).append(EQ);
+                query.append(HttpUtil.utf8Encode(device.getOsName()));
+            }
+
+            if (device.getOsVersion() != null && !device.getOsVersion().isEmpty()) {
+                query.append(AND);
+                query.append(Constants.OSVER).append(EQ);
+                query.append(HttpUtil.utf8Encode(device.getOsVersion()));
+            }
+        }
+    }
+
+    private void addDuplicateFilter(final Long duplicateOf) {
+        if (duplicateOf != null) {
+            query.append(AND);
+            query.append(Constants.DUPLICATE_OF).append(EQ).append(duplicateOf);
+        }
+    }
+
+    private void addFormatFilter() {
+        query.append(Constants.FORMAT).append(EQ).append(Constants.FORMAT_VAL);
+    }
+
+    private void addIdFilter(final Long id) {
+        query.append(AND);
+        query.append(Constants.ID).append(EQ).append(id);
+    }
+
+    private void addStatusFilter(final Status status) {
+        if (status != null) {
+            query.append(AND);
+            query.append(Constants.STATUS).append(EQ);
+            query.append(HttpUtil.utf8Encode(status.name()));
+        }
+    }
+
+    private void addTimestampFilter(final TimestampFilter tsFilter) {
         if (tsFilter != null) {
             if (tsFilter.getFrom() != null) {
                 query.append(AND);
@@ -150,79 +202,25 @@ class HttpQueryBuilder {
             }
         }
     }
-    
-    private void addTypeFilter(String type) {
+
+    private void addTypeFilter(final String type) {
         if (type != null && !type.isEmpty()) {
             query.append(AND);
             query.append(Constants.TYPE).append(EQ);
             query.append(HttpUtil.utf8Encode(type));
         }
     }
-    
-    private void addStatusFilter(Status status) {
-        if (status != null) {
-            query.append(AND);
-            query.append(Constants.STATUS).append(EQ);
-            query.append(HttpUtil.utf8Encode(status.name()));
-        }
-    }
-    
-    private void addDuplicateFilter(Long duplicateOf) {
-        if (duplicateOf != null) {
-            query.append(AND);
-            query.append(Constants.DUPLICATE_OF).append(EQ).append(duplicateOf);
-        }
-    }
-    
-    private void addConfidenceFilter(Short confidence) {
-        if (confidence != null) {
-            query.append(AND);
-            query.append(Constants.CONFIDENCE).append(EQ).append(confidence);
-        }
-    }
-    
-    private void addApplicationCtiteria(Application app) {
-        if (app != null) {
-            if (app.getName() != null && !app.getName().isEmpty()) {
-                query.append(AND);
-                query.append(Constants.APPNAME).append(EQ);
-                query.append(HttpUtil.utf8Encode(app.getName()));
-            }
-            
-            if (app.getVersion() != null && !app.getVersion().isEmpty()) {
-                query.append(AND);
-                query.append(Constants.APPVER).append(EQ);
-                query.append(HttpUtil.utf8Encode(app.getVersion()));
-            }
-        }
-    }
-    
-    private void addDeviceFilter(Device device) {
-        if (device != null) {
-            if (device.getOsName() != null && !device.getOsName().isEmpty()) {
-                query.append(AND);
-                query.append(Constants.OSNAME).append(EQ);
-                query.append(HttpUtil.utf8Encode(device.getOsName()));
-            }
-            
-            if (device.getOsVersion() != null && !device.getOsVersion().isEmpty()) {
-                query.append(AND);
-                query.append(Constants.OSVER).append(EQ);
-                query.append(HttpUtil.utf8Encode(device.getOsVersion()));
-            }
-        }
-    }
-    
-    private void addUsernameFilter(String username) {
+
+    private void addUsernameFilter(final String username) {
         if (username != null && !username.isEmpty()) {
             query.append(AND);
             query.append(Constants.USERNAME).append(EQ);
             query.append(HttpUtil.utf8Encode(username));
         }
     }
-    
-    private void addIdFilter(Long id) {
+
+    private void addZoomFilter(final int zoom) {
         query.append(AND);
-        query.append(Constants.ID).append(EQ).append(id);
+        query.append(Constants.ZOOM).append(EQ).append(zoom);
     }
 }

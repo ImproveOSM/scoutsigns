@@ -25,9 +25,9 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  * Created on Jun 21, 2012 by Bea
- * Modified on $Date$ 
+ * Modified on $Date$
  *          by $Author$
  */
 package org.openstreetmap.josm.plugins.scoutsigns.gui;
@@ -52,7 +52,6 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField.AbstractFormatter;
-import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
@@ -65,50 +64,168 @@ import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.text.DefaultFormatterFactory;
 import org.jdesktop.swingx.JXDatePicker;
 
 
 /**
  * Helper object, used for creating specific GUI elements.
- * 
+ *
  * @author Bea
  * @version $Revision$
  */
 public final class Builder {
-    
+
     private static final int HEADER_WIDTH = 12;
-    
+
     private static final Dimension PICKER_DIM = new Dimension(120, 20);
     private static final Dimension PICKER_BTN_DIM = new Dimension(20, 20);
-    
-    private Builder() {}
-    
-    
+
+    /**
+     * Builds a box layout {@code JPanel} with the given components.
+     *
+     * @param cmpLeft the left component
+     * @param cmpCenter the center component
+     * @param cmpRight the right component
+     * @return a {@code JPanel} object
+     */
+    public static JPanel buildBoxLayoutPanel(final JComponent cmpLeft, final JComponent cmpCenter,
+            final JComponent cmpRight) {
+        final JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        panel.setBackground(Color.lightGray);
+        panel.setOpaque(true);
+        panel.add(Box.createHorizontalStrut(HEADER_WIDTH));
+        panel.add(cmpLeft);
+        panel.add(Box.createHorizontalStrut(HEADER_WIDTH));
+        panel.add(Box.createHorizontalGlue());
+        panel.add(cmpCenter);
+        panel.add(Box.createHorizontalGlue());
+        panel.add(Box.createHorizontalStrut(HEADER_WIDTH));
+        panel.add(cmpRight);
+        panel.add(Box.createHorizontalStrut(HEADER_WIDTH));
+        return panel;
+    }
+
+
+    /**
+     * Builds a {@code JButton} object with the given properties.
+     *
+     * @param action the {@code AbstractAction} to be executed when the button is clicked
+     * @param icon the {@code Icon} to be displayed on the button
+     * @return a {@code JButton}
+     */
+    public static JButton buildButton(final AbstractAction action, final Icon icon, final String tooltip) {
+        JButton btn;
+        if (action == null) {
+            btn = new JButton();
+        } else {
+            btn = new JButton(action);
+        }
+        btn.setIcon(icon);
+        btn.setToolTipText(tooltip);
+        btn.setFocusable(false);
+        return btn;
+    }
+
+    /**
+     * Builds a {@code JButton} with the given arguments.
+     *
+     * @param action the action to be executed when the button is clicked
+     * @param text the text to be displayed
+     * @return a {@code JButton} object
+     */
+    public static JButton buildButton(final AbstractAction action, final String text) {
+        final JButton btn = new JButton(action);
+        btn.setFont(FontUtil.BOLD_12);
+        btn.setText(text);
+        btn.setFocusable(false);
+        return btn;
+    }
+
+    /**
+     * Builds a new {@code JXDatePicker} with the given arguments.
+     *
+     * @param icon the {@code Icon} to be displayed on the action button
+     * @param formatter custom {@code AbstractFormatter} used for formatting the user's input
+     * @param changeListener {@code PropertyChangeListener} defining the action to be executed when the controller's
+     * value is changed
+     * @param lowerDate the lower {@code Date} limit to be set
+     * @param upperDate the upper {@code Date} limit to be set
+     * @param selDate the selected {@code Date}
+     * @return a {@code JXDatePicker} object
+     */
+    public static JXDatePicker
+            buildDatePicker(final Icon icon, final AbstractFormatter formatter,
+                    final PropertyChangeListener changeListener, final Date lowerDate, final Date upperDate,
+                    final Date selDate) {
+        final JXDatePicker picker = new JXDatePicker();
+
+        picker.setPreferredSize(PICKER_DIM);
+
+        // customize month view
+        picker.getMonthView().setTodayBackground(Color.darkGray);
+        picker.getMonthView().setDayForeground(Calendar.SATURDAY, Color.red);
+        picker.getMonthView().setShowingLeadingDays(true);
+        picker.getMonthView().setShowingTrailingDays(true);
+        picker.getMonthView().setLowerBound(lowerDate);
+        picker.getMonthView().setUpperBound(upperDate);
+        picker.getMonthView().setSelectionDate(selDate);
+
+        // customize button
+        ((JButton) picker.getComponent(1)).setIcon(icon);
+        ((JButton) picker.getComponent(1)).setPreferredSize(PICKER_BTN_DIM);
+
+        // customize editor
+        picker.getEditor().setFormatterFactory(new DefaultFormatterFactory(formatter));
+
+        // add listener
+        picker.addPropertyChangeListener(changeListener);
+
+        return picker;
+    }
+
     /**
      * Builds a {@code JLabel} with the given properties.
-     * 
+     *
      * @param icon the {@code Icon} to be displayed on the label
      * @param bounds the dimension and location of the label
      * @return a {@code JLabel}
      */
-    public static JLabel buildLabel(Icon icon, Rectangle bounds) {
-        JLabel lbl = new JLabel(icon);
+    public static JLabel buildLabel(final Icon icon, final Rectangle bounds) {
+        final JLabel lbl = new JLabel(icon);
         if (bounds != null) {
             lbl.setBounds(bounds);
         }
         return lbl;
     }
-    
+
     /**
      * Builds a {@code JLabel} with the given properties.
-     * 
+     *
+     * @param text the text which will be shown on the label
+     * @param font the font of the label's text
+     * @param textColor the text color
+     * @param visible specifies if the label is visible or not
+     * @return a new {@code JLabel} object
+     */
+    public static JLabel buildLabel(final String text, final Font font, final Color textColor, final boolean visible) {
+        final JLabel lbl = buildLabel(text, font, null);
+        lbl.setForeground(textColor);
+        lbl.setVisible(visible);
+        return lbl;
+    }
+
+    /**
+     * Builds a {@code JLabel} with the given properties.
+     *
      * @param text the text which will be shown on the label
      * @param font the font of the label's text
      * @param bounds the dimension and location of the label
      * @return a new {@code JLabel} object
      */
-    public static JLabel buildLabel(String text, Font font, Rectangle bounds) {
-        JLabel lbl = new JLabel(text);
+    public static JLabel buildLabel(final String text, final Font font, final Rectangle bounds) {
+        final JLabel lbl = new JLabel(text);
         lbl.setFont(font);
         lbl.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         lbl.setHorizontalTextPosition(SwingConstants.LEFT);
@@ -118,10 +235,10 @@ public final class Builder {
         }
         return lbl;
     }
-    
+
     /**
      * Builds a {@code JLabel} with the given properties.
-     * 
+     *
      * @param text the text which will be shown on the label
      * @param tooltip the label's tool tip
      * @param hAligment the horizontal alignment
@@ -129,9 +246,9 @@ public final class Builder {
      * @param font the font of the label's text
      * @return a new {@code JLabel} object
      */
-    public static JLabel buildLabel(String text, String tooltip, int hAligment,
-            Color txtColor, Font font) {
-        JLabel lbl = buildLabel(text, font, null);
+    public static JLabel buildLabel(final String text, final String tooltip, final int hAligment, final Color txtColor,
+            final Font font) {
+        final JLabel lbl = buildLabel(text, font, null);
         if (tooltip != null) {
             lbl.setToolTipText(tooltip);
         }
@@ -142,73 +259,123 @@ public final class Builder {
         lbl.setFont(font);
         return lbl;
     }
-    
-    /**
-     * Builds a {@code JLabel} with the given properties.
-     * 
-     * @param text the text which will be shown on the label
-     * @param font the font of the label's text
-     * @param textColor the text color
-     * @param visible specifies if the label is visible or not
-     * @return a new {@code JLabel} object
+
+    /***
+     * Builds a {@code JList} with the given components.
+     *
+     * @param data the data to be added into the list
+     * @param selModel the selection model
+     * @param orientation the list orientation
+     * @param selData the selected data
+     * @return a {@code JList} object
      */
-    public static JLabel buildLabel(String text, Font font, Color textColor,
-            boolean visible) {
-        JLabel lbl = buildLabel(text, font, null);
-        lbl.setForeground(textColor);
-        lbl.setVisible(visible);
-        return lbl;
+    public static <T> JList<T>
+            buildList(final List<T> data, final int selModel, final int orientation, final T selData) {
+        final DefaultListModel<T> model = new DefaultListModel<>();
+        for (final T elem : data) {
+            model.addElement(elem);
+        }
+        final JList<T> list = new JList<>(model);
+        list.setFont(FontUtil.PLAIN_12);
+        list.setLayoutOrientation(orientation);
+        list.setVisibleRowCount(-1);
+        list.setSelectionMode(selModel);
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                if (selData != null) {
+                    list.setSelectedValue(selData, true);
+                    list.ensureIndexIsVisible(list.getSelectedIndex());
+                }
+            }
+        });
+        return list;
     }
-    
+
     /**
-     * Builds a {@code JTextField} with the given arguments.
-     * 
-     * @param txt the text to be displayed
-     * @param tooltip the tool tip to be displayed on mouse hover action
+     * Builds a {@code JMenuItem} with the given arguments.
+     *
+     * @param text the text to be displayed
+     * @param icon the icon to be displayed
+     * @param listener the {@code MouseListener} associated with this item
+     * @param enabled if true the item is enabled, if false it is disabled
+     * @return a {@code JMenuItem}
+     */
+    public static JMenuItem buildMenuItem(final Icon icon, final String text, final String tooltip,
+            final MouseListener listener, final boolean enabled) {
+        final JMenuItem menuItem = new JMenuItem(text, icon);
+        menuItem.setToolTipText(tooltip);
+        if (enabled) {
+            menuItem.addMouseListener(listener);
+        }
+        menuItem.setEnabled(enabled);
+        return menuItem;
+    }
+
+    /**
+     * Builds a {@code JRadioButton} with the given arguments.
+     *
+     * @param text the text to be displayed
+     * @param font the font to be used
      * @param bgColor the background color
-     * @return a {@code JTextField} object
+     * @return a {@code JRadioButton}
      */
-    public static JTextField buildTextField(String txt, String tooltip,
-            Color bgColor) {
-        JTextField txtField = new JTextField();
-        if (txt != null) {
-            txtField.setText(txt);
-        }
-        if (tooltip != null) {
-            txtField.setToolTipText(tooltip);
-        }
-        txtField.setFont(FontUtil.PLAIN_12);
-        txtField.setBackground(bgColor);
-        return txtField;
+    public static JRadioButton buildRadioButton(final String text, final Font font, final Color bgColor) {
+        final JRadioButton radioButton = new JRadioButton(text);
+        radioButton.setBackground(bgColor);
+        radioButton.setFont(font);
+        radioButton.setFocusable(false);
+        return radioButton;
     }
-    
+
     /**
-     * Builds a {@code JTextPane} with the given text and content type.
-     * 
-     * @param txt the text to be displayed in the text component
-     * @param contentType the text's content type
-     * @return a {@code JTextPane}
+     * Builds a {@code JScrollPane} with the given arguments. The scroll pane scroll bars are displayed as needed.
+     *
+     * @param component the {@code Component} to be added to the scroll pane
+     * @param bgColor the background color
+     * @param borderVisible if true the scroll pane is created with a black border
+     * @return a {@code JScrollPane} objects
      */
-    public static JTextPane buildTextPane(String txt, String contentType) {
-        JTextPane txtPane = new JTextPane();
-        txtPane.setCaretPosition(0);
-        txtPane.setEditable(false);
-        txtPane.setContentType(contentType);
-        txtPane.setText(txt);
-        return txtPane;
+    public static JScrollPane buildScrollPane(final Component component, final Color bgColor,
+            final boolean borderVisible) {
+        final JScrollPane scrollPane = buildScrollPane(component, bgColor);
+        if (borderVisible) {
+            scrollPane.setBorder(BorderFactory.createLineBorder(Color.gray));
+        }
+        return scrollPane;
     }
-    
+
+    /**
+     * Builds a {@code JScrollPane} object with the given properties.
+     *
+     * @param name the name of the scroll pane
+     * @param component the component to added into the scroll pane
+     * @param bgColor the background color of the scroll pane
+     * @param prefSize the preferred size of the component
+     * @return a {@code JScrollPane} object
+     */
+    public static JScrollPane buildScrollPane(final String name, final Component component, final Color bgColor,
+            final Dimension prefSize) {
+        final JScrollPane scrollPane = buildScrollPane(component, bgColor);
+        if (name != null) {
+            scrollPane.setName(name);
+        }
+        scrollPane.setPreferredSize(prefSize);
+        return scrollPane;
+    }
+
     /**
      * Builds a {@code JTextArea} with the given arguments.
-     * 
+     *
      * @param txt the text to be displayed in the text component
      * @param font the text's font
      * @param bgColor the background color
      * @param bounds the the dimension and location of the label
      * @return a {@code JTextArea}
      */
-    public static JTextArea buildTextArea(String txt, boolean editable,
-            Font font, Color bgColor, Rectangle bounds) {
+    public static JTextArea buildTextArea(final String txt, final boolean editable, final Font font,
+            final Color bgColor, final Rectangle bounds) {
         JTextArea txtArea = null;
         if (txt != null) {
             txtArea = new JTextArea(txt);
@@ -225,228 +392,52 @@ public final class Builder {
         }
         return txtArea;
     }
-    
+
     /**
-     * Builds a {@code JMenuItem} with the given arguments.
-     * 
-     * @param text the text to be displayed
-     * @param icon the icon to be displayed
-     * @param listener the {@code MouseListener} associated with this item
-     * @param enabled if true the item is enabled, if false it is disabled
-     * @return a {@code JMenuItem}
-     */
-    public static JMenuItem buildMenuItem(Icon icon, String text,
-            String tooltip, MouseListener listener, boolean enabled) {
-        JMenuItem menuItem = new JMenuItem(text, icon);
-        menuItem.setToolTipText(tooltip);
-        if (enabled) {
-            menuItem.addMouseListener(listener);
-        }
-        menuItem.setEnabled(enabled);
-        return menuItem;
-    }
-    
-    /**
-     * Builds a {@code JRadioButton} with the given arguments.
-     * 
-     * @param text the text to be displayed
-     * @param font the font to be used
+     * Builds a {@code JTextField} with the given arguments.
+     *
+     * @param txt the text to be displayed
+     * @param tooltip the tool tip to be displayed on mouse hover action
      * @param bgColor the background color
-     * @return a {@code JRadioButton}
+     * @return a {@code JTextField} object
      */
-    public static JRadioButton buildRadioButton(String text, Font font,
-            Color bgColor) {
-        JRadioButton radioButton = new JRadioButton(text);
-        radioButton.setBackground(bgColor);
-        radioButton.setFont(font);
-        radioButton.setFocusable(false);
-        return radioButton;
-    }
-    
-    /**
-     * Builds a {@code JButton} with the given arguments.
-     * 
-     * @param action the action to be executed when the button is clicked
-     * @param text the text to be displayed
-     * @return a {@code JButton} object
-     */
-    public static JButton buildButton(AbstractAction action, String text) {
-        JButton btn = new JButton(action);
-        btn.setFont(FontUtil.BOLD_12);
-        btn.setText(text);
-        btn.setFocusable(false);
-        return btn;
-    }
-    
-    /**
-     * Builds a {@code JButton} object with the given properties.
-     * 
-     * @param action the {@code AbstractAction} to be executed when the button
-     * is clicked
-     * @param icon the {@code Icon} to be displayed on the button
-     * @return a {@code JButton}
-     */
-    public static JButton buildButton(AbstractAction action, Icon icon,
-            String tooltip) {
-        JButton btn;
-        if (action == null) {
-            btn = new JButton();
-        } else {
-            btn = new JButton(action);
+    public static JTextField buildTextField(final String txt, final String tooltip, final Color bgColor) {
+        final JTextField txtField = new JTextField();
+        if (txt != null) {
+            txtField.setText(txt);
         }
-        btn.setIcon(icon);
-        btn.setToolTipText(tooltip);
-        btn.setFocusable(false);
-        return btn;
-    }
-    
-    /**
-     * Builds a {@code JScrollPane} object with the given properties.
-     * 
-     * @param name the name of the scroll pane
-     * @param component the component to added into the scroll pane
-     * @param bgColor the background color of the scroll pane
-     * @param prefSize the preferred size of the component
-     * @return a {@code JScrollPane} object
-     */
-    public static JScrollPane buildScrollPane(String name, Component component,
-            Color bgColor, Dimension prefSize) {
-        JScrollPane scrollPane = buildScrollPane(component, bgColor);
-        if (name != null) {
-            scrollPane.setName(name);
+        if (tooltip != null) {
+            txtField.setToolTipText(tooltip);
         }
-        scrollPane.setPreferredSize(prefSize);
-        return scrollPane;
+        txtField.setFont(FontUtil.PLAIN_12);
+        txtField.setBackground(bgColor);
+        return txtField;
     }
-    
+
     /**
-     * Builds a {@code JScrollPane} with the given arguments. The scroll pane
-     * scroll bars are displayed as needed.
-     * 
-     * @param component the {@code Component} to be added to the scroll pane
-     * @param bgColor the background color
-     * @param borderVisible if true the scroll pane is created with a black
-     * border
-     * @return a {@code JScrollPane} objects
+     * Builds a {@code JTextPane} with the given text and content type.
+     *
+     * @param txt the text to be displayed in the text component
+     * @param contentType the text's content type
+     * @return a {@code JTextPane}
      */
-    public static JScrollPane buildScrollPane(Component component,
-            Color bgColor, boolean borderVisible) {
-        JScrollPane scrollPane = buildScrollPane(component, bgColor);
-        if (borderVisible) {
-            scrollPane.setBorder(BorderFactory.createLineBorder(Color.gray));
-        }
-        return scrollPane;
+    public static JTextPane buildTextPane(final String txt, final String contentType) {
+        final JTextPane txtPane = new JTextPane();
+        txtPane.setCaretPosition(0);
+        txtPane.setEditable(false);
+        txtPane.setContentType(contentType);
+        txtPane.setText(txt);
+        return txtPane;
     }
-    
-    private static JScrollPane buildScrollPane(Component component,
-            Color bgColor) {
-        JScrollPane scrollPane = new JScrollPane(component,
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+    private static JScrollPane buildScrollPane(final Component component, final Color bgColor) {
+        final JScrollPane scrollPane =
+                new JScrollPane(component, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBackground(bgColor);
         scrollPane.setAutoscrolls(true);
         return scrollPane;
     }
-    
-    /**
-     * Builds a box layout {@code JPanel} with the given components.
-     * 
-     * @param cmpLeft the left component
-     * @param cmpCenter the center component
-     * @param cmpRight the right component
-     * @return a {@code JPanel} object
-     */
-    public static JPanel buildBoxLayoutPanel(JComponent cmpLeft,
-            JComponent cmpCenter, JComponent cmpRight) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-        panel.setBackground(Color.lightGray);
-        panel.setOpaque(true);
-        panel.add(Box.createHorizontalStrut(HEADER_WIDTH));
-        panel.add(cmpLeft);
-        panel.add(Box.createHorizontalStrut(HEADER_WIDTH));
-        panel.add(Box.createHorizontalGlue());
-        panel.add(cmpCenter);
-        panel.add(Box.createHorizontalGlue());
-        panel.add(Box.createHorizontalStrut(HEADER_WIDTH));
-        panel.add(cmpRight);
-        panel.add(Box.createHorizontalStrut(HEADER_WIDTH));
-        return panel;
-    }
-    
-    /***
-     * Builds a {@code JList} with the given components.
-     * 
-     * @param data the data to be added into the list
-     * @param selModel the selection model
-     * @param orientation the list orientation
-     * @param selData the selected data
-     * @return a {@code JList} object
-     */
-    public static <T> JList<T> buildList(List<T> data, int selModel,
-            int orientation, final T selData) {
-        DefaultListModel<T> model = new DefaultListModel<>();
-        for (T elem : data) {
-            model.addElement(elem);
-        }
-        final JList<T> list = new JList<>(model);
-        list.setFont(FontUtil.PLAIN_12);
-        list.setLayoutOrientation(orientation);
-        list.setVisibleRowCount(-1);
-        list.setSelectionMode(selModel);
-        SwingUtilities.invokeLater(new Runnable() {
-            
-            @Override
-            public void run() {
-                if (selData != null) {
-                    list.setSelectedValue(selData, true);
-                    list.ensureIndexIsVisible(list.getSelectedIndex());
-                }
-            }
-        });
-        return list;
-    }
 
-    /**
-     * Builds a new {@code JXDatePicker} with the given arguments.
-     * 
-     * @param icon the {@code Icon} to be displayed on the action button
-     * @param formatter custom {@code AbstractFormatter} used for formatting
-     * the user's input
-     * @param changeListener {@code PropertyChangeListener} defining the action
-     * to be executed when the controller's value is changed
-     * @param lowerDate the lower {@code Date} limit to be set
-     * @param upperDate the upper {@code Date} limit to be set
-     * @param selDate the selected {@code Date}
-     * @return a {@code JXDatePicker} object
-     */
-    public static JXDatePicker buildDatePicker(Icon icon,
-            AbstractFormatter formatter, PropertyChangeListener changeListener,
-            Date lowerDate, Date upperDate, Date selDate) {
-        JXDatePicker picker = new JXDatePicker();
-        
-        picker.setPreferredSize(PICKER_DIM);
-        
-        // customize month view
-        picker.getMonthView().setTodayBackground(Color.darkGray);
-        picker.getMonthView().setDayForeground(Calendar.SATURDAY, Color.red);
-        picker.getMonthView().setShowingLeadingDays(true);
-        picker.getMonthView().setShowingTrailingDays(true);
-        picker.getMonthView().setLowerBound(lowerDate);
-        picker.getMonthView().setUpperBound(upperDate);
-        picker.getMonthView().setSelectionDate(selDate);
-        
-        // customize button
-        ((JButton) picker.getComponent(1)).setIcon(icon);
-        ((JButton) picker.getComponent(1)).setPreferredSize(PICKER_BTN_DIM);
-        
-        // customize editor
-        picker.getEditor().setFormatterFactory(
-                new DefaultFormatterFactory(formatter));
-        
-        // add listener
-        picker.addPropertyChangeListener(changeListener);
-        
-        return picker;
-    }
+    private Builder() {}
 }

@@ -32,10 +32,9 @@
 package org.openstreetmap.josm.plugins.scoutsigns.util.retry;
 
 
-
 /**
- *  A retry agent attempts several times to execute a given operation.
- *  
+ * A retry agent attempts several times to execute a given operation.
+ * 
  * @author Beata
  * @version $Revision$
  */
@@ -56,39 +55,20 @@ public abstract class RetryAgent<T> {
 
     /**
      * Builds a new retry agent with the given setup
-     * 
+     *
      * @param setup the setup for this {@code RetryAgent}
      */
-    public RetryAgent(RetrySetup setup) {
+    public RetryAgent(final RetrySetup setup) {
         this.setup = setup;
     }
 
 
     /**
-     * The target operation of the retry agent. This method is called several
-     * times, until it returns successfully, or until the number of attempts has
-     * been exhausted.
-     * 
-     * @return an object of type T, defined by implementor
-     * @throws RetryAgentException in the case if the target operation fails
-     */
-    protected abstract T target() throws RetryAgentException;
-
-    /**
-     * The clean up operation of the retry agent. This method is called after
-     * each call of the target method.
-     * 
-     * @throws RetryAgentException in the case if the cleanup operation fails
-     */
-    protected abstract void cleanup() throws RetryAgentException;
-
-    /**
-     * Launches the {@code RetryAgent}'s execution. The target and cleanup
-     * operations will run at least once.
-     * 
+     * Launches the {@code RetryAgent}'s execution. The target and cleanup operations will run at least once.
+     *
      * @return an object of type T, defined by the implementor
-     * @throws RetryAgentException in case the target method failed on every
-     * attempt and the running conditions have been exhausted
+     * @throws RetryAgentException in case the target method failed on every attempt and the running conditions have
+     * been exhausted
      */
     public T run() throws RetryAgentException {
         T result = null;
@@ -100,7 +80,7 @@ public abstract class RetryAgent<T> {
             try {
                 result = target();
                 success = true;
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 if (attempts <= 0) {
                     throw new RetryAgentException(e);
                 }
@@ -113,15 +93,31 @@ public abstract class RetryAgent<T> {
         return result;
     }
 
-    private void pause(int delay) throws RetryAgentException {
-        try {
-            Thread.sleep(delay);
-        } catch (InterruptedException e) {
-            throw new RetryAgentException(e);
-        }
+    /**
+     * The clean up operation of the retry agent. This method is called after each call of the target method.
+     *
+     * @throws RetryAgentException in the case if the cleanup operation fails
+     */
+    protected abstract void cleanup() throws RetryAgentException;
+
+    /**
+     * The target operation of the retry agent. This method is called several times, until it returns successfully, or
+     * until the number of attempts has been exhausted.
+     *
+     * @return an object of type T, defined by implementor
+     * @throws RetryAgentException in the case if the target operation fails
+     */
+    protected abstract T target() throws RetryAgentException;
+
+    private int computeDelay(final int delay) {
+        return delay * MULT / DIV;
     }
 
-    private int computeDelay(int delay) {
-        return delay * MULT / DIV;
+    private void pause(final int delay) throws RetryAgentException {
+        try {
+            Thread.sleep(delay);
+        } catch (final InterruptedException e) {
+            throw new RetryAgentException(e);
+        }
     }
 }

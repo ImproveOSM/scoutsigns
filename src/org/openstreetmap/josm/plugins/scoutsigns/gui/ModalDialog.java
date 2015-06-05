@@ -40,23 +40,23 @@ import org.openstreetmap.josm.Main;
 
 /**
  * Defines a general model dialog.
- * 
+ *
  * @author Beata
  * @version $Revision$
  */
 public abstract class ModalDialog extends JDialog {
-    
+
     private static final long serialVersionUID = 1102099029345490735L;
-    
-    
+
+
     /**
      * Builds a new {@code ModalDialog} with the given arguments.
-     * 
+     *
      * @param title the dialog title
      * @param icon the icon to be displayed in the dialog header
      * @param size the size of the dialog
      */
-    public ModalDialog(String title, Image icon, Dimension size) {
+    public ModalDialog(final String title, final Image icon, final Dimension size) {
         setLayout(new BorderLayout());
         setModal(true);
         setAlwaysOnTop(true);
@@ -66,8 +66,8 @@ public abstract class ModalDialog extends JDialog {
         setSize(size);
         setMinimumSize(size);
     }
-    
-    
+
+
     /**
      * Creates the UI components.
      */

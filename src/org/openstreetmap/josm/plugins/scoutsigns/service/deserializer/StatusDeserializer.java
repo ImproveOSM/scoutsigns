@@ -41,15 +41,15 @@ import com.google.gson.JsonParseException;
 
 /**
  * Custom deserializer for the {@code Status} object.
- * 
+ *
  * @author Beata
  * @version $Revision$
  */
 public class StatusDeserializer implements JsonDeserializer<Status> {
-    
+
     @Override
-    public Status deserialize(JsonElement jsonElement, Type type,
-            JsonDeserializationContext context) throws JsonParseException {
+    public Status deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext context)
+            throws JsonParseException {
         return Status.valueOf(jsonElement.getAsString().toUpperCase());
     }
 }

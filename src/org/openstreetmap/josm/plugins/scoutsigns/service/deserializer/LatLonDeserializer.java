@@ -42,22 +42,22 @@ import com.google.gson.JsonParseException;
 
 /**
  * Custom deserializer for the {@code LatLon} object.
- * 
+ *
  * @author Beata
  * @version $Revision$
  */
 public class LatLonDeserializer implements JsonDeserializer<LatLon> {
-    
+
     private static final String LATITUDE = "lat";
     private static final String LONGITUDE = "lon";
-    
-    
+
+
     @Override
-    public LatLon deserialize(JsonElement jsonElement, Type type,
-            JsonDeserializationContext context) throws JsonParseException {
-        JsonObject obj = (JsonObject) jsonElement;
-        double lat = obj.get(LATITUDE).getAsDouble();
-        double lon = obj.get(LONGITUDE).getAsDouble();
+    public LatLon deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext context)
+            throws JsonParseException {
+        final JsonObject obj = (JsonObject) jsonElement;
+        final double lat = obj.get(LATITUDE).getAsDouble();
+        final double lon = obj.get(LONGITUDE).getAsDouble();
         return new LatLon(lat, lon);
     }
 }

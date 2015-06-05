@@ -39,6 +39,6 @@ package org.openstreetmap.josm.plugins.scoutsigns.util.http;
  * @version $Revision$
  */
 public enum HttpMethod {
-    
+
     GET, POST;
 }

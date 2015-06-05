@@ -35,35 +35,34 @@ import org.openstreetmap.josm.data.coor.LatLon;
 
 
 /**
- * Defines the 'sign position' business entity. A sign position represents the
- * geographical position of a road sign.
- * 
+ * Defines the 'sign position' business entity. A sign position represents the geographical position of a road sign.
+ *
  * @author Beata
  * @version $Revision$
  */
 public class SignPosition {
-    
-    private LatLon position;
-    private Double height;
-    
-    
+
+    private final LatLon position;
+    private final Double height;
+
+
     /**
      * Builds a new object with the given arguments.
-     * 
+     *
      * @param position the road sign's position
      * @param height the height of the sign in meters relative to the vehicle
      */
-    public SignPosition(LatLon position, Double height) {
+    public SignPosition(final LatLon position, final Double height) {
         this.position = position;
         this.height = height;
     }
-    
-    
-    public LatLon getPosition() {
-        return position;
-    }
-    
+
+
     public Double getHeight() {
         return height;
+    }
+
+    public LatLon getPosition() {
+        return position;
     }
 }

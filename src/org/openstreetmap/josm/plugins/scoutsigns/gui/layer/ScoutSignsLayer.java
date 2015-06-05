@@ -31,10 +31,10 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.gui.layer;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.Action;
 import javax.swing.Icon;
 import org.openstreetmap.josm.data.Bounds;
@@ -53,19 +53,19 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltCnf;
 
 /**
  * Defines the skosigns layer main functionality.
- * 
+ *
  * @author Bea
  * @version $Revision$
  */
 public class ScoutSignsLayer extends Layer {
-    
-    private PaintHandler paintHandler;
+
+    private final PaintHandler paintHandler;
     private DataSet dataSet;
-    private List<RoadSign> selRoadSigns;
-    
+    private final List<RoadSign> selRoadSigns;
+
     private boolean tripView;
-    
-    
+
+
     /**
      * Builds a new {@code SkoSignsLayer} with default functionality.
      */
@@ -74,17 +74,70 @@ public class ScoutSignsLayer extends Layer {
         paintHandler = new PaintHandler();
         selRoadSigns = new ArrayList<>();
     }
-    
+
+    @Override
+    public Icon getIcon() {
+        return IconCnf.getInstance().getLayerIcon();
+    }
+
+    @Override
+    public Object getInfoComponent() {
+        return TltCnf.getInstance().getLayerInfo();
+    }
+
+    @Override
+    public Action[] getMenuEntries() {
+        final LayerListDialog layerListDlg = LayerListDialog.getInstance();
+        return new Action[] { layerListDlg.createActivateLayerAction(this), layerListDlg.createShowHideLayerAction(),
+                layerListDlg.createDeleteLayerAction(), SeparatorLayerAction.INSTANCE,
+                new LayerListPopup.InfoAction(this) };
+    }
+
     /**
-     * Returns the road sign near to the given point. The method returns null if
-     * there is no nearby road sign.
-     * 
+     * Returns the selected road signs. If no road sign(s) is selected the method return an empty list.
+     *
+     * @return a list of {@code RoadSign}s
+     */
+    public List<RoadSign> getSelRoadSigns() {
+        return selRoadSigns;
+    }
+
+    @Override
+    public String getToolTipText() {
+        return TltCnf.getInstance().getPluginTlt();
+    }
+
+    @Override
+    public boolean isMergable(final Layer layer) {
+        return false;
+    }
+
+    public boolean isTripView() {
+        return tripView;
+    }
+
+    /**
+     * Return the last selected road sign. If no road sign is selected the method returns null.
+     *
+     * @return a {@code RoadSign} object
+     */
+    public RoadSign lastSelRoadSign() {
+        return selRoadSigns.isEmpty() ? null : selRoadSigns.get(selRoadSigns.size() - 1);
+    }
+
+    @Override
+    public void mergeFrom(final Layer layer) {
+        // merge operation is not supported
+    }
+
+    /**
+     * Returns the road sign near to the given point. The method returns null if there is no nearby road sign.
+     *
      * @param point a {@code Point}
      * @return a {@code RoadSign}
      */
-    public RoadSign nearbyRoadSign(Point point, boolean multiSelect) {
-        RoadSign roadSign = dataSet!= null ? Util.nearbyRoadSign(
-                dataSet.getRoadSigns(), point):null;
+    public RoadSign nearbyRoadSign(final Point point, final boolean multiSelect) {
+        final RoadSign roadSign = dataSet != null ? Util.nearbyRoadSign(dataSet.getRoadSigns(), point) : null;
         if (!multiSelect) {
             selRoadSigns.clear();
         }
@@ -93,128 +146,66 @@ public class ScoutSignsLayer extends Layer {
         }
         return roadSign;
     }
-    
-    /**
-     * Updates the currently selected road sign data.
-     * 
-     * @param roadSign
-     */
-    public void updateSelRoadSign(RoadSign roadSign) {
-        int idx = selRoadSigns.indexOf(roadSign);
-        if (idx > -1) {
-            selRoadSigns.remove(roadSign);
-            selRoadSigns.add(idx, roadSign);
-        }
-    }
-    
+
     @Override
-    public Icon getIcon() {
-        return IconCnf.getInstance().getLayerIcon();
-    }
-    
-    @Override
-    public Object getInfoComponent() {
-        return TltCnf.getInstance().getLayerInfo();
-    }
-    
-    @Override
-    public Action[] getMenuEntries() {
-        LayerListDialog layerListDlg = LayerListDialog.getInstance();
-        return new Action[] { layerListDlg.createActivateLayerAction(this),
-                layerListDlg.createShowHideLayerAction(),
-                layerListDlg.createDeleteLayerAction(),
-                SeparatorLayerAction.INSTANCE,
-                new LayerListPopup.InfoAction(this) };
-    }
-    
-    @Override
-    public String getToolTipText() {
-        return TltCnf.getInstance().getPluginTlt();
-    }
-    
-    @Override
-    public boolean isMergable(Layer layer) {
-        return false;
-    }
-    
-    @Override
-    public void mergeFrom(Layer layer) {
-        // merge operation is not supported
-    }
-    
-    @Override
-    public void paint(Graphics2D g2D, MapView mv, Bounds bounds) {
+    public void paint(final Graphics2D g2D, final MapView mv, final Bounds bounds) {
         mv.setDoubleBuffered(true);
         if (tripView) {
             // draw selected road sign's trip
             paintHandler.drawTripData(g2D, mv, selRoadSigns.get(0));
         } else if (dataSet != null) {
-            
+
             if (!dataSet.getRoadSigns().isEmpty()) {
                 // draw road signs
-                paintHandler.drawRoadSigns(g2D, mv, dataSet.getRoadSigns(),
-                        selRoadSigns);
+                paintHandler.drawRoadSigns(g2D, mv, dataSet.getRoadSigns(), selRoadSigns);
             } else if (!dataSet.getRoadSignClusters().isEmpty()) {
                 // draw road sign clusters
-                paintHandler.drawRoadSignClusters(g2D, mv,
-                        dataSet.getRoadSignClusters());
+                paintHandler.drawRoadSignClusters(g2D, mv, dataSet.getRoadSignClusters());
             }
         }
     }
-   
-    @Override
-    public void visitBoundingBox(BoundingXYVisitor arg0) {
-        // not supported
-    }
-    
+
     /**
      * Updates the layer's data set with new data.
-     * 
+     *
      * @param dataSet the new data set
      */
-    public void setDataSet(DataSet dataSet) {
+    public void setDataSet(final DataSet dataSet) {
         this.dataSet = dataSet;
-        
+
         // check previously selected elements
-        checkSelRoadSigns(); 
+        checkSelRoadSigns();
     }
-    
+
+    public void setTripView(final boolean tripView) {
+        this.tripView = tripView;
+    }
+
+    /**
+     * Updates the currently selected road sign data.
+     *
+     * @param roadSign
+     */
+    public void updateSelRoadSign(final RoadSign roadSign) {
+        final int idx = selRoadSigns.indexOf(roadSign);
+        if (idx > -1) {
+            selRoadSigns.remove(roadSign);
+            selRoadSigns.add(idx, roadSign);
+        }
+    }
+
+    @Override
+    public void visitBoundingBox(final BoundingXYVisitor arg0) {
+        // not supported
+    }
+
     private void checkSelRoadSigns() {
         if (!selRoadSigns.isEmpty() && dataSet.getRoadSigns() != null) {
-            for (RoadSign elem : dataSet.getRoadSigns()) {
+            for (final RoadSign elem : dataSet.getRoadSigns()) {
                 if (!this.dataSet.getRoadSigns().contains(elem)) {
                     selRoadSigns.remove(elem);
                 }
             }
         }
-    }
-    
-    /**
-     * Returns the selected road signs. If no road sign(s) is selected the method
-     * return an empty list.
-     * 
-     * @return a list of {@code RoadSign}s
-     */
-    public List<RoadSign> getSelRoadSigns() {
-        return selRoadSigns;
-    }
-    
-    /**
-     * Return the last selected road sign. If no road sign is selected the
-     * method returns null.
-     * 
-     * @return a {@code RoadSign} object
-     */
-    public RoadSign lastSelRoadSign() {
-        return selRoadSigns.isEmpty() ? null : selRoadSigns.get(selRoadSigns
-                .size() - 1);
-    }
-    
-    public boolean isTripView() {
-        return tripView;
-    }
-    
-    public void setTripView(boolean tripView) {
-        this.tripView = tripView;
     }
 }

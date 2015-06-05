@@ -43,29 +43,28 @@ import com.google.gson.JsonParseException;
 
 /**
  * Custom deserializer for the {@code CarPosition} object.
- * 
+ *
  * @author Beata
  * @version $Revision$
  */
 public class CarPositionDeserializer implements JsonDeserializer<CarPosition> {
-    
+
     private static final String HEADING = "heading";
     private static final String ACCURACY = "accuracy";
     private static final String TYPE = "type";
     private static final String LATITUDE = "lat";
     private static final String LONGITUDE = "lon";
-    
-    
+
+
     @Override
-    public CarPosition deserialize(JsonElement jsonElement, Type type,
-            JsonDeserializationContext context) throws JsonParseException {
-        JsonObject obj = (JsonObject) jsonElement;
-        int heading = obj.get(HEADING).getAsInt();
-        int accuracy = obj.get(ACCURACY).getAsInt();
-        String carPosType = obj.get(TYPE).getAsString();
-        double lat = obj.get(LATITUDE).getAsDouble();
-        double lon = obj.get(LONGITUDE).getAsDouble();
-        return new CarPosition(new LatLon(lat, lon), heading, accuracy,
-                carPosType);
+    public CarPosition deserialize(final JsonElement jsonElement, final Type type,
+            final JsonDeserializationContext context) throws JsonParseException {
+        final JsonObject obj = (JsonObject) jsonElement;
+        final int heading = obj.get(HEADING).getAsInt();
+        final int accuracy = obj.get(ACCURACY).getAsInt();
+        final String carPosType = obj.get(TYPE).getAsString();
+        final double lat = obj.get(LATITUDE).getAsDouble();
+        final double lon = obj.get(LONGITUDE).getAsDouble();
+        return new CarPosition(new LatLon(lat, lon), heading, accuracy, carPosType);
     }
 }

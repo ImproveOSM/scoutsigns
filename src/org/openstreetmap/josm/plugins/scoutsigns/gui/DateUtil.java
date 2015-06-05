@@ -38,91 +38,89 @@ import java.util.TimeZone;
 
 
 /**
- * Utility class contains date methods used for formatting and parsing date
- * values.
- * 
+ * Utility class contains date methods used for formatting and parsing date values.
+ *
  * @author Beata
  * @version $Revision$
  */
 public final class DateUtil {
-    
+
     private static final String MONTH = "MMMM yyyy";
     private static final String DAY = "MMM d, yyyy";
     private static final String TSTP = "yyyy-MM-dd HH:mm:ss";
     private static final Long UNIX_TSTP = 1000L;
-    
-    private DateUtil() {}
-    
-    
+
     /**
-     * Formats the given timestamp using the following pattern:'yyyy-MM-dd
-     * HH:mm:ss'.
-     * 
-     * @param timestamp a {@code Long} value representing a timestamp
+     * Formats the given time using the following pattern: 'MMM d, yyyy'.
+     *
+     * @param time a {@ode Date} representing a given day
      * @return a {@code String}
      */
-    public static String formatTimestamp(Long timestamp) {
-        SimpleDateFormat dateTimeFormat = new SimpleDateFormat(TSTP);
+    public static String formatDay(final Date time) {
+        final SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DAY);
         dateTimeFormat.setTimeZone(TimeZone.getDefault());
-        Date date = new Date(timestamp * UNIX_TSTP);
-        return date != null ? dateTimeFormat.format(date) : "";
+        return time != null ? dateTimeFormat.format(time) : "";
+    }
+
+
+    /**
+     * Formats the given time using the following pattern: 'MMM d, yyyy'.
+     *
+     * @param time a {@code Long} value representing a time
+     * @return a {@code String}
+     */
+    public static String formatDay(final Long time) {
+        final SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DAY);
+        dateTimeFormat.setTimeZone(TimeZone.getDefault());
+        return time != null ? dateTimeFormat.format(time) : "";
     }
 
     /**
      * Formats the given month, using the following pattern:'MMMM yyyy'.
-     * 
+     *
      * @param timestamp a {@code Long} value representing a timestamp
      * @return a {@code String}
      */
-    public static String formatMonth(Long timestamp) {
-        SimpleDateFormat dateTimeFormat = new SimpleDateFormat(MONTH);
+    public static String formatMonth(final Long timestamp) {
+        final SimpleDateFormat dateTimeFormat = new SimpleDateFormat(MONTH);
         dateTimeFormat.setTimeZone(TimeZone.getDefault());
-        Date date = new Date(timestamp);
+        final Date date = new Date(timestamp);
         return date != null ? dateTimeFormat.format(date) : "";
     }
-    
+
     /**
-     * Formats the given time using the following pattern: 'MMM d, yyyy'.
-     * 
-     * @param time a {@ode Date} representing a given day
+     * Formats the given timestamp using the following pattern:'yyyy-MM-dd HH:mm:ss'.
+     *
+     * @param timestamp a {@code Long} value representing a timestamp
      * @return a {@code String}
      */
-    public static String formatDay(Date time) {
-        SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DAY);
+    public static String formatTimestamp(final Long timestamp) {
+        final SimpleDateFormat dateTimeFormat = new SimpleDateFormat(TSTP);
         dateTimeFormat.setTimeZone(TimeZone.getDefault());
-        return time != null ? dateTimeFormat.format(time) : "";
+        final Date date = new Date(timestamp * UNIX_TSTP);
+        return date != null ? dateTimeFormat.format(date) : "";
     }
-    
+
     /**
-     * Formats the given time using the following pattern: 'MMM d, yyyy'.
-     * 
-     * @param time a {@code Long} value representing a time
-     * @return a {@code String}
-     */
-    public static String formatDay(Long time) {
-        SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DAY);
-        dateTimeFormat.setTimeZone(TimeZone.getDefault());
-        return time != null ? dateTimeFormat.format(time) : "";
-    }
-    
-    /**
-     * Parses the given day and returns the corresponding date. The method
-     * returns null if the day argument is null or empty.
-     * 
+     * Parses the given day and returns the corresponding date. The method returns null if the day argument is null or
+     * empty.
+     *
      * @param day a {@code String} representing a day
      * @return a {@code Date} object
      */
-    public static Date parseDay(String day) {
+    public static Date parseDay(final String day) {
         Date result = null;
         if (day != null && !day.isEmpty()) {
             try {
-                SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DAY);
+                final SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DAY);
                 dateTimeFormat.setTimeZone(TimeZone.getDefault());
                 result = dateTimeFormat.parse(day);
-            } catch (ParseException e) {
+            } catch (final ParseException e) {
                 result = null;
             }
         }
         return result;
     }
+
+    private DateUtil() {}
 }

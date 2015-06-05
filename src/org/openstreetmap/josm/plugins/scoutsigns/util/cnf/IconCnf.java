@@ -39,46 +39,52 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * Utility class, holds icons and icon paths.
- * 
+ *
  * @author Bea
  * @version $Revision$
  */
 public final class IconCnf {
-    
+
     /** The name of the configuration file */
     private static final String CNF_FILE = "scoutsigns_icon.properties";
-    
+
     /** The unique instance of the object */
     private static final IconCnf INSTANCE = new IconCnf();
-    
+
+    public static IconCnf getInstance() {
+        return INSTANCE;
+    }
+
     private final String shcName;
+
     private final Icon layerIcon;
-    
     /* button panel icons */
     private final ImageIcon filterIcon;
     private final ImageIcon photoIcon;
     private final Icon tripIcon;
     private final ImageIcon commentIcon;
     private final Icon moreActionIcon;
+
     private final Icon backIcon;
-    
     /* road sign status icons */
     private final ImageIcon openIcon;
     private final ImageIcon solvedIcon;
     private final ImageIcon invalidIcon;
+
     private final ImageIcon duplicateIcon;
-    
     /* road sign icons & path names */
     private final ImageIcon selRoadSignBgIcon;
     private final String typeIconPath;
+
     private final String defTypeIconName;
-    
+
+
     /* calendar icon */
     private final ImageIcon calendarIcon;
-    
-    
+
+
     private IconCnf() {
-        Properties properties = CnfUtil.load(CNF_FILE);
+        final Properties properties = CnfUtil.load(CNF_FILE);
         shcName = CnfUtil.readProperty(properties, "dialog.shc");
         layerIcon = getIcon(properties, "layer.icon");
         filterIcon = getIcon(properties, "filter.icon");
@@ -96,77 +102,72 @@ public final class IconCnf {
         defTypeIconName = CnfUtil.readProperty(properties, "sign.types.def");
         calendarIcon = getIcon(properties, "calendar.icon");
     }
-    
-    
-    private ImageIcon getIcon(Properties properties, String key) {
-        return ImageProvider.get(CnfUtil.readProperty(properties, key));
-    }
-    
-    public static IconCnf getInstance() {
-        return INSTANCE;
-    }
-    
-    public String getShcName() {
-        return shcName;
-    }
-    
-    public Icon getLayerIcon() {
-        return layerIcon;
-    }
-    
-    public ImageIcon getFilterIcon() {
-        return filterIcon;
-    }
-    
-    public ImageIcon getPhotoIcon() {
-        return photoIcon;
-    }
-    
-    public Icon getTripIcon() {
-        return tripIcon;
-    }
-    
-    public ImageIcon getCommentIcon() {
-        return commentIcon;
-    }
-    
-    public Icon getMoreActionIcon() {
-        return moreActionIcon;
-    }
-    
+
     public Icon getBackIcon() {
         return backIcon;
     }
-    
-    public String getTypeIconPath() {
-        return typeIconPath;
+
+    public ImageIcon getCalendarIcon() {
+        return calendarIcon;
     }
-    
-    public ImageIcon getOpenIcon() {
-        return openIcon;
+
+    public ImageIcon getCommentIcon() {
+        return commentIcon;
     }
-    
-    public ImageIcon getSolvedIcon() {
-        return solvedIcon;
+
+    public String getDefTypeIconName() {
+        return defTypeIconName;
     }
-    
+
+    public ImageIcon getDuplicateIcon() {
+        return duplicateIcon;
+    }
+
+    public ImageIcon getFilterIcon() {
+        return filterIcon;
+    }
+
     public ImageIcon getInvalidIcon() {
         return invalidIcon;
     }
-    
-    public ImageIcon getDuplicateIcon() {
-        return duplicateIcon;
+
+    public Icon getLayerIcon() {
+        return layerIcon;
+    }
+
+    public Icon getMoreActionIcon() {
+        return moreActionIcon;
+    }
+
+    public ImageIcon getOpenIcon() {
+        return openIcon;
+    }
+
+    public ImageIcon getPhotoIcon() {
+        return photoIcon;
     }
 
     public ImageIcon getSelRoadSignBgIcon() {
         return selRoadSignBgIcon;
     }
 
-    public String getDefTypeIconName() {
-        return defTypeIconName;
+    public String getShcName() {
+        return shcName;
     }
-    
-    public ImageIcon getCalendarIcon() {
-        return calendarIcon;
+
+    public ImageIcon getSolvedIcon() {
+        return solvedIcon;
+    }
+
+    public Icon getTripIcon() {
+        return tripIcon;
+    }
+
+    public String getTypeIconPath() {
+        return typeIconPath;
+    }
+
+    private ImageIcon getIcon(final Properties properties, final String key) {
+        return ImageProvider.get(CnfUtil.readProperty(properties, key));
     }
 }

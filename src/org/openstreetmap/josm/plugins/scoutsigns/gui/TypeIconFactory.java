@@ -40,52 +40,51 @@ import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
  * Factory for the road sign types.
- * 
+ *
  * @author Beata
  * @version $Revision$
  */
 public final class TypeIconFactory {
-    
+
     private static Map<String, ImageIcon> map;
-    
+
     /* the icons extension */
     private static final String EXT = ".png";
-    
-    private static final TypeIconFactory UNIQUE_INSTANCE =
-            new TypeIconFactory();
-    
-    
-    private TypeIconFactory() {
-        map = new HashMap<>();
-    }
-    
-    
+
+    private static final TypeIconFactory UNIQUE_INSTANCE = new TypeIconFactory();
+
+
     /**
      * Returns the unique instance of the {@code TypeIconFactory}.
-     * 
+     *
      * @return a {@code TypeIconFactory}
      */
     public static TypeIconFactory getInstance() {
         return UNIQUE_INSTANCE;
     }
-    
+
+
+    private TypeIconFactory() {
+        map = new HashMap<>();
+    }
+
     /**
-     * Returns the icon corresponding to the given type. The method returns
-     * a default icon, if no icon corresponds to the given type.
-     * 
+     * Returns the icon corresponding to the given type. The method returns a default icon, if no icon corresponds to
+     * the given type.
+     *
      * @param type specifies a road sign type
      * @return an {@code ImageIcon} object
      */
-    public ImageIcon getIcon(String type) {
+    public ImageIcon getIcon(final String type) {
         ImageIcon typeIcon = map.get(type);
         if (typeIcon == null) {
             ImageIcon icon;
             try {
-                icon = ImageProvider.get(IconCnf.getInstance().getTypeIconPath() 
-                        + type + EXT);
-            } catch (RuntimeException e) {
-                icon = ImageProvider.get(IconCnf.getInstance().getTypeIconPath() 
-                        + IconCnf.getInstance().getDefTypeIconName() + EXT);
+                icon = ImageProvider.get(IconCnf.getInstance().getTypeIconPath() + type + EXT);
+            } catch (final RuntimeException e) {
+                icon =
+                        ImageProvider.get(IconCnf.getInstance().getTypeIconPath()
+                                + IconCnf.getInstance().getDefTypeIconName() + EXT);
             }
             typeIcon = icon;
         }

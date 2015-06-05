@@ -44,92 +44,53 @@ import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
 
 /**
  * A custom panel displaying the road sign status filters.
- * 
+ *
  * @author Beata
  * @version $Revision$
  */
 class StatusFilterPanel extends JPanel {
-    
+
     private static final long serialVersionUID = -4882107014928534768L;
-    
-    private static final GridBagConstraints CB_OPEN = new GridBagConstraints(1,
-            1, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
-            GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 5), 0, 0);
-    private static final GridBagConstraints CB_SOLVED = new GridBagConstraints(
-            2, 1, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
-            GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0);
-    private static final GridBagConstraints CB_INVALID =
-            new GridBagConstraints(3, 1, 1, 1, 1, 0,
-                    GridBagConstraints.PAGE_START,
-                    GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0);
-    private static final GridBagConstraints CB_DUPL = new GridBagConstraints(4,
-            1, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
-            GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0);
-    
+
+    private static final GridBagConstraints CB_OPEN = new GridBagConstraints(1, 1, 1, 1, 1, 0,
+            GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 5), 0, 0);
+    private static final GridBagConstraints CB_SOLVED = new GridBagConstraints(2, 1, 1, 1, 1, 0,
+            GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0);
+    private static final GridBagConstraints CB_INVALID = new GridBagConstraints(3, 1, 1, 1, 1, 0,
+            GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0);
+    private static final GridBagConstraints CB_DUPL = new GridBagConstraints(4, 1, 1, 1, 1, 0,
+            GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0);
+
     private JRadioButton cboxOpen;
     private JRadioButton cboxSolved;
     private JRadioButton cboxInvalid;
     private JRadioButton cboxDuplicate;
-    private ButtonGroup btnGroup;
-    
-    
+    private final ButtonGroup btnGroup;
+
+
     /**
      * Builds a new status filter panel with the given argument.
-     * 
+     *
      * @param selection {@code Status} to be selected
      */
-    StatusFilterPanel(Status selection) {
+    StatusFilterPanel(final Status selection) {
         super(new GridBagLayout());
         btnGroup = new ButtonGroup();
         addComponents();
         selectElement(selection);
     }
-    
-    
-    private void addComponents() {
-        cboxOpen = Builder.buildRadioButton(Status.OPEN.toString().toLowerCase(),
-                FontUtil.PLAIN_12, getBackground());
-        btnGroup.add(cboxOpen);
-        add(cboxOpen, CB_OPEN);
-        
-        cboxSolved = Builder.buildRadioButton(Status.SOLVED.toString().toLowerCase(),
-                FontUtil.PLAIN_12, getBackground());
-        btnGroup.add(cboxSolved);
-        add(cboxSolved, CB_SOLVED);
-        
-        cboxInvalid = Builder.buildRadioButton(Status.INVALID.toString().
-                toLowerCase(), FontUtil.PLAIN_12, getBackground());
-        btnGroup.add(cboxInvalid);
-        add(cboxInvalid, CB_INVALID);
-        
-        cboxDuplicate = Builder.buildRadioButton(Status.DUPLICATE.toString().
-                toLowerCase(), FontUtil.PLAIN_12, getBackground());
-        btnGroup.add(cboxDuplicate);
-        add(cboxDuplicate, CB_DUPL);
+
+
+    /**
+     * Clears the selected status elements.
+     */
+    void clearSelection() {
+        btnGroup.clearSelection();
     }
-    
-    private void selectElement(Status selection) {
-        if (selection != null) {
-            switch (selection) {
-                case OPEN:
-                    cboxOpen.setSelected(true);
-                    break;
-                case SOLVED:
-                    cboxSolved.setSelected(true);
-                    break;
-                case INVALID:
-                    cboxInvalid.setSelected(true);
-                    break;
-                default:
-                    cboxDuplicate.setSelected(true);
-                    break;
-            }
-        }
-    }
-    
+
     /**
      * Returns the selected status.
-     * 
+     *
      * @return a {@code Status}
      */
     Status getSelection() {
@@ -148,11 +109,44 @@ class StatusFilterPanel extends JPanel {
         }
         return status;
     }
-    
-    /**
-     * Clears the selected status elements.
-     */
-    void clearSelection() {
-        btnGroup.clearSelection();
+
+    private void addComponents() {
+        cboxOpen = Builder.buildRadioButton(Status.OPEN.toString().toLowerCase(), FontUtil.PLAIN_12, getBackground());
+        btnGroup.add(cboxOpen);
+        add(cboxOpen, CB_OPEN);
+
+        cboxSolved =
+                Builder.buildRadioButton(Status.SOLVED.toString().toLowerCase(), FontUtil.PLAIN_12, getBackground());
+        btnGroup.add(cboxSolved);
+        add(cboxSolved, CB_SOLVED);
+
+        cboxInvalid =
+                Builder.buildRadioButton(Status.INVALID.toString().toLowerCase(), FontUtil.PLAIN_12, getBackground());
+        btnGroup.add(cboxInvalid);
+        add(cboxInvalid, CB_INVALID);
+
+        cboxDuplicate =
+                Builder.buildRadioButton(Status.DUPLICATE.toString().toLowerCase(), FontUtil.PLAIN_12, getBackground());
+        btnGroup.add(cboxDuplicate);
+        add(cboxDuplicate, CB_DUPL);
+    }
+
+    private void selectElement(final Status selection) {
+        if (selection != null) {
+            switch (selection) {
+                case OPEN:
+                    cboxOpen.setSelected(true);
+                    break;
+                case SOLVED:
+                    cboxSolved.setSelected(true);
+                    break;
+                case INVALID:
+                    cboxInvalid.setSelected(true);
+                    break;
+                default:
+                    cboxDuplicate.setSelected(true);
+                    break;
+            }
+        }
     }
 }

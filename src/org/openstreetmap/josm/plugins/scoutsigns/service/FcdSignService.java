@@ -56,148 +56,135 @@ import com.google.gson.JsonSyntaxException;
 
 /**
  * Executes the operations of the FcdSignService.
- * 
+ *
  * @author Beata
  * @version $Revision$
  */
 public class FcdSignService {
-    
-    private Gson gson;
-    
-    
+
+    private final Gson gson;
+
+
     /**
      * Builds a new {@code FcdSignService} object.
      */
     public FcdSignService() {
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(SignPosition.class,
-                new SignPositionDeserializer());
-        builder.registerTypeAdapter(CarPosition.class,
-                new CarPositionDeserializer());
+        final GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(SignPosition.class, new SignPositionDeserializer());
+        builder.registerTypeAdapter(CarPosition.class, new CarPositionDeserializer());
         builder.registerTypeAdapter(LatLon.class, new LatLonDeserializer());
         builder.registerTypeAdapter(Status.class, new StatusDeserializer());
         this.gson = builder.create();
     }
-    
-    
+
+
     /**
-     * Searches for the road signs from the specified area that satisfy the
-     * given filters. Null filters are ignored.
-     * 
-     * @param bbox a {@code BoundingBox} specifies the searching area
-     * @param filter specifies the search filters
-     * @param zoom the current zoom level
-     * @return a {@code DataSet} containing a list of road signs or a list of
-     * road sign clusters
-     * @throws FcdSignServiceException if an error occurred during the
-     * FcdSignService method execution
-     */
-    public DataSet searchSigns(BoundingBox bbox, SearchFilter filter, int zoom)
-            throws FcdSignServiceException {
-        String url = new HttpQueryBuilder(bbox, filter, zoom).build(
-                Constants.SEARCH_SIGNS);
-        Root root = executeGet(url);
-        verifyStatus(root);
-        return new DataSet(root.getRoadSigns(), root.getRoadSignClusters());
-    }
-    
-    /**
-     * Retrieves the road sign corresponding to the given identifier.
-     * 
-     * @param id the identifier of the desired road sign
-     * @return a {@code RoadSign} object
-     * @throws FcdSignServiceException if an error occurred during the
-     * FcdSignService method execution
-     */
-    public RoadSign retrieveRoadSign(Long id) throws FcdSignServiceException {
-        String url = new HttpQueryBuilder(id).build(Constants.RETRIEVE_SIGN);
-        Root root = executeGet(url);
-        verifyStatus(root);
-        return root.getRoadSign();
-    }
-    
-    /**
-     * Adds a comment to the specified road sign. If the status is not null,
-     * then also the road sign's status is modified.
-     * 
+     * Adds a comment to the specified road sign. If the status is not null, then also the road sign's status is
+     * modified.
+     *
      * @param signId the road sign's identifier
      * @param username the user's OSM username
      * @param text the comment text
      * @param status the road sign's new {@code Status}
-     * @param duplicateOf it is used only with {@code Status#DUPLICATE}.
-     * Specifies the parent road sign's identifier.
-     * @throws FcdSignServiceException if an error occurred during the
-     * FcdSignService method execution
+     * @param duplicateOf it is used only with {@code Status#DUPLICATE}. Specifies the parent road sign's identifier.
+     * @throws FcdSignServiceException if an error occurred during the FcdSignService method execution
      */
-    public void addComment(Long signId, String username, String text,
-            Status status, Long duplicateOf) throws FcdSignServiceException {
-        Map<String, String> content = new HttpContentBuilder(signId, username, 
-                text, status, duplicateOf).getContent();
-        String url = new HttpQueryBuilder().build(Constants.ADD_COMMENT);
-        Root root = executePost(url, content);
+    public void addComment(final Long signId, final String username, final String text, final Status status,
+            final Long duplicateOf) throws FcdSignServiceException {
+        final Map<String, String> content =
+                new HttpContentBuilder(signId, username, text, status, duplicateOf).getContent();
+        final String url = new HttpQueryBuilder().build(Constants.ADD_COMMENT);
+        final Root root = executePost(url, content);
         verifyStatus(root);
     }
-    
+
     /**
-     * Adds the same comment to every specified road sign. This is a batch '
-     * operation, and is equivalent to calling 'addComment' on each individual
-     * road sign. If the status is not null, then also the road sign's status is
+     * Adds the same comment to every specified road sign. This is a batch ' operation, and is equivalent to calling
+     * 'addComment' on each individual road sign. If the status is not null, then also the road sign's status is
      * modified.
-     * 
+     *
      * @param signIds the collection of road sign identifiers
      * @param username the user's OSM username
      * @param text the comment text
      * @param status the road sign's new {@code Status}
-     * @param duplicateOf it is used only with {@code Status#DUPLICATE}.
-     * Specifies the parent road sign's identifier.
-     * @throws FcdSignServiceException if an error occurred during the
-     * FcdSignService method execution
+     * @param duplicateOf it is used only with {@code Status#DUPLICATE}. Specifies the parent road sign's identifier.
+     * @throws FcdSignServiceException if an error occurred during the FcdSignService method execution
      */
-    public void addComments(List<Long> signIds, String username, String text,
-            Status status, Long duplicateOf) throws FcdSignServiceException {
-        Map<String, String> content = new HttpContentBuilder(signIds, username, 
-                text, status, duplicateOf).getContent();
-        String url = new HttpQueryBuilder().build(Constants.ADD_COMMENTS);
-        Root root = executePost(url, content);
+    public void addComments(final List<Long> signIds, final String username, final String text, final Status status,
+            final Long duplicateOf) throws FcdSignServiceException {
+        final Map<String, String> content =
+                new HttpContentBuilder(signIds, username, text, status, duplicateOf).getContent();
+        final String url = new HttpQueryBuilder().build(Constants.ADD_COMMENTS);
+        final Root root = executePost(url, content);
         verifyStatus(root);
     }
-    
-    private Root executePost(String url, Map<String, String> content)
+
+    /**
+     * Retrieves the road sign corresponding to the given identifier.
+     *
+     * @param id the identifier of the desired road sign
+     * @return a {@code RoadSign} object
+     * @throws FcdSignServiceException if an error occurred during the FcdSignService method execution
+     */
+    public RoadSign retrieveRoadSign(final Long id) throws FcdSignServiceException {
+        final String url = new HttpQueryBuilder(id).build(Constants.RETRIEVE_SIGN);
+        final Root root = executeGet(url);
+        verifyStatus(root);
+        return root.getRoadSign();
+    }
+
+    /**
+     * Searches for the road signs from the specified area that satisfy the given filters. Null filters are ignored.
+     *
+     * @param bbox a {@code BoundingBox} specifies the searching area
+     * @param filter specifies the search filters
+     * @param zoom the current zoom level
+     * @return a {@code DataSet} containing a list of road signs or a list of road sign clusters
+     * @throws FcdSignServiceException if an error occurred during the FcdSignService method execution
+     */
+    public DataSet searchSigns(final BoundingBox bbox, final SearchFilter filter, final int zoom)
             throws FcdSignServiceException {
-        String response = null;
-        try {
-            HttpConnector connector = new HttpConnector(url, HttpMethod.POST);
-            connector.write(content);
-            response = connector.read();
-        } catch (HttpException ex) {
-            throw new FcdSignServiceException(ex);
-        }
-        return buildRoot(response);
+        final String url = new HttpQueryBuilder(bbox, filter, zoom).build(Constants.SEARCH_SIGNS);
+        final Root root = executeGet(url);
+        verifyStatus(root);
+        return new DataSet(root.getRoadSigns(), root.getRoadSignClusters());
     }
-    
-    private Root executeGet(String url) throws FcdSignServiceException {
-        String response = null;
-        try {
-            response = new HttpConnector(url, HttpMethod.GET).read();
-        } catch (HttpException ex) {
-            throw new FcdSignServiceException(ex);
-        }
-        return buildRoot(response);
-    }
-    
-    private Root buildRoot(String response) throws FcdSignServiceException {
+
+    private Root buildRoot(final String response) throws FcdSignServiceException {
         Root root = new Root();
         if (response != null) {
             try {
                 root = gson.fromJson(response, Root.class);
-            } catch (JsonSyntaxException ex) {
+            } catch (final JsonSyntaxException ex) {
                 throw new FcdSignServiceException(ex);
             }
         }
         return root;
     }
-    
-    private void verifyStatus(Root root) throws FcdSignServiceException {
+
+    private Root executeGet(final String url) throws FcdSignServiceException {
+        String response = null;
+        try {
+            response = new HttpConnector(url, HttpMethod.GET).read();
+        } catch (final HttpException ex) {
+            throw new FcdSignServiceException(ex);
+        }
+        return buildRoot(response);
+    }
+
+    private Root executePost(final String url, final Map<String, String> content) throws FcdSignServiceException {
+        String response = null;
+        try {
+            final HttpConnector connector = new HttpConnector(url, HttpMethod.POST);
+            connector.write(content);
+            response = connector.read();
+        } catch (final HttpException ex) {
+            throw new FcdSignServiceException(ex);
+        }
+        return buildRoot(response);
+    }
+
+    private void verifyStatus(final Root root) throws FcdSignServiceException {
         if (root.getStatus() != null && root.getStatus().isErrorCode()) {
             throw new FcdSignServiceException(root.getStatus().getApiMessage());
         }

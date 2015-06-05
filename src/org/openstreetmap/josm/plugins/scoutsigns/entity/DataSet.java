@@ -37,15 +37,15 @@ import java.util.List;
 
 /**
  * Represents the data set of the {@code ScoutSignsLayer}.
- * 
+ *
  * @author Beata
  * @version $Revision$
  */
 public class DataSet {
-    
-    private List<RoadSign> roadSigns;
-    private List<RoadSignCluster> roadSignClusters;
-    
+
+    private final List<RoadSign> roadSigns;
+    private final List<RoadSignCluster> roadSignClusters;
+
     /**
      * Builds an empty {@code DataSet}
      */
@@ -53,26 +53,24 @@ public class DataSet {
         this.roadSigns = new ArrayList<>();
         this.roadSignClusters = new ArrayList<>();
     }
-    
+
     /**
      * Builds a new @ code DataSet} with the given arguments.
-     * 
+     *
      * @param roadSigns a list of {@code RoadSign}s.
      * @param roadSignClusters a lit of {@code RoadSignCluster}s.
      */
-    public DataSet(List<RoadSign> roadSigns,
-            List<RoadSignCluster> roadSignClusters) {
+    public DataSet(final List<RoadSign> roadSigns, final List<RoadSignCluster> roadSignClusters) {
         this.roadSigns = roadSigns != null ? roadSigns : new ArrayList<RoadSign>();
-        this.roadSignClusters = roadSignClusters != null ? roadSignClusters : 
-            new ArrayList<RoadSignCluster>();
+        this.roadSignClusters = roadSignClusters != null ? roadSignClusters : new ArrayList<RoadSignCluster>();
     }
-    
-    
-    public List<RoadSign> getRoadSigns() {
-        return roadSigns;
-    }
-    
+
+
     public List<RoadSignCluster> getRoadSignClusters() {
         return roadSignClusters;
+    }
+
+    public List<RoadSign> getRoadSigns() {
+        return roadSigns;
     }
 }

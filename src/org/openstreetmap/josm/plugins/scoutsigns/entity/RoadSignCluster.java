@@ -36,34 +36,33 @@ import org.openstreetmap.josm.data.coor.LatLon;
 
 /**
  * Defines the road sign cluster business entity.
- * 
+ *
  * @author Beata
  * @version $Revision$
  */
 public class RoadSignCluster {
-    
-    private LatLon position;
-    private Integer count;
-    
-    
+
+    private final LatLon position;
+    private final Integer count;
+
+
     /**
      * Builds a new {@code RoadSignCluster} with the given arguments.
-     * 
-     * @param position the geographical position where the cluster should be
-     * represented on the map
+     *
+     * @param position the geographical position where the cluster should be represented on the map
      * @param count the number of road signs contained in the cluster
      */
-    public RoadSignCluster(LatLon position, Integer count) {
+    public RoadSignCluster(final LatLon position, final Integer count) {
         this.position = position;
         this.count = count;
     }
-    
-    
-    public LatLon getPosition() {
-        return position;
-    }
-    
+
+
     public Integer getCount() {
         return count;
+    }
+
+    public LatLon getPosition() {
+        return position;
     }
 }

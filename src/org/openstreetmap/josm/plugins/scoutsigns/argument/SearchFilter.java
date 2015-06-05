@@ -39,41 +39,38 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 
 /**
  * Defines the filters that can be applied to the "searchSings" method.
+ * 
  * @author Beata
  * @version $Revision$
  */
 public class SearchFilter {
-    
+
     public static final short DEF_CONFIDENCE = 90;
-    
-    private TimestampFilter timestampFilter;
-    private String type;
-    private Status status;
-    private Long duplicateOf;
-    private Short confidence;
-    private Application app;
-    private Device device;
-    private String username;
-    
-    
+
+    private final TimestampFilter timestampFilter;
+    private final String type;
+    private final Status status;
+    private final Long duplicateOf;
+    private final Short confidence;
+    private final Application app;
+    private final Device device;
+    private final String username;
+
+
     /**
      * Builds a new filter with the given arguments.
-     * 
-     * @param timestampFilter defines the interval of time in which the returned
-     * road signs have been created
+     *
+     * @param timestampFilter defines the interval of time in which the returned road signs have been created
      * @param type the type of the returned road signs
      * @param status the status of the returned road signs
-     * @param duplicateOf the id of road sign of which all returned road signs
-     * are duplicates
-     * @param app defines the application from which the returned road sign have
-     * been created
-     * @param device defines the device from which the returned road sign have
-     * been created
+     * @param duplicateOf the id of road sign of which all returned road signs are duplicates
+     * @param app defines the application from which the returned road sign have been created
+     * @param device defines the device from which the returned road sign have been created
      * @param username the user's OSM user name
      */
-    public SearchFilter(TimestampFilter timestampFilter, String type,
-            Status status, Long duplicateOf, Short confidence, Application app,
-            Device device, String username) {
+    public SearchFilter(final TimestampFilter timestampFilter, final String type, final Status status,
+            final Long duplicateOf, final Short confidence, final Application app, final Device device,
+            final String username) {
         this.timestampFilter = timestampFilter;
         this.type = type;
         this.status = status;
@@ -83,41 +80,60 @@ public class SearchFilter {
         this.device = device;
         this.username = username;
     }
-    
-    
-    public TimestampFilter getTimestampFilter() {
-        return timestampFilter;
+
+
+    @Override
+    public boolean equals(final Object obj) {
+        boolean result = false;
+        if (this == obj) {
+            result = true;
+        } else if (obj instanceof SearchFilter) {
+            final SearchFilter other = (SearchFilter) obj;
+            result = ObjectUtil.bothNullOrEqual(timestampFilter, other.getTimestampFilter());
+            result = result && ObjectUtil.bothNullOrEqual(status, other.getStatus());
+            result = result && ObjectUtil.bothNullOrEqual(type, other.getType());
+            result = result && ObjectUtil.bothNullOrEqual(duplicateOf, other.getDuplicateOf());
+            result = result && ObjectUtil.bothNullOrEqual(confidence, other.getConfidence());
+            result = result && ObjectUtil.bothNullOrEqual(app, other.getApp());
+            result = result && ObjectUtil.bothNullOrEqual(device, other.getDevice());
+            result = result && ObjectUtil.bothNullOrEqual(username, other.getUsername());
+        }
+        return result;
     }
-    
-    public String getType() {
-        return type;
-    }
-    
-    public Status getStatus() {
-        return status;
-    }
-    
-    public Long getDuplicateOf() {
-        return duplicateOf;
-    }
-    
-    public Short getConfidence() {
-        return confidence;
-    }
-    
+
     public Application getApp() {
         return app;
     }
-    
+
+    public Short getConfidence() {
+        return confidence;
+    }
+
     public Device getDevice() {
         return device;
     }
-    
+
+    public Long getDuplicateOf() {
+        return duplicateOf;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public TimestampFilter getTimestampFilter() {
+        return timestampFilter;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+
     public String getUsername() {
         return username;
     }
-    
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -130,31 +146,6 @@ public class SearchFilter {
         result = prime * result + ObjectUtil.hashCode(timestampFilter);
         result = prime * result + ObjectUtil.hashCode(type);
         result = prime * result + ObjectUtil.hashCode(username);
-        return result;
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        boolean result = false;
-        if (this == obj) {
-            result = true;
-        } else if (obj instanceof SearchFilter) {
-            SearchFilter other = (SearchFilter) obj;
-            result = ObjectUtil.bothNullOrEqual(timestampFilter, 
-                    other.getTimestampFilter());
-            result = result && ObjectUtil.bothNullOrEqual(status, 
-                    other.getStatus());
-            result = result && ObjectUtil.bothNullOrEqual(type, other.getType());
-            result = result && ObjectUtil.bothNullOrEqual(duplicateOf,
-                    other.getDuplicateOf());
-            result = result && ObjectUtil.bothNullOrEqual(confidence,
-                    other.getConfidence());
-            result = result && ObjectUtil.bothNullOrEqual(app, other.getApp());
-            result = result && ObjectUtil.bothNullOrEqual(device,
-                    other.getDevice());
-            result = result && ObjectUtil.bothNullOrEqual(username,
-                    other.getUsername());
-        }
         return result;
     }
 }

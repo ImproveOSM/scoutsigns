@@ -40,20 +40,32 @@ import javax.swing.JRadioButton;
 
 
 /**
- * Defines a custom check box controller. The check box value is represented by
- * an icon.
- * 
+ * Defines a custom check box controller. The check box value is represented by an icon.
+ *
  * @author Beata
  * @version $Revision$
  */
 public class IconRadioButton extends JPanel {
-    
+
     private static final long serialVersionUID = -3568998777956214141L;
-    
-    private JRadioButton cbbox;
-    private JLabel lblIcon;
-    
-    private IconRadioButton(Color bgColor) {
+
+    private final JRadioButton cbbox;
+    private final JLabel lblIcon;
+
+    /**
+     * Builds a new {@code IconRadioButton} with the given arguments.
+     *
+     * @param icon the icon to be displayed as the value of the radio button
+     * @param bgColor the background color
+     * @param tooltip the tool-tip to display
+     */
+    public IconRadioButton(final Icon icon, final Color bgColor, final String tooltip) {
+        this(bgColor);
+        setIcon(icon);
+        lblIcon.setToolTipText(tooltip);
+    }
+
+    private IconRadioButton(final Color bgColor) {
         super(new FlowLayout(FlowLayout.LEFT));
         setBackground(bgColor);
         cbbox = new JRadioButton();
@@ -62,57 +74,44 @@ public class IconRadioButton extends JPanel {
         add(cbbox);
         add(lblIcon);
     }
-    
-    /**
-     * Builds a new {@code IconRadioButton} with the given arguments.
-     * 
-     * @param icon the icon to be displayed as the value of the radio button
-     * @param bgColor the background color
-     * @param tooltip the tool-tip to display
-     */
-    public IconRadioButton(Icon icon, Color bgColor, String tooltip) {
-        this(bgColor);
-        setIcon(icon);
-        lblIcon.setToolTipText(tooltip);
-    }
-    
-    /**
-     * Returns the state of the check box.
-     * 
-     * @return true if the check box is selected, false otherwise
-     */
-    public boolean isSelected() {
-        return cbbox.isSelected();
-    }
-    
-    /**
-     * Sets the state of the check box.
-     * 
-     * @param selected the new state
-     */
-    public void setSelected(boolean selected) {
-        cbbox.setSelected(selected);
-    }
-    
-    /**
-     * Sets the icon.
-     * 
-     * @param icon a {@code Icon}
-     */
-    public void setIcon(Icon icon) {
-        lblIcon.setIcon(icon);
-    }
-    
+
     /**
      * Returns the icon.
-     * 
+     *
      * @return a {@code Icon}
      */
     public Icon getIcon() {
         return lblIcon.getIcon();
     }
-    
+
     public JRadioButton getRadioButton() {
         return cbbox;
+    }
+
+    /**
+     * Returns the state of the check box.
+     *
+     * @return true if the check box is selected, false otherwise
+     */
+    public boolean isSelected() {
+        return cbbox.isSelected();
+    }
+
+    /**
+     * Sets the icon.
+     *
+     * @param icon a {@code Icon}
+     */
+    public void setIcon(final Icon icon) {
+        lblIcon.setIcon(icon);
+    }
+
+    /**
+     * Sets the state of the check box.
+     *
+     * @param selected the new state
+     */
+    public void setSelected(final boolean selected) {
+        cbbox.setSelected(selected);
     }
 }

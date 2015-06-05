@@ -44,62 +44,29 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
 
 
 /**
- * Defines the a button panel with "Reset", "OK" and "Cancel" buttons for the
- * road sign filter dialog.
- * 
+ * Defines the a button panel with "Reset", "OK" and "Cancel" buttons for the road sign filter dialog.
+ *
  * @author Beata
  * @version $Revision$
  */
 class ButtonPanel extends JPanel {
-    
-    private static final long serialVersionUID = 102915374051667032L;
-    
-    private RoadSignFilterDialog parent;
-    private JButton btnReset;
-    private JButton btnOk;
-    private JButton btnCancel;
-    
-    
-    /**
-     * Builds a new button panel with the given argument.
-     * 
-     * @param parent
-     */
-    ButtonPanel(RoadSignFilterDialog parent) {
-        super(new FlowLayout(FlowLayout.RIGHT));
-        this.parent = parent;
-        addComponents();
-    }
-    
-    
-    private void addComponents() {
-        GuiCnf guiCnf = GuiCnf.getInstance();
-        btnReset = Builder.buildButton(new Action(), guiCnf.getBtnReset());
-        btnOk = Builder.buildButton(new Action(), guiCnf.getBtnOk());
-        btnCancel = Builder.buildButton(new CancelAction(parent), 
-                guiCnf.getBtnCancel());
-        add(btnReset);
-        add(btnOk);
-        add(btnCancel);
-    }
-    
-    
+
     private final class Action extends AbstractAction {
-        
+
         private static final long serialVersionUID = -5379206652290290706L;
-        
+
         @Override
-        public void actionPerformed(ActionEvent event) {
-            String actionCmd = event.getActionCommand();
+        public void actionPerformed(final ActionEvent event) {
+            final String actionCmd = event.getActionCommand();
             if (actionCmd.equals(btnReset.getText())) {
                 // reset default settings
                 parent.resetFilters();
             } else {
                 // apply filters
-                PrefManager prefManager = PrefManager.getInstance();
-                SearchFilter newFilter = parent.getSelectedFilters();
+                final PrefManager prefManager = PrefManager.getInstance();
+                final SearchFilter newFilter = parent.getSelectedFilters();
                 if (newFilter != null) {
-                    SearchFilter oldFilter = prefManager.loadSearchFilter();
+                    final SearchFilter oldFilter = prefManager.loadSearchFilter();
                     if (oldFilter.equals(newFilter)) {
                         prefManager.saveFiltersChangedFlag(false);
                     } else {
@@ -110,5 +77,36 @@ class ButtonPanel extends JPanel {
                 }
             }
         }
+    }
+
+    private static final long serialVersionUID = 102915374051667032L;
+    private final RoadSignFilterDialog parent;
+    private JButton btnReset;
+    private JButton btnOk;
+
+
+    private JButton btnCancel;
+
+
+    /**
+     * Builds a new button panel with the given argument.
+     *
+     * @param parent
+     */
+    ButtonPanel(final RoadSignFilterDialog parent) {
+        super(new FlowLayout(FlowLayout.RIGHT));
+        this.parent = parent;
+        addComponents();
+    }
+
+
+    private void addComponents() {
+        final GuiCnf guiCnf = GuiCnf.getInstance();
+        btnReset = Builder.buildButton(new Action(), guiCnf.getBtnReset());
+        btnOk = Builder.buildButton(new Action(), guiCnf.getBtnOk());
+        btnCancel = Builder.buildButton(new CancelAction(parent), guiCnf.getBtnCancel());
+        add(btnReset);
+        add(btnOk);
+        add(btnCancel);
     }
 }

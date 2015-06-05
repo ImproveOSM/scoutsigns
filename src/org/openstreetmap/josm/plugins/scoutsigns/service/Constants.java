@@ -3,11 +3,11 @@
  * Cuza Voda 1, Cluj-Napoca, Cluj, 400107, Romania
  * All rights reserved.
  *
- * This software is the confidential and proprietary information of SKOBBLER SRL 
- * ="Confidential Information"). You shall not disclose such Confidential 
- * Information and shall use it only in accordance with the terms of the license 
+ * This software is the confidential and proprietary information of SKOBBLER SRL
+ * ="Confidential Information"). You shall not disclose such Confidential
+ * Information and shall use it only in accordance with the terms of the license
  * agreement you entered into with SKOBBLER SRL.
- * 
+ *
  * Created on Jul 29, 2014 by Bea
  * Modified on $DateTime$ by $Author$
  */
@@ -16,20 +16,19 @@ package org.openstreetmap.josm.plugins.scoutsigns.service;
 
 /**
  * Defines the FcdSignService method and parameter names.
- * 
+ *
  * @author Bea
  * @version $Revision$
  */
 final class Constants {
-    
-    private Constants() {}
-    
+
     /* request parameters used by any operation */
     static final String FORMAT = "format";
+
     static final String FORMAT_VAL = "json";
-    
     /* "searchSigns" method & parameters */
     static final String SEARCH_SIGNS = "searchSigns";
+
     static final String NORTH = "north";
     static final String SOUTH = "south";
     static final String EAST = "east";
@@ -46,17 +45,19 @@ final class Constants {
     static final String OSNAME = "osName";
     static final String OSVER = "osVer";
     static final String USERNAME = "username";
-    
     /* "retrieveSign" method & parameter */
     static final String RETRIEVE_SIGN = "retrieveSign";
+
     static final String ID = "id";
-    
     /* "addComment" method & paramaters */
     static final String ADD_COMMENT = "addComment";
+
     static final String SIGN_ID = "signId";
     static final String TEXT = "text";
-    
     /* "addComments" method & parameters */
     static final String ADD_COMMENTS = "addComments";
+
     static final String SIGN_IDS = "signIds";
+
+    private Constants() {}
 }

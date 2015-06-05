@@ -48,24 +48,24 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
 
 /**
  * Defines a frame for displaying the photo of a selected road sign.
- * 
+ *
  * @author Beata
  * @version $Revision$
  */
 class ImageFrame extends JFrame {
-    
+
     private static final long serialVersionUID = -4511721458975966411L;
-    
+
     private static final Dimension DIM = new Dimension(250, 200);
     private JLabel lblImage;
     private JPanel pnlImage;
-    
+
     /**
      * Builds a new frame for the given image.
-     * 
+     *
      * @param image a {@code Image}
      */
-    ImageFrame(Image image) {
+    ImageFrame(final Image image) {
         setTitle(GuiCnf.getInstance().getFrmPhotoTitle());
         setIconImage(IconCnf.getInstance().getPhotoIcon().getImage());
         setResizable(true);
@@ -76,42 +76,40 @@ class ImageFrame extends JFrame {
         addComponent(image);
         repaint();
     }
-    
-    
-    private void addComponent(Image image) {
+
+
+    /**
+     * Updates the image frame with the new image.
+     *
+     * @param image a {@code Image} object
+     */
+    void update(final Image image) {
+        if (image == null) {
+            lblImage.setText(GuiCnf.getInstance().getLblPhotoMissing());
+        } else {
+            try {
+                final BufferedImage bi = ImageUtil.base64ToImage(image.getData(), image.getWidth(), image.getHeight());
+                lblImage.setIcon(new ImageIcon(bi));
+            } catch (final IOException e) {
+                lblImage.setText(GuiCnf.getInstance().getLblPhotoError());
+            }
+        }
+        pnlImage.repaint();
+    }
+
+    private void addComponent(final Image image) {
         if (image == null) {
             lblImage = new JLabel(GuiCnf.getInstance().getLblPhotoMissing());
         } else {
             try {
-                BufferedImage bi = ImageUtil.base64ToImage(image.getData(),
-                        image.getWidth(), image.getHeight());
+                final BufferedImage bi = ImageUtil.base64ToImage(image.getData(), image.getWidth(), image.getHeight());
                 lblImage = new JLabel(new ImageIcon(bi));
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 lblImage = new JLabel(GuiCnf.getInstance().getLblPhotoError());
             }
         }
         pnlImage = new JPanel(new BorderLayout());
         pnlImage.add(lblImage, BorderLayout.CENTER);
         add(pnlImage);
-    }
-    
-    /**
-     * Updates the image frame with the new image.
-     * 
-     * @param image a {@code Image} object
-     */
-    void update(Image image) {
-        if (image == null) {
-            lblImage.setText(GuiCnf.getInstance().getLblPhotoMissing());
-        } else {
-            try {
-                BufferedImage bi = ImageUtil.base64ToImage(image.getData(),
-                        image.getWidth(), image.getHeight());
-                lblImage.setIcon(new ImageIcon(bi));
-            } catch (IOException e) {
-                lblImage.setText(GuiCnf.getInstance().getLblPhotoError());
-            }
-        }
-        pnlImage.repaint();
     }
 }

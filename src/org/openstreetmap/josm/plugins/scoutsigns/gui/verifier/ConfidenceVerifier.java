@@ -36,35 +36,35 @@ import javax.swing.JComponent;
 
 /**
  * Input verifier for the confidence text field.
- * 
+ *
  * @author Beata
  * @version $Revision$
  */
 public class ConfidenceVerifier extends AbstractVerifier {
-    
+
     private static final int MIN_VAL = 0;
     private static final int MAX_VAL = 100;
-    
+
     /**
      * Builds a new {@code ConfidenceVerifier} with the given arguments.
-     * 
+     *
      * @param component the {@code JComponent} that is validated
-     * @param message a {@code String} to be displayed if the user input is
-     * invalid. This string is displayed as a tool-tip.
+     * @param message a {@code String} to be displayed if the user input is invalid. This string is displayed as a
+     * tool-tip.
      */
-    public ConfidenceVerifier(JComponent component, String message) {
+    public ConfidenceVerifier(final JComponent component, final String message) {
         super(component, message);
     }
-    
-    
+
+
     @Override
-    protected boolean validate(String value) {
+    protected boolean validate(final String value) {
         boolean valid = true;
         if (!value.isEmpty()) {
             try {
-                Short shortValue = Short.parseShort(value);
+                final Short shortValue = Short.parseShort(value);
                 valid = shortValue >= MIN_VAL && shortValue <= MAX_VAL;
-            } catch (NumberFormatException e) {
+            } catch (final NumberFormatException e) {
                 valid = false;
             }
         }
