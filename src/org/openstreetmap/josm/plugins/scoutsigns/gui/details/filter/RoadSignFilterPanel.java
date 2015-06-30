@@ -227,9 +227,7 @@ class RoadSignFilterPanel extends JPanel {
     void resetFilters() {
         cbbScout.setSelected(true);
         cbbMapillary.setSelected(true);
-        listTypes =
-                Builder.buildList(ServiceCnf.getInstance().getScoutTypes(), new TypeListCellRenderer(Source.SCOUT),
-                        null);
+        listTypes = Builder.buildList(ServiceCnf.getInstance().getCommonTypes(), new TypeListCellRenderer(null), null);
         cmpTypes.getViewport().setView(listTypes);
         pickerFrom.getEditor().setText("");
         pickerFrom.setDate(null);
