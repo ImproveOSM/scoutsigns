@@ -33,10 +33,11 @@ final class Constants {
     static final String SOUTH = "south";
     static final String EAST = "east";
     static final String WEST = "west";
+    static final String SOURCE = "sources";
     static final String ZOOM = "zoom";
     static final String FROM = "from";
     static final String TO = "to";
-    static final String TYPE = "type";
+    static final String TYPES = "types";
     static final String STATUS = "status";
     static final String DUPLICATE_OF = "duplicateOf";
     static final String CONFIDENCE = "confidence";

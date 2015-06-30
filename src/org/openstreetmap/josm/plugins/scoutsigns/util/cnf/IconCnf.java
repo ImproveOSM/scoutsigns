@@ -74,9 +74,10 @@ public final class IconCnf {
     private final ImageIcon duplicateIcon;
     /* road sign icons & path names */
     private final ImageIcon selRoadSignBgIcon;
-    private final String typeIconPath;
+    private final String scoutTypesIconPath;
+    private final String mapillaryTypesIconPath;
 
-    private final String defTypeIconName;
+    private final String defaultTypeIconName;
 
 
     /* calendar icon */
@@ -97,9 +98,12 @@ public final class IconCnf {
         solvedIcon = getIcon(properties, "status.solved.icon");
         invalidIcon = getIcon(properties, "status.invalid.icon");
         duplicateIcon = getIcon(properties, "status.duplicate.icon");
-        typeIconPath = CnfUtil.readProperty(properties, "sign.types.path");
+
         selRoadSignBgIcon = getIcon(properties, "sign.sel.bg");
-        defTypeIconName = CnfUtil.readProperty(properties, "sign.types.def");
+        scoutTypesIconPath = CnfUtil.readProperty(properties, "sign.types.scout.path");
+        mapillaryTypesIconPath = CnfUtil.readProperty(properties, "sign.types.mapillary.path");
+        defaultTypeIconName = CnfUtil.readProperty(properties, "sign.types.def");
+
         calendarIcon = getIcon(properties, "calendar.icon");
     }
 
@@ -115,8 +119,8 @@ public final class IconCnf {
         return commentIcon;
     }
 
-    public String getDefTypeIconName() {
-        return defTypeIconName;
+    public String getDefaultTypeIconName() {
+        return defaultTypeIconName;
     }
 
     public ImageIcon getDuplicateIcon() {
@@ -135,6 +139,10 @@ public final class IconCnf {
         return layerIcon;
     }
 
+    public String getMapillaryTypesIconPath() {
+        return mapillaryTypesIconPath;
+    }
+
     public Icon getMoreActionIcon() {
         return moreActionIcon;
     }
@@ -145,6 +153,10 @@ public final class IconCnf {
 
     public ImageIcon getPhotoIcon() {
         return photoIcon;
+    }
+
+    public String getScoutTypesIconPath() {
+        return scoutTypesIconPath;
     }
 
     public ImageIcon getSelRoadSignBgIcon() {
@@ -161,10 +173,6 @@ public final class IconCnf {
 
     public Icon getTripIcon() {
         return tripIcon;
-    }
-
-    public String getTypeIconPath() {
-        return typeIconPath;
     }
 
     private ImageIcon getIcon(final Properties properties, final String key) {

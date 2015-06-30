@@ -40,8 +40,6 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ServiceCnf;
-import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
 
 
 /**
@@ -85,23 +83,6 @@ public final class Util {
                     result = roadSign;
                 }
             }
-        }
-        return result;
-    }
-
-    /**
-     * Verifies if the clustering view info dialog should be displayed or not.
-     *
-     * @param zoom the current zoom level
-     * @param prevZoom the previous zoom level
-     * @return true if the dialog window needs to be displayed, false otherwise
-     */
-    public static boolean shouldDisplayClInfoDialog(final int zoom, final int prevZoom) {
-        final boolean suppressMsg = PrefManager.getInstance().loadSuppressClusterInfoFlag();
-        boolean result = false;
-        if (!suppressMsg) {
-            final int maxZoom = ServiceCnf.getInstance().getMaxClusterZoom();
-            result = zoom <= maxZoom && zoom < prevZoom;
         }
         return result;
     }

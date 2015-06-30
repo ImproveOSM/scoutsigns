@@ -52,7 +52,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltCnf;
 
 
 /**
- * Defines the skosigns layer main functionality.
+ * Defines the ScoutSigns layer main functionality.
  *
  * @author Bea
  * @version $Revision$
@@ -134,6 +134,7 @@ public class ScoutSignsLayer extends Layer {
      * Returns the road sign near to the given point. The method returns null if there is no nearby road sign.
      *
      * @param point a {@code Point}
+     * @param multiSelect specifies if multiple elements are selected or not
      * @return a {@code RoadSign}
      */
     public RoadSign nearbyRoadSign(final Point point, final boolean multiSelect) {
@@ -166,15 +167,20 @@ public class ScoutSignsLayer extends Layer {
     }
 
     /**
-     * Updates the layer's data set with new data.
+     * Sets the layer's data set. Previously selected road signs will be unselected if the new data set does not contain
+     * these elements.
      *
-     * @param dataSet the new data set
+     * @param dataSet a {@code DataSet} containing road signs from the current view
      */
     public void setDataSet(final DataSet dataSet) {
         this.dataSet = dataSet;
-
-        // check previously selected elements
-        checkSelRoadSigns();
+        if (!selRoadSigns.isEmpty() && dataSet.getRoadSigns() != null) {
+            for (final RoadSign elem : dataSet.getRoadSigns()) {
+                if (!this.dataSet.getRoadSigns().contains(elem)) {
+                    selRoadSigns.remove(elem);
+                }
+            }
+        }
     }
 
     public void setTripView(final boolean tripView) {
@@ -184,7 +190,7 @@ public class ScoutSignsLayer extends Layer {
     /**
      * Updates the currently selected road sign data.
      *
-     * @param roadSign
+     * @param roadSign a {@code RoadSign} representing the selected object
      */
     public void updateSelRoadSign(final RoadSign roadSign) {
         final int idx = selRoadSigns.indexOf(roadSign);
@@ -197,15 +203,5 @@ public class ScoutSignsLayer extends Layer {
     @Override
     public void visitBoundingBox(final BoundingXYVisitor arg0) {
         // not supported
-    }
-
-    private void checkSelRoadSigns() {
-        if (!selRoadSigns.isEmpty() && dataSet.getRoadSigns() != null) {
-            for (final RoadSign elem : dataSet.getRoadSigns()) {
-                if (!this.dataSet.getRoadSigns().contains(elem)) {
-                    selRoadSigns.remove(elem);
-                }
-            }
-        }
     }
 }

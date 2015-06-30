@@ -45,12 +45,18 @@ public final class ServiceCnf {
     }
 
     private final String serviceUrl;
-    private final List<String> types;
+    private final String mapillaryImageUrl;
+    private final String mapillaryImagePage;
+
 
     private int searchDelay;
-
-
     private int maxClusterZoom;
+    private final List<String> scoutTypes;
+
+    private final List<String> mapillaryTypes;
+
+
+    private final List<String> commonTypes;
 
 
     private ServiceCnf() {
@@ -61,6 +67,13 @@ public final class ServiceCnf {
             // mechanism
             throw new ExceptionInInitializerError("Missing FcdSignService url.");
         }
+        mapillaryImageUrl = properties.getProperty("mapillary.image.url");
+        if (mapillaryImageUrl == null) {
+            // no need to catch this error, it is handled by JOSM error
+            // mechanism
+            throw new ExceptionInInitializerError("Missing Mapillary image url.");
+        }
+        mapillaryImagePage = properties.getProperty("mapillary.image.page");
         try {
             searchDelay = Integer.parseInt(properties.getProperty("search.delay"));
         } catch (final NumberFormatException ex) {
@@ -71,11 +84,39 @@ public final class ServiceCnf {
         } catch (final NumberFormatException ex) {
             maxClusterZoom = MAX_CLUSTER_ZOOM;
         }
-        types = CnfUtil.readPropertiesList(properties, "types");
+        // scout road sign types
+        scoutTypes = CnfUtil.readPropertiesList(properties, "types.scout");
+
+        // mapillary road sign types
+        mapillaryTypes = CnfUtil.readPropertiesList(properties, "types.mapillary");
+
+        // read common types
+        commonTypes = CnfUtil.readPropertiesList(properties, "types.common");
+    }
+
+
+    public List<String> getCommonTypes() {
+        return commonTypes;
+    }
+
+    public String getMapillaryImagePage() {
+        return mapillaryImagePage;
+    }
+
+    public String getMapillaryImageUrl() {
+        return mapillaryImageUrl;
+    }
+
+    public List<String> getMapillaryTypes() {
+        return mapillaryTypes;
     }
 
     public int getMaxClusterZoom() {
         return maxClusterZoom;
+    }
+
+    public List<String> getScoutTypes() {
+        return scoutTypes;
     }
 
     public int getSearchDelay() {
@@ -86,7 +127,7 @@ public final class ServiceCnf {
         return serviceUrl;
     }
 
-    public List<String> getTypes() {
-        return types;
+    public void setSearchDelay(final int searchDelay) {
+        this.searchDelay = searchDelay;
     }
 }

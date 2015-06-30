@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, skobbler GmbH
+ * Copyright (c) 2015, skobbler GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,30 +26,35 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * Created on Jul 31, 2014 by Beata
+ * Created on Jun 8, 2015 by Beata
  * Modified on $DateTime$ by $Author$
  */
-package org.openstreetmap.josm.plugins.scoutsigns.service.deserializer;
-
-import java.lang.reflect.Type;
-import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
+package org.openstreetmap.josm.plugins.scoutsigns.argument;
 
 
 /**
- * Custom deserializer for the {@code Status} object.
+ * Holds mapillary road sign image sizes.
  *
  * @author Beata
- * @version $Revision$
  */
-public class StatusDeserializer implements JsonDeserializer<Status> {
+public enum MapillaryImageSize {
+
+    PX_320(320), PX_640(640), PX_1024(1024);
+
+    private int value;
+
+
+    private MapillaryImageSize(final int value) {
+        this.value = value;
+    }
+
+
+    public int getValue() {
+        return value;
+    }
 
     @Override
-    public Status deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext context)
-            throws JsonParseException {
-        return Status.valueOf(jsonElement.getAsString().toUpperCase());
+    public String toString() {
+        return value + "px";
     }
 }

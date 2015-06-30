@@ -31,9 +31,11 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.argument;
 
+import java.util.List;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Application;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Device;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.ObjectUtil;
+import org.openstreetmap.josm.plugins.scoutsigns.entity.Source;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 
 
@@ -47,8 +49,9 @@ public class SearchFilter {
 
     public static final short DEF_CONFIDENCE = 90;
 
+    private final List<Source> sources;
     private final TimestampFilter timestampFilter;
-    private final String type;
+    private final List<String> types;
     private final Status status;
     private final Long duplicateOf;
     private final Short confidence;
@@ -60,19 +63,22 @@ public class SearchFilter {
     /**
      * Builds a new filter with the given arguments.
      *
+     * @param sources defines the source list from which search for road signs
      * @param timestampFilter defines the interval of time in which the returned road signs have been created
-     * @param type the type of the returned road signs
+     * @param types a list of road sign type
      * @param status the status of the returned road signs
      * @param duplicateOf the id of road sign of which all returned road signs are duplicates
+     * @param confidence specifies the confidence with which the sign has been recognized (0-300)
      * @param app defines the application from which the returned road sign have been created
      * @param device defines the device from which the returned road sign have been created
      * @param username the user's OSM user name
      */
-    public SearchFilter(final TimestampFilter timestampFilter, final String type, final Status status,
-            final Long duplicateOf, final Short confidence, final Application app, final Device device,
-            final String username) {
+    public SearchFilter(final List<Source> sources, final TimestampFilter timestampFilter, final List<String> types,
+            final Status status, final Long duplicateOf, final Short confidence, final Application app,
+            final Device device, final String username) {
+        this.sources = sources;
         this.timestampFilter = timestampFilter;
-        this.type = type;
+        this.types = types;
         this.status = status;
         this.duplicateOf = duplicateOf;
         this.confidence = confidence;
@@ -89,9 +95,10 @@ public class SearchFilter {
             result = true;
         } else if (obj instanceof SearchFilter) {
             final SearchFilter other = (SearchFilter) obj;
-            result = ObjectUtil.bothNullOrEqual(timestampFilter, other.getTimestampFilter());
+            result = ObjectUtil.bothNullOrEqual(sources, other.getSources());
+            result = result && ObjectUtil.bothNullOrEqual(timestampFilter, other.getTimestampFilter());
             result = result && ObjectUtil.bothNullOrEqual(status, other.getStatus());
-            result = result && ObjectUtil.bothNullOrEqual(type, other.getType());
+            result = result && ObjectUtil.bothNullOrEqual(types, other.getTypes());
             result = result && ObjectUtil.bothNullOrEqual(duplicateOf, other.getDuplicateOf());
             result = result && ObjectUtil.bothNullOrEqual(confidence, other.getConfidence());
             result = result && ObjectUtil.bothNullOrEqual(app, other.getApp());
@@ -117,6 +124,10 @@ public class SearchFilter {
         return duplicateOf;
     }
 
+    public List<Source> getSources() {
+        return sources;
+    }
+
     public Status getStatus() {
         return status;
     }
@@ -125,8 +136,8 @@ public class SearchFilter {
         return timestampFilter;
     }
 
-    public String getType() {
-        return type;
+    public List<String> getTypes() {
+        return types;
     }
 
 
@@ -138,13 +149,14 @@ public class SearchFilter {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + ObjectUtil.hashCode(sources);
         result = prime * result + ObjectUtil.hashCode(app);
         result = prime * result + ObjectUtil.hashCode(device);
         result = prime * result + ObjectUtil.hashCode(duplicateOf);
         result = prime * result + ObjectUtil.hashCode(confidence);
         result = prime * result + ObjectUtil.hashCode(status);
         result = prime * result + ObjectUtil.hashCode(timestampFilter);
-        result = prime * result + ObjectUtil.hashCode(type);
+        result = prime * result + ObjectUtil.hashCode(types);
         result = prime * result + ObjectUtil.hashCode(username);
         return result;
     }

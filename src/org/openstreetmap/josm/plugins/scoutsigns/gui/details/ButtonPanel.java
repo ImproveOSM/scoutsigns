@@ -23,6 +23,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
+import org.openstreetmap.josm.plugins.scoutsigns.entity.Source;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter.RoadSignFilterDialog;
@@ -92,7 +93,7 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     }
 
     /*
-     * Displays the selected road sign's image.
+     * Displays the selected road sign's image. If the frame is already opened updates it's content.
      */
     private final class DisplayImageFrame extends AbstractAction {
 
@@ -101,11 +102,12 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         @Override
         public void actionPerformed(final ActionEvent event) {
             if (imgFrame != null && imgFrame.isVisible()) {
-                imgFrame.update(roadSign.getImage());
+                imgFrame.update(roadSign);
                 imgFrame.repaint();
             } else {
-                imgFrame = new ImageFrame(roadSign.getImage());
+                imgFrame = new ImageFrame(roadSign);
                 imgFrame.pack();
+                imgFrame.setVisible(true);
             }
         }
     }
@@ -153,33 +155,25 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     private static final Dimension DIM = new Dimension(200, 23);
     private static final int ROWS = 1;
     private static final int COLS = 5;
+
     private TripViewObserver observer;
-    /* the selected road sign */
-    private RoadSign roadSign;
-    private ImageFrame imgFrame;
-
-
-    /* button panel comnponents */
-    private final JButton btnFilter;
-
-    private final JButton btnImage;
-
-
-    private final JButton btnComment;
-
-
-    private final JButton btnMoreAction;
-
-    private final JButton btnBack;
-
-    private final JButton btnTrip;
-
     private StatusChangeObserver statusChangeObserver;
 
-    /* TripViewObservable implementation */
+    /* the selected road sign */
+    private RoadSign roadSign;
+
+    /* UI components */
+    private final JButton btnFilter;
+    private final JButton btnImage;
+    private final JButton btnComment;
+    private final JButton btnMoreAction;
+    private final JButton btnBack;
+    private final JButton btnTrip;
+    private ImageFrame imgFrame;
 
     /* the list of statuses that a road sign/ set of road signs might have */
     private List<Status> statuses = new ArrayList<>(Status.VALUES_LIST);
+
 
     /**
      * Builds a new {@code ButtonPanel}
@@ -200,7 +194,7 @@ class ButtonPanel extends JPanel implements TripViewObservable {
 
         // disable actions
         btnFilter.setEnabled(false);
-        enableRoadSignActions(false);
+        enableRoadSignActions();
 
         // add components
         add(btnFilter);
@@ -222,7 +216,6 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         }
     }
 
-
     @Override
     public void registerObserver(final TripViewObserver observer) {
         this.observer = observer;
@@ -237,17 +230,15 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     void enableButtons(final int zoom) {
         if (zoom > ServiceCnf.getInstance().getMaxClusterZoom()) {
             btnFilter.setEnabled(true);
-            if (roadSign != null) {
-                enableRoadSignActions(true);
-            } else {
-                enableRoadSignActions(false);
-            }
+            enableRoadSignActions();
         } else {
             btnFilter.setEnabled(false);
-            enableRoadSignActions(false);
+            btnImage.setEnabled(false);
+            btnTrip.setEnabled(false);
+            btnComment.setEnabled(false);
+            btnMoreAction.setEnabled(false);
         }
     }
-
 
     /**
      * Registers the given observer.
@@ -257,7 +248,6 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     void registerStatusChangeObserver(final StatusChangeObserver observer) {
         statusChangeObserver = observer;
     }
-
 
     /**
      * Sets the selected road sign.
@@ -274,23 +264,26 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         }
         if (this.roadSign != null) {
             statuses.remove(this.roadSign.getStatus());
-            enableRoadSignActions(true);
 
             // reload image
             if (imgFrame != null && imgFrame.isVisible()) {
-                imgFrame.update(roadSign.getImage());
+                imgFrame.update(roadSign);
                 imgFrame.repaint();
             }
-        } else {
-            enableRoadSignActions(false);
         }
+        enableRoadSignActions();
     }
 
-
-    private void enableRoadSignActions(final boolean enable) {
-        btnImage.setEnabled(enable);
-        btnTrip.setEnabled(enable);
-        btnComment.setEnabled(enable);
-        btnMoreAction.setEnabled(enable);
+    private void enableRoadSignActions() {
+        boolean enableImage = false;
+        boolean enableActions = false;
+        if (roadSign != null) {
+            enableActions = roadSign.getSource() == Source.MAPILLARY ? false : true;
+            enableImage = true;
+        }
+        btnImage.setEnabled(enableImage);
+        btnTrip.setEnabled(enableActions);
+        btnComment.setEnabled(enableActions);
+        btnMoreAction.setEnabled(enableActions);
     }
 }

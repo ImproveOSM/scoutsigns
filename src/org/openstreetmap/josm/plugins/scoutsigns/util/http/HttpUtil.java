@@ -52,11 +52,25 @@ public final class HttpUtil {
     public static final String ENCODING = "utf-8";
 
     /**
+     * Encodes the given collection of strings using {@code HttpUtil#ENCODING} encoding.
+     *
+     * @param col a collection of {@code String}s
+     * @return the encoded string
+     */
+    public static String utf8Encode(final Collection<String> col) {
+        final StringBuilder param = new StringBuilder();
+        for (final String elem : col) {
+            param.append(elem).append(",");
+        }
+        return utf8Encode(param.substring(0, param.length() - 1));
+    }
+
+
+    /**
      * Encodes the given parameter using {@code HttpUtil#ENCODING} encoding.
      *
      * @param param the parameter to be encoded
      * @return the encoded parameter
-     * @throws HttpException if the encoding failed
      */
     public static String utf8Encode(final String param) {
         String encodedParam = null;
@@ -67,7 +81,6 @@ public final class HttpUtil {
         }
         return encodedParam;
     }
-
 
     /**
      * Reads the content of the given input stream and returns in string format.
@@ -88,20 +101,6 @@ public final class HttpUtil {
             IOUtils.closeQuietly(input);
         }
         return result;
-    }
-
-    /**
-     * Encodes the given collection of strings using {@code HttpUtil#ENCODING} encoding.
-     *
-     * @param col a collection of {@code String}s
-     * @return the encoded string
-     */
-    static String utf8Encode(final Collection<String> col) throws HttpException {
-        final StringBuilder param = new StringBuilder();
-        for (final String elem : col) {
-            param.append(elem).append(" ");
-        }
-        return utf8Encode(param.substring(0, param.length() - 1));
     }
 
     /**

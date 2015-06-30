@@ -107,22 +107,27 @@ class RoadSignPanel extends InfoPanel<RoadSign> {
     }
 
     private void addId(final Long id, final int widthLbl) {
-        add(Builder.buildLabel(getGuiCnf().getLblId(), FontUtil.BOLD_12, new Rectangle(RECT_X, RECT_Y, widthLbl,
-                LHEIGHT)));
-        final int widthVal = FontUtil.FM_PLAIN_12.stringWidth(id.toString());
-        add(Builder.buildLabel(id.toString(), FontUtil.PLAIN_12, new Rectangle(widthLbl, RECT_Y, widthVal, LHEIGHT)));
-        pnlWidth = pnlWidth + widthLbl + widthVal;
-        y = RECT_Y + LHEIGHT;
+        if (id != null) {
+            add(Builder.buildLabel(getGuiCnf().getLblId(), FontUtil.BOLD_12, new Rectangle(RECT_X, RECT_Y, widthLbl,
+                    LHEIGHT)));
+            final int widthVal = FontUtil.FM_PLAIN_12.stringWidth(id.toString());
+            add(Builder
+                    .buildLabel(id.toString(), FontUtil.PLAIN_12, new Rectangle(widthLbl, RECT_Y, widthVal, LHEIGHT)));
+            pnlWidth = pnlWidth + widthLbl + widthVal;
+            y = RECT_Y + LHEIGHT;
+        }
     }
 
     private void addPoint(final LatLon point, final int widthLbl) {
-        add(Builder
-                .buildLabel(getGuiCnf().getLblPoint(), FontUtil.BOLD_12, new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
-        final String pointStr = Formatter.formatLatLon(point);
-        final int widthVal = FontUtil.FM_PLAIN_12.stringWidth(pointStr);
-        add(Builder.buildLabel(pointStr, FontUtil.PLAIN_12, new Rectangle(widthLbl, y, widthVal, LHEIGHT)));
-        pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
-        y = y + LHEIGHT;
+        if (point != null) {
+            add(Builder.buildLabel(getGuiCnf().getLblPoint(), FontUtil.BOLD_12, new Rectangle(RECT_X, y, widthLbl,
+                    LHEIGHT)));
+            final String pointStr = Formatter.formatLatLon(point);
+            final int widthVal = FontUtil.FM_PLAIN_12.stringWidth(pointStr);
+            add(Builder.buildLabel(pointStr, FontUtil.PLAIN_12, new Rectangle(widthLbl, y, widthVal, LHEIGHT)));
+            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
+            y = y + LHEIGHT;
+        }
     }
 
     private void addStatus(final Status status, final int widthLbl) {

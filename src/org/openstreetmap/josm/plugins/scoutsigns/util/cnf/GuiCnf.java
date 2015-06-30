@@ -79,6 +79,7 @@ public final class GuiCnf {
     private final String lblPhotoMissing;
     /* filter dialog texts */
     private final String dlgFilterTitle;
+    private final String lblSources;
     private final String lblTimeInt;
 
     private final String lblUsername;
@@ -104,10 +105,12 @@ public final class GuiCnf {
     private final String txtCommentInvalid;
 
     private final String txtDateInvalid;
+
     /* info texts */
     private final String infoClusterTitle;
-
     private final String infoClusterTxt;
+    private final String infoMapillaryTitle;
+    private final String infoMapillaryTxt;
     private final String txtMenuSolve;
     private final String txtMenuInvalid;
     private final String txtMenuDuplicate;
@@ -153,6 +156,7 @@ public final class GuiCnf {
 
         /* filter dialog texts */
         dlgFilterTitle = CnfUtil.readProperty(properties, "filter.title");
+        lblSources = CnfUtil.readProperty(properties, "filter.sources");
         lblTimeInt = CnfUtil.readProperty(properties, "filter.int");
         lblUsername = CnfUtil.readProperty(properties, "filter.username");
         dlgCommentTitle = CnfUtil.readProperty(properties, "comment.title");
@@ -178,6 +182,8 @@ public final class GuiCnf {
 
         infoClusterTitle = CnfUtil.readProperty(properties, "info.cluster.title");
         infoClusterTxt = CnfUtil.readProperty(properties, "info.cluster.txt");
+        infoMapillaryTitle = CnfUtil.readProperty(properties, "info.mapillary.title");
+        infoMapillaryTxt = CnfUtil.readProperty(properties, "info.mapillary.txt");
 
         /* menu item texts */
         txtMenuSolve = CnfUtil.readProperty(properties, "edit.menu.solve");
@@ -247,6 +253,14 @@ public final class GuiCnf {
         return infoClusterTxt;
     }
 
+    public String getInfoMapillaryTitle() {
+        return infoMapillaryTitle;
+    }
+
+    public String getInfoMapillaryTxt() {
+        return infoMapillaryTxt;
+    }
+
     public String getLblAcc() {
         return lblAcc;
     }
@@ -313,6 +327,10 @@ public final class GuiCnf {
 
     public String getLblProfile() {
         return lblProfile;
+    }
+
+    public String getLblSources() {
+        return lblSources;
     }
 
     public String getLblStatus() {

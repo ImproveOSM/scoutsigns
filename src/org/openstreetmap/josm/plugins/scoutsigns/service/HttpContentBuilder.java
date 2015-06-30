@@ -96,7 +96,6 @@ class HttpContentBuilder {
         }
     }
 
-
     Map<String, String> getContent() {
         return content;
     }

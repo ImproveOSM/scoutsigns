@@ -33,24 +33,27 @@ package org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import javax.swing.ImageIcon;
+import java.util.List;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JCheckBox;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import org.jdesktop.swingx.JXDatePicker;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.TimestampFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Application;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Device;
+import org.openstreetmap.josm.plugins.scoutsigns.entity.Source;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.DateFormatter;
@@ -73,55 +76,11 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
  */
 class RoadSignFilterPanel extends JPanel {
 
-    private static final class Constraints {
-
-        private static final GridBagConstraints LBL_INT = new GridBagConstraints(0, 0, 1, 1, 1, 1,
-                GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(7, 5, 3, 5), 0, 0);
-
-        private static final GridBagConstraints CBB_START = new GridBagConstraints(1, 0, 1, 1, 1, 0,
-                GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints CBB_END = new GridBagConstraints(2, 0, 1, 1, 1, 0,
-                GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints LBL_STATUS = new GridBagConstraints(0, 2, 1, 1, 1, 1,
-                GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints PNL_STATUS = new GridBagConstraints(1, 2, 3, 1, 1, 0,
-                GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 2, 3), 0, 0);
-        private static final GridBagConstraints LBL_TYPE = new GridBagConstraints(0, 3, 1, 1, 1, 0,
-                GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints LIST_TYPE = new GridBagConstraints(1, 3, 2, 1, 1, 0,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 94);
-        private static final GridBagConstraints LBL_DUPL = new GridBagConstraints(0, 4, 1, 1, 1, 0,
-                GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints TXT_DUPL = new GridBagConstraints(1, 4, 1, 1, 1, 0,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints LBL_CONF = new GridBagConstraints(0, 5, 1, 1, 1, 0,
-                GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints TXT_CONF = new GridBagConstraints(1, 5, 1, 1, 1, 0,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints LBL_USERNAME = new GridBagConstraints(0, 6, 1, 1, 1, 0,
-                GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints TXT_USERNAME = new GridBagConstraints(1, 6, 1, 1, 1, 0,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints LBL_DEV = new GridBagConstraints(0, 7, 1, 1, 1, 0,
-                GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints TXT_OS_NAME = new GridBagConstraints(1, 7, 1, 1, 1, 0,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints TXT_OS_VERS = new GridBagConstraints(2, 7, 1, 1, 1, 0,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints LBL_APP = new GridBagConstraints(0, 8, 1, 1, 1, 0,
-                GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints TXT_APP_NAME = new GridBagConstraints(1, 8, 1, 1, 1, 0,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-        private static final GridBagConstraints TXT_APP_VERS = new GridBagConstraints(2, 8, 1, 1, 1, 0,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
-
-        private Constraints() {}
-    }
 
     /*
      * Listens to from date change value events.
      */
-    private final class FromChangeListener implements PropertyChangeListener {
+    private final class DateFromChangeListener implements PropertyChangeListener {
 
         @Override
         public void propertyChange(final PropertyChangeEvent evt) {
@@ -129,13 +88,12 @@ class RoadSignFilterPanel extends JPanel {
                 pickerTo.getMonthView().setLowerBound(pickerFrom.getDate());
             }
         }
-
     }
 
     /*
      * Listens to to date change value events.
      */
-    private final class ToChangeListener implements PropertyChangeListener {
+    private final class DateToChangeListener implements PropertyChangeListener {
 
         @Override
         public void propertyChange(final PropertyChangeEvent evt) {
@@ -143,27 +101,76 @@ class RoadSignFilterPanel extends JPanel {
                 pickerFrom.getMonthView().setUpperBound(pickerTo.getDate());
             }
         }
+    }
 
+    /*
+     * Listens to source filter changes.
+     */
+    private final class SourceSelectionListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(final ActionEvent event) {
+            List<String> types;
+            DefaultListCellRenderer renderer;
+            final List<Source> sources = new ArrayList<>();
+            if (cbbScout.isSelected() && !cbbMapillary.isSelected()) {
+                pnlStatus.enableComponents(true);
+                txtDupl.setEnabled(true);
+                txtUsername.setEnabled(true);
+                txtOsName.setEnabled(true);
+                txtOsVers.setEnabled(true);
+                txtAppName.setEnabled(true);
+                txtAppVers.setEnabled(true);
+
+                // reload scout types
+                sources.add(Source.SCOUT);
+                types = ServiceCnf.getInstance().getScoutTypes();
+                renderer = new TypeListCellRenderer(Source.SCOUT);
+            } else {
+                // enable common filters, time interval, type, confidence
+                pnlStatus.enableComponents(false);
+                txtDupl.setEnabled(false);
+                txtUsername.setEnabled(false);
+                txtOsName.setEnabled(false);
+                txtOsVers.setEnabled(false);
+                txtAppName.setEnabled(false);
+                txtAppVers.setEnabled(false);
+
+                if (cbbMapillary.isSelected() && !cbbScout.isSelected()) {
+                    // reload Mapillary types
+                    sources.add(Source.MAPILLARY);
+                    types = ServiceCnf.getInstance().getMapillaryTypes();
+                    renderer = new TypeListCellRenderer(Source.MAPILLARY);
+                } else {
+                    types = ServiceCnf.getInstance().getCommonTypes();
+                    renderer = new TypeListCellRenderer(null);
+                }
+            }
+            listTypes = Builder.buildList(types, renderer, null);
+            cmpTypes.getViewport().setView(listTypes);
+            repaint();
+        }
     }
 
     private static final long serialVersionUID = 31048161544787922L;
+
     private static final Dimension TYPE_LIST_SIZE = new Dimension(300, 200);
+
+    private JCheckBox cbbScout;
+    private JCheckBox cbbMapillary;
     private JXDatePicker pickerTo;
     private JXDatePicker pickerFrom;
     private StatusFilterPanel pnlStatus;
     private JList<String> listTypes;
+    private JScrollPane cmpTypes;
     private JTextField txtDupl;
     private JTextField txtConf;
     private JTextField txtUsername;
     private JTextField txtOsName;
-
-
     private JTextField txtOsVers;
-
-
     private JTextField txtAppName;
-
     private JTextField txtAppVers;
+
 
     /**
      * Builds a new road sign filter panel.
@@ -175,12 +182,13 @@ class RoadSignFilterPanel extends JPanel {
         final SearchFilter filter = PrefManager.getInstance().loadSearchFilter();
         addTimeIntervalFilter(filter.getTimestampFilter());
         addStatusFilter(filter.getStatus());
-        addTypeFilter(filter.getType());
+        addTypeFilter(filter.getSources(), filter.getTypes());
         addDuplicateFilter(filter.getDuplicateOf());
         addConfidenceFilter(filter.getConfidence());
         addUsernameFilter(filter.getUsername());
         addDeviceFilter(filter.getDevice());
         addAppFilter(filter.getApp());
+        addSourceFilter(filter.getSources());
     }
 
     /**
@@ -193,27 +201,22 @@ class RoadSignFilterPanel extends JPanel {
         SearchFilter filter = null;
         if (verifyInput()) {
             final Long from = pickerFrom.getDate() != null ? pickerFrom.getDate().getTime() : null;
-
             final Long to = pickerTo.getDate() != null ? pickerTo.getDate().getTime() : null;
             final Status status = pnlStatus.getSelection();
-            final String type = listTypes.getSelectedValue();
             final String duplicateStr = txtDupl.getText().trim();
             final Long duplicate = !duplicateStr.isEmpty() ? Long.parseLong(duplicateStr) : null;
-
             final String confidenceStr = txtConf.getText().trim();
             final Short confidence = !confidenceStr.isEmpty() ? Short.parseShort(confidenceStr) : null;
-
             final String appName = txtAppName.getText().trim();
             final String appVersion = txtAppVers.getText().trim();
-
             final String osName = txtOsName.getText().trim();
             final String osVersion = txtOsVers.getText().trim();
-
             final String username = txtUsername.getText().trim();
-
+            final List<Source> sources = getSelectedSources();
             filter =
-                    new SearchFilter(new TimestampFilter(from, to), type, status, duplicate, confidence,
-                            new Application(appName, appVersion), new Device(osName, osVersion), username);
+                    new SearchFilter(sources, new TimestampFilter(from, to), listTypes.getSelectedValuesList(), status,
+                            duplicate, confidence, new Application(appName, appVersion), new Device(osName, osVersion),
+                            username);
         }
         return filter;
     }
@@ -222,6 +225,12 @@ class RoadSignFilterPanel extends JPanel {
      * Resets the filters to the default one.
      */
     void resetFilters() {
+        cbbScout.setSelected(true);
+        cbbMapillary.setSelected(true);
+        listTypes =
+                Builder.buildList(ServiceCnf.getInstance().getScoutTypes(), new TypeListCellRenderer(Source.SCOUT),
+                        null);
+        cmpTypes.getViewport().setView(listTypes);
         pickerFrom.getEditor().setText("");
         pickerFrom.setDate(null);
         pickerTo.getEditor().setText("");
@@ -282,6 +291,25 @@ class RoadSignFilterPanel extends JPanel {
         txtDupl.setInputVerifier(new DuplicateIdVerifier(txtDupl, GuiCnf.getInstance().getTxtDuplIdInvalid()));
     }
 
+    private void addSourceFilter(final List<Source> sources) {
+        add(Builder.buildLabel(GuiCnf.getInstance().getLblSources(), FontUtil.BOLD_12, null), Constraints.LBL_SOURCES);
+
+        boolean scoutSel = false;
+        boolean mapillarySel = false;
+        if (sources != null) {
+            scoutSel = sources.contains(Source.SCOUT);
+            mapillarySel = sources.contains(Source.MAPILLARY);
+        }
+        cbbScout = Builder.buildCheckBox(new SourceSelectionListener(), Source.SCOUT.name().toLowerCase(), scoutSel);
+        cbbMapillary =
+                Builder.buildCheckBox(new SourceSelectionListener(), Source.MAPILLARY.name().toLowerCase(),
+                        mapillarySel);
+        final JPanel pnl = new JPanel(new GridBagLayout());
+        pnl.add(cbbScout, Constraints.CBB_SCOUT);
+        pnl.add(cbbMapillary, Constraints.CBB_MAPILLARY);
+        add(pnl, Constraints.PNL_SOURCES);
+    }
+
     private void addStatusFilter(final Status status) {
         add(Builder.buildLabel(GuiCnf.getInstance().getLblStatus(), FontUtil.BOLD_12, null), Constraints.LBL_STATUS);
         pnlStatus = new StatusFilterPanel(status);
@@ -290,26 +318,30 @@ class RoadSignFilterPanel extends JPanel {
 
     private void addTimeIntervalFilter(final TimestampFilter tstampFilter) {
         add(Builder.buildLabel(GuiCnf.getInstance().getLblTimeInt(), FontUtil.BOLD_12, null), Constraints.LBL_INT);
-
-        final Date lowerDate =
-                tstampFilter != null && tstampFilter.getFrom() != null ? new Date(tstampFilter.getFrom()) : null;
-        final Date upperDate =
-                tstampFilter != null && tstampFilter.getTo() != null ? new Date(tstampFilter.getTo()) : Calendar
-                        .getInstance().getTime();
-
-        final ImageIcon icon = IconCnf.getInstance().getCalendarIcon();
+        Date lower = null;
+        Date upper = null;
+        Long from = null;
+        Long to = null;
+        if (tstampFilter != null) {
+            from = tstampFilter.getFrom();
+            to = tstampFilter.getTo();
+            lower = tstampFilter.getFrom() != null ? new Date(tstampFilter.getFrom()) : null;
+            upper = tstampFilter.getTo() != null ? new Date(tstampFilter.getTo()) : Calendar.getInstance().getTime();
+        }
 
         pickerFrom =
-                Builder.buildDatePicker(icon, new DateFormatter(), new FromChangeListener(), null, upperDate, lowerDate);
-        pickerFrom.getEditor().setText(DateUtil.formatDay(tstampFilter.getFrom()));
+                Builder.buildDatePicker(IconCnf.getInstance().getCalendarIcon(), new DateFormatter(),
+                        new DateFromChangeListener(), null, upper, lower);
+        pickerFrom.getEditor().setText(DateUtil.formatDay(from));
         final DateVerifier fromVerifier =
                 new DateVerifier(pickerFrom.getEditor(), GuiCnf.getInstance().getTxtDateInvalid());
         pickerFrom.getEditor().setInputVerifier(fromVerifier);
         add(pickerFrom, Constraints.CBB_START);
 
         pickerTo =
-                Builder.buildDatePicker(icon, new DateFormatter(), new ToChangeListener(), lowerDate, upperDate, null);
-        pickerTo.getEditor().setText(DateUtil.formatDay(tstampFilter.getTo()));
+                Builder.buildDatePicker(IconCnf.getInstance().getCalendarIcon(), new DateFormatter(),
+                        new DateToChangeListener(), lower, upper, null);
+        pickerTo.getEditor().setText(DateUtil.formatDay(to));
         final DateVerifier toVerifier =
                 new DateVerifier(pickerTo.getEditor(), GuiCnf.getInstance().getTxtDateInvalid());
         pickerTo.getEditor().setInputVerifier(toVerifier);
@@ -317,12 +349,24 @@ class RoadSignFilterPanel extends JPanel {
     }
 
 
-    private void addTypeFilter(final String type) {
+    private void addTypeFilter(final List<Source> sources, final List<String> selectedTypes) {
         add(Builder.buildLabel(GuiCnf.getInstance().getLblType(), FontUtil.BOLD_12, null), Constraints.LBL_TYPE);
-        listTypes =
-                Builder.buildList(ServiceCnf.getInstance().getTypes(), ListSelectionModel.SINGLE_SELECTION,
-                        JList.HORIZONTAL_WRAP, type);
-        final JScrollPane cmpTypes = Builder.buildScrollPane(listTypes, Color.white, false);
+
+        List<String> types;
+        DefaultListCellRenderer renderer;
+        if (sources == null || sources.size() == 2) {
+            types = ServiceCnf.getInstance().getCommonTypes();
+            renderer = new TypeListCellRenderer(null);
+        } else if (sources.contains(Source.SCOUT)) {
+            types = ServiceCnf.getInstance().getScoutTypes();
+            renderer = new TypeListCellRenderer(Source.SCOUT);
+        } else {
+            types = ServiceCnf.getInstance().getMapillaryTypes();
+            renderer = new TypeListCellRenderer(Source.MAPILLARY);
+        }
+
+        listTypes = Builder.buildList(types, renderer, selectedTypes);
+        cmpTypes = Builder.buildScrollPane(listTypes, Color.white, false);
         cmpTypes.getViewport().setViewSize(TYPE_LIST_SIZE);
         add(cmpTypes, Constraints.LIST_TYPE);
     }
@@ -332,6 +376,17 @@ class RoadSignFilterPanel extends JPanel {
         add(Builder.buildLabel(GuiCnf.getInstance().getLblUsername(), FontUtil.BOLD_12, null), Constraints.LBL_USERNAME);
         txtUsername = Builder.buildTextField(username, null, Color.white);
         add(txtUsername, Constraints.TXT_USERNAME);
+    }
+
+    private List<Source> getSelectedSources() {
+        final List<Source> sources = new ArrayList<Source>();
+        if (cbbScout.isSelected()) {
+            sources.add(Source.SCOUT);
+        }
+        if (cbbMapillary.isSelected()) {
+            sources.add(Source.MAPILLARY);
+        }
+        return sources;
     }
 
     private boolean verifyInput() {

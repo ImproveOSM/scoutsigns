@@ -46,16 +46,21 @@ public class RoadSign {
 
     private final Long id;
     private final String type;
-    private Long tstamp;
-    private Image image;
-    private Short confidence;
-    private CarPosition carPos;
+    private final Source source;
+    private final Long tstamp;
+    private final Image image;
+    private final Short confidence;
+    private final CarPosition carPos;
     private final SignPosition signPos;
-    private List<LatLon> nearbyPos;
-    private Trip trip;
+    private final List<LatLon> nearbyPos;
+    private final Trip trip;
     private final Status status;
-    private Long duplicateOf;
-    private Collection<Comment> comments;
+    private final Long duplicateOf;
+    private final Collection<Comment> comments;
+
+    // the identifier of the image, this property is used for external road
+    // signs
+    private final String key;
 
 
     /**
@@ -63,6 +68,7 @@ public class RoadSign {
      *
      * @param id the road sign's unique identifier
      * @param type the road sign's type
+     * @param source the road sign's origin
      * @param tstamp the road sign's creation time in Unix time format
      * @param image a {@code Image} represents the road sign's picture
      * @param confidence the confidence with which the sign has been recognized (0-100)
@@ -77,11 +83,17 @@ public class RoadSign {
      * only if the road sign has the {@code Status#DUPLICATE} value.
      * @param comments a collection of {@code Comment} objects, representing the comments posted by the users related to
      * the road sign
+     * @param key represents the road sign's image identifier; this property is used only for external road signs
      */
-    public RoadSign(final Long id, final String type, final Long tstamp, final Image image, final Short confidence,
-            final CarPosition carPos, final SignPosition signPos, final List<LatLon> nearbyPos, final Trip trip,
-            final Status status, final Long duplicateOf, final Collection<Comment> comments) {
-        this(id, type, signPos, status);
+    public RoadSign(final Long id, final String type, final Source source, final Long tstamp, final Image image,
+            final Short confidence, final CarPosition carPos, final SignPosition signPos, final List<LatLon> nearbyPos,
+            final Trip trip, final Status status, final Long duplicateOf, final Collection<Comment> comments,
+            final String key) {
+        this.id = id;
+        this.type = type;
+        this.source = source;
+        this.signPos = signPos;
+        this.status = status;
         this.tstamp = tstamp;
         this.image = image;
         this.confidence = confidence;
@@ -90,21 +102,7 @@ public class RoadSign {
         this.trip = trip;
         this.duplicateOf = duplicateOf;
         this.comments = comments;
-    }
-
-    /**
-     * Builds a new object with the given arguments.
-     *
-     * @param id the road sign's unique identifier
-     * @param type the road sign's type
-     * @param signPos a {@code SignPosition} object, representing the geographic position of the road sign
-     * @param status a {@code Status} object, representing the road sign's status
-     */
-    public RoadSign(final Long id, final String type, final SignPosition signPos, final Status status) {
-        this.id = id;
-        this.type = type;
-        this.signPos = signPos;
-        this.status = status;
+        this.key = key;
     }
 
 
@@ -115,7 +113,16 @@ public class RoadSign {
             result = true;
         } else if (obj instanceof RoadSign) {
             final RoadSign other = (RoadSign) obj;
-            result = id.equals(other.getId());
+
+            if (id != null) {
+                result = id.equals(other.getId());
+            } else {
+                // id is null for external signs
+                result = ObjectUtil.bothNullOrEqual(type, other.getType());
+                result = result && ObjectUtil.bothNullOrEqual(signPos, other.getSignPos());
+                result = result && ObjectUtil.bothNullOrEqual(confidence, other.getConfidence());
+                result = result && ObjectUtil.bothNullOrEqual(key, other.getKey());
+            }
         }
         return result;
     }
@@ -144,12 +151,20 @@ public class RoadSign {
         return image;
     }
 
+    public String getKey() {
+        return key;
+    }
+
     public List<LatLon> getNearbyPos() {
         return nearbyPos;
     }
 
     public SignPosition getSignPos() {
         return signPos;
+    }
+
+    public Source getSource() {
+        return source;
     }
 
     public Status getStatus() {
@@ -172,7 +187,14 @@ public class RoadSign {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        if (id != null) {
+            result = prime * result + id.hashCode();
+        } else {
+            result = prime * result + ObjectUtil.hashCode(type);
+            result = prime * result + ObjectUtil.hashCode(signPos);
+            result = prime * result + ObjectUtil.hashCode(confidence);
+            result = prime * result + ObjectUtil.hashCode(key);
+        }
         return result;
     }
 }

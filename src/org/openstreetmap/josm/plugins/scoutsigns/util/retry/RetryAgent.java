@@ -37,6 +37,7 @@ package org.openstreetmap.josm.plugins.scoutsigns.util.retry;
  *
  * @author Beata
  * @version $Revision$
+ * @param <T> the object type to be retried
  */
 public abstract class RetryAgent<T> {
 

@@ -194,7 +194,7 @@ class PaintHandler {
             if (selected) {
                 drawIcon(g2D, IconCnf.getInstance().getSelRoadSignBgIcon(), point);
             }
-            drawIcon(g2D, iconFactory.getIcon(roadSign.getType()), point);
+            drawIcon(g2D, iconFactory.getIcon(roadSign.getSource(), roadSign.getType()), point);
         }
     }
 }

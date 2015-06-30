@@ -43,7 +43,7 @@ import javax.swing.JComponent;
 public class ConfidenceVerifier extends AbstractVerifier {
 
     private static final int MIN_VAL = 0;
-    private static final int MAX_VAL = 100;
+    private static final int MAX_VAL = 300;
 
     /**
      * Builds a new {@code ConfidenceVerifier} with the given arguments.

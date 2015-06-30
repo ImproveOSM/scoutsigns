@@ -84,8 +84,7 @@ public final class DateUtil {
     public static String formatMonth(final Long timestamp) {
         final SimpleDateFormat dateTimeFormat = new SimpleDateFormat(MONTH);
         dateTimeFormat.setTimeZone(TimeZone.getDefault());
-        final Date date = new Date(timestamp);
-        return date != null ? dateTimeFormat.format(date) : "";
+        return timestamp != null ? dateTimeFormat.format(new Date(timestamp)) : "";
     }
 
     /**
@@ -97,8 +96,7 @@ public final class DateUtil {
     public static String formatTimestamp(final Long timestamp) {
         final SimpleDateFormat dateTimeFormat = new SimpleDateFormat(TSTP);
         dateTimeFormat.setTimeZone(TimeZone.getDefault());
-        final Date date = new Date(timestamp * UNIX_TSTP);
-        return date != null ? dateTimeFormat.format(date) : "";
+        return timestamp != null ? dateTimeFormat.format(new Date(timestamp * UNIX_TSTP)) : "";
     }
 
     /**
@@ -116,7 +114,7 @@ public final class DateUtil {
                 dateTimeFormat.setTimeZone(TimeZone.getDefault());
                 result = dateTimeFormat.parse(day);
             } catch (final ParseException e) {
-                result = null;
+                // ignore it
             }
         }
         return result;

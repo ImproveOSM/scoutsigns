@@ -52,13 +52,13 @@ class StatusFilterPanel extends JPanel {
 
     private static final long serialVersionUID = -4882107014928534768L;
 
-    private static final GridBagConstraints CB_OPEN = new GridBagConstraints(1, 1, 1, 1, 1, 0,
-            GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 5), 0, 0);
-    private static final GridBagConstraints CB_SOLVED = new GridBagConstraints(2, 1, 1, 1, 1, 0,
+    private static final GridBagConstraints CB_OPEN = new GridBagConstraints(0, 0, 1, 1, 0, 0,
+            GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 9), 0, 0);
+    private static final GridBagConstraints CB_SOLVED = new GridBagConstraints(1, 0, 1, 1, 0, 0,
+            GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(0, 7, 0, 5), 0, 0);
+    private static final GridBagConstraints CB_INVALID = new GridBagConstraints(2, 0, 1, 1, 0, 0,
             GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0);
-    private static final GridBagConstraints CB_INVALID = new GridBagConstraints(3, 1, 1, 1, 1, 0,
-            GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0);
-    private static final GridBagConstraints CB_DUPL = new GridBagConstraints(4, 1, 1, 1, 1, 0,
+    private static final GridBagConstraints CB_DUPL = new GridBagConstraints(3, 0, 1, 1, 0, 0,
             GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0);
 
     private JRadioButton cboxOpen;
@@ -86,6 +86,13 @@ class StatusFilterPanel extends JPanel {
      */
     void clearSelection() {
         btnGroup.clearSelection();
+    }
+
+    void enableComponents(final boolean isEnabled) {
+        cboxOpen.setEnabled(isEnabled);
+        cboxSolved.setEnabled(isEnabled);
+        cboxInvalid.setEnabled(isEnabled);
+        cboxDuplicate.setEnabled(isEnabled);
     }
 
     /**

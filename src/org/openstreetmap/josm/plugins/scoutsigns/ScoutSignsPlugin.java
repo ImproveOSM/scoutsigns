@@ -36,7 +36,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import org.openstreetmap.josm.Main;
@@ -60,8 +59,8 @@ import org.openstreetmap.josm.plugins.scoutsigns.gui.details.ScoutSignsDetailsDi
 import org.openstreetmap.josm.plugins.scoutsigns.gui.layer.ScoutSignsLayer;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.TripViewObserver;
+import org.openstreetmap.josm.plugins.scoutsigns.util.InfoDialog;
 import org.openstreetmap.josm.plugins.scoutsigns.util.Util;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ServiceCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.Keys;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
@@ -119,34 +118,24 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, Zoo
                 final BoundingBox bbox = Util.buildBBox(Main.map.mapView);
                 if (bbox != null) {
                     final int zoom = OsmUrlToBounds.getZoom(Main.map.mapView.getRealBounds());
-                    final DataSet result = ServiceHandler.getInstance().searchSigns(bbox, searchFilter, zoom);
+                    final SearchFilter filter =
+                            zoom > ServiceCnf.getInstance().getMaxClusterZoom() ? searchFilter : null;
+                    final DataSet result = ServiceHandler.getInstance().searchSigns(bbox, filter, zoom);
                     SwingUtilities.invokeLater(new Runnable() {
 
                         @Override
                         public void run() {
                             synchronized (this) {
-                                displayClusterInfoDialog(zoom);
+                                new InfoDialog().displayDialog(zoom, prevZoom);
                                 prevZoom = zoom;
                                 updateSelection(result);
                                 dialog.enableButtons(zoom);
-
                                 layer.setDataSet(result);
                                 Main.map.repaint();
                             }
                         }
                     });
                 }
-            }
-        }
-
-        private void displayClusterInfoDialog(final int zoom) {
-            if (Util.shouldDisplayClInfoDialog(zoom, prevZoom)) {
-                final int val =
-                        JOptionPane.showOptionDialog(Main.map.mapView, GuiCnf.getInstance().getInfoClusterTxt(), GuiCnf
-                                .getInstance().getInfoClusterTitle(), JOptionPane.YES_NO_OPTION,
-                                JOptionPane.INFORMATION_MESSAGE, null, null, null);
-                final boolean flag = val == JOptionPane.YES_OPTION;
-                PrefManager.getInstance().saveSuppressClusterInfoFlag(flag);
             }
         }
 
@@ -160,21 +149,14 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, Zoo
     }
 
     private ScoutSignsLayer layer;
-
     private ScoutSignsDetailsDialog dialog;
-
     /** timer for the zoom in/out operations */
     private Timer zoomTimer;
-
 
     /** the filters applied to the search */
     private SearchFilter searchFilter;
 
-
     private int prevZoom;
-
-
-    /* ZoomChangeListener method */
 
     /**
      * Builds a new {@code ScoutSignsPlugin} object. This constructor is automatically invoked by JOSM to bootstrap the
@@ -185,16 +167,16 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, Zoo
     public ScoutSignsPlugin(final PluginInformation info) {
         super(info);
         PrefManager.getInstance().saveSupressErrorFlag(false);
+        PrefManager.getInstance().saveSuppressMapillaryInfoFlag(false);
         searchFilter = PrefManager.getInstance().loadSearchFilter();
     }
 
-
-    /* LayerChangeListener methods */
 
     @Override
     public void activeLayerChange(final Layer layer1, final Layer layer2) {
         // this action is not supported
     }
+
 
     @Override
     public void enterTripView() {
@@ -209,9 +191,6 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, Zoo
         Main.worker.execute(new UpdateThread());
         NavigatableComponent.addZoomChangeListener(this);
     }
-
-
-    /* MouseListener methods */
 
     @Override
     public void layerAdded(final Layer newLayer) {
@@ -234,7 +213,11 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, Zoo
             layer = null;
 
             // unregister listeners
-            removeListeners();
+            NavigatableComponent.removeZoomChangeListener(this);
+            MapView.removeLayerChangeListener(this);
+            Main.map.mapView.removeMouseListener(this);
+            Main.pref.removePreferenceChangeListener(this);
+            PrefManager.getInstance().saveSuppressMapillaryInfoFlag(false);
         }
     }
 
@@ -259,15 +242,19 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, Zoo
 
             if (roadSign != null) {
                 // a road sign was selected
+                if (roadSign.getId() != null) {
+                    final Long id = roadSign.getId();
+                    Main.worker.execute(new Runnable() {
 
-                final Long id = roadSign.getId();
-                Main.worker.execute(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        retrieveSign(id);
-                    }
-                });
+                        @Override
+                        public void run() {
+                            retrieveSign(id);
+                        }
+                    });
+                } else {
+                    dialog.updateData(roadSign);
+                    Main.map.repaint();
+                }
             } else if (!multiSelect) {
                 // un-select previously selected road sign
 
@@ -288,16 +275,10 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, Zoo
         // this action is not supported
     }
 
-
-    /* PreferenceChangedListener method */
-
     @Override
     public void mouseExited(final MouseEvent event) {
         // this action is not supported
     }
-
-
-    /* StatusChangeObserver method */
 
     @Override
     public void mousePressed(final MouseEvent event) {
@@ -308,8 +289,6 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, Zoo
     public void mouseReleased(final MouseEvent event) {
         // this action is not supported
     }
-
-    /* TripViewObserver implementation */
 
     @Override
     public void preferenceChanged(final PreferenceChangeEvent event) {
@@ -325,38 +304,25 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, Zoo
     public void statusChanged(final String ursername, final String text, final Status status, final Long duplicateOf) {
         final List<RoadSign> selRoadSigns = layer.getSelRoadSigns();
         if (!selRoadSigns.isEmpty()) {
-            if (selRoadSigns.size() > 1) {
-                // add comment/ change status of multiple road signs
-                Main.worker.execute(new Runnable() {
+            Main.worker.execute(new Runnable() {
 
-                    @Override
-                    public void run() {
+                @Override
+                public void run() {
+                    Long signId;
+                    if (selRoadSigns.size() > 1) {
                         ServiceHandler.getInstance().addComments(selRoadSigns, ursername, text, status, duplicateOf);
 
                         // update details of last road sign
-                        final Long lastId = selRoadSigns.get(selRoadSigns.size() - 1).getId();
-                        retrieveSign(lastId);
-                    }
-                });
-            } else {
-                // add comment/change status of a single road sign
-                final Long signId = selRoadSigns.get(0).getId();
-                Main.worker.execute(new Runnable() {
-
-                    @Override
-                    public void run() {
+                        signId = selRoadSigns.get(selRoadSigns.size() - 1).getId();
+                    } else {
+                        signId = selRoadSigns.get(0).getId();
                         ServiceHandler.getInstance().addComment(signId, ursername, text, status, duplicateOf);
-
-                        // update details of the selected road sign
-                        retrieveSign(signId);
                     }
-                });
-            }
+                    retrieveSign(signId);
+                }
+            });
         }
     }
-
-
-    /* local methods & classes */
 
     @Override
     public void zoomChanged() {
@@ -368,7 +334,6 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, Zoo
 
                     @Override
                     public void actionPerformed(final ActionEvent e) {
-
                         Main.worker.execute(new UpdateThread());
                     }
                 });
@@ -391,14 +356,6 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, Zoo
         dialog.registerStatusChangeObserver(this);
         dialog.registerTripViewObserver(this);
     }
-
-    private void removeListeners() {
-        NavigatableComponent.removeZoomChangeListener(this);
-        MapView.removeLayerChangeListener(this);
-        Main.map.mapView.removeMouseListener(this);
-        Main.pref.removePreferenceChangeListener(this);
-    }
-
 
     private void retrieveSign(final Long signId) {
         final RoadSign roadSign = ServiceHandler.getInstance().retrieveSign(signId);

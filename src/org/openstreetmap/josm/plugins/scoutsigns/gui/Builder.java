@@ -38,6 +38,7 @@ import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeListener;
 import java.util.Calendar;
@@ -47,9 +48,11 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.JLabel;
@@ -61,6 +64,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -113,6 +117,7 @@ public final class Builder {
      *
      * @param action the {@code AbstractAction} to be executed when the button is clicked
      * @param icon the {@code Icon} to be displayed on the button
+     * @param tooltip the tooltip to display on mouse hover
      * @return a {@code JButton}
      */
     public static JButton buildButton(final AbstractAction action, final Icon icon, final String tooltip) {
@@ -141,6 +146,25 @@ public final class Builder {
         btn.setText(text);
         btn.setFocusable(false);
         return btn;
+    }
+
+    /**
+     * Builds a {@code JCheckBox} with the given arguments.
+     *
+     * @param listener the listener to be executed when the check box is selected
+     * @param text the text to be displayed
+     * @param isSelected specifies if the check-box is selected or not
+     * @return a {@code JCheckBox} object
+     */
+    public static JCheckBox buildCheckBox(final ActionListener listener, final String text, final boolean isSelected) {
+        final JCheckBox cbbox = new JCheckBox(text);
+        if (listener != null) {
+            cbbox.addActionListener(listener);
+        }
+        cbbox.setFont(FontUtil.PLAIN_12);
+        cbbox.setFocusPainted(false);
+        cbbox.setSelected(isSelected);
+        return cbbox;
     }
 
     /**
@@ -242,7 +266,7 @@ public final class Builder {
      * @param text the text which will be shown on the label
      * @param tooltip the label's tool tip
      * @param hAligment the horizontal alignment
-     * @param textColor the text color
+     * @param txtColor the text color
      * @param font the font of the label's text
      * @return a new {@code JLabel} object
      */
@@ -261,32 +285,38 @@ public final class Builder {
     }
 
     /***
-     * Builds a {@code JList} with the given components.
+     * Builds a {@code JList} with the given components. The created list will be horizontal wrapped and supports
+     * multiple interval selection.
      *
      * @param data the data to be added into the list
-     * @param selModel the selection model
-     * @param orientation the list orientation
-     * @param selData the selected data
+     * @param renderer a custom list cell renderer
+     * @param selection a list of elements to be selected
      * @return a {@code JList} object
      */
-    public static <T> JList<T>
-            buildList(final List<T> data, final int selModel, final int orientation, final T selData) {
+    public static <T> JList<T> buildList(final List<T> data, final DefaultListCellRenderer renderer,
+            final List<T> selection) {
         final DefaultListModel<T> model = new DefaultListModel<>();
         for (final T elem : data) {
             model.addElement(elem);
         }
         final JList<T> list = new JList<>(model);
         list.setFont(FontUtil.PLAIN_12);
-        list.setLayoutOrientation(orientation);
+        list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         list.setVisibleRowCount(-1);
-        list.setSelectionMode(selModel);
+        list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        list.setCellRenderer(renderer);
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
-                if (selData != null) {
-                    list.setSelectedValue(selData, true);
+                if (selection != null && !selection.isEmpty()) {
+                    for (final T sel : selection) {
+                        final int idx = model.indexOf(sel);
+                        list.addSelectionInterval(idx, idx);
+                    }
                     list.ensureIndexIsVisible(list.getSelectedIndex());
+                    list.scrollRectToVisible(list.getCellBounds(list.getMinSelectionIndex(),
+                            list.getMaxSelectionIndex()));
                 }
             }
         });
@@ -298,6 +328,7 @@ public final class Builder {
      *
      * @param text the text to be displayed
      * @param icon the icon to be displayed
+     * @param tooltip the tool tip to be displayed on mouse hover
      * @param listener the {@code MouseListener} associated with this item
      * @param enabled if true the item is enabled, if false it is disabled
      * @return a {@code JMenuItem}
@@ -369,6 +400,7 @@ public final class Builder {
      * Builds a {@code JTextArea} with the given arguments.
      *
      * @param txt the text to be displayed in the text component
+     * @param editable specifies if the text can be edited or not
      * @param font the text's font
      * @param bgColor the background color
      * @param bounds the the dimension and location of the label

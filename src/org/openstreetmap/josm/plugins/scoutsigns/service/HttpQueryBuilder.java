@@ -31,11 +31,15 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.TimestampFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Application;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Device;
+import org.openstreetmap.josm.plugins.scoutsigns.entity.Source;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ServiceCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.http.HttpUtil;
@@ -73,16 +77,16 @@ class HttpQueryBuilder {
         addBBoxFilter(bbox);
         addZoomFilter(zoom);
 
-        // add optional filters
+        // add filters
         if (filter != null) {
+            addSourceFilter(filter.getSources());
             addTimestampFilter(filter.getTimestampFilter());
             addStatusFilter(filter.getStatus());
-            addTypeFilter(filter.getType());
+            addTypeFilter(filter.getSources(), filter.getTypes());
             addDuplicateFilter(filter.getDuplicateOf());
             addConfidenceFilter(filter.getConfidence());
             addApplicationCtiteria(filter.getApp());
             addDeviceFilter(filter.getDevice());
-
             addUsernameFilter(filter.getUsername());
         }
     }
@@ -180,6 +184,16 @@ class HttpQueryBuilder {
         query.append(Constants.ID).append(EQ).append(id);
     }
 
+    private void addSourceFilter(final List<Source> sources) {
+        final List<String> sourceList = new ArrayList<>();
+        for (final Source source : (sources == null || sources.isEmpty() ? Arrays.asList(Source.values()) : sources)) {
+            sourceList.add(source.name());
+        }
+        query.append(AND);
+        query.append(Constants.SOURCE).append(EQ);
+        query.append(HttpUtil.utf8Encode(sourceList));
+    }
+
     private void addStatusFilter(final Status status) {
         if (status != null) {
             query.append(AND);
@@ -203,11 +217,16 @@ class HttpQueryBuilder {
         }
     }
 
-    private void addTypeFilter(final String type) {
-        if (type != null && !type.isEmpty()) {
+    private void addTypeFilter(final List<Source> sources, final List<String> types) {
+        if (types != null && !types.isEmpty()) {
             query.append(AND);
-            query.append(Constants.TYPE).append(EQ);
-            query.append(HttpUtil.utf8Encode(type));
+            query.append(Constants.TYPES).append(EQ);
+            query.append(HttpUtil.utf8Encode(types));
+        } else if (sources == null || sources.size() > 1) {
+            // request only common types
+            query.append(AND);
+            query.append(Constants.TYPES).append(EQ);
+            query.append(HttpUtil.utf8Encode(ServiceCnf.getInstance().getCommonTypes()));
         }
     }
 

@@ -44,7 +44,6 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.service.deserializer.CarPositionDeserializer;
 import org.openstreetmap.josm.plugins.scoutsigns.service.deserializer.LatLonDeserializer;
 import org.openstreetmap.josm.plugins.scoutsigns.service.deserializer.SignPositionDeserializer;
-import org.openstreetmap.josm.plugins.scoutsigns.service.deserializer.StatusDeserializer;
 import org.openstreetmap.josm.plugins.scoutsigns.service.entity.Root;
 import org.openstreetmap.josm.plugins.scoutsigns.util.http.HttpConnector;
 import org.openstreetmap.josm.plugins.scoutsigns.util.http.HttpException;
@@ -73,7 +72,6 @@ public class FcdSignService {
         builder.registerTypeAdapter(SignPosition.class, new SignPositionDeserializer());
         builder.registerTypeAdapter(CarPosition.class, new CarPositionDeserializer());
         builder.registerTypeAdapter(LatLon.class, new LatLonDeserializer());
-        builder.registerTypeAdapter(Status.class, new StatusDeserializer());
         this.gson = builder.create();
     }
 
@@ -145,6 +143,7 @@ public class FcdSignService {
     public DataSet searchSigns(final BoundingBox bbox, final SearchFilter filter, final int zoom)
             throws FcdSignServiceException {
         final String url = new HttpQueryBuilder(bbox, filter, zoom).build(Constants.SEARCH_SIGNS);
+        System.out.println(url);
         final Root root = executeGet(url);
         verifyStatus(root);
         return new DataSet(root.getRoadSigns(), root.getRoadSignClusters());
