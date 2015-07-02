@@ -110,44 +110,8 @@ class RoadSignFilterPanel extends JPanel {
 
         @Override
         public void actionPerformed(final ActionEvent event) {
-            List<String> types;
-            DefaultListCellRenderer renderer;
-            final List<Source> sources = new ArrayList<>();
-            if (cbbScout.isSelected() && !cbbMapillary.isSelected()) {
-                pnlStatus.enableComponents(true);
-                txtDupl.setEnabled(true);
-                txtUsername.setEnabled(true);
-                txtOsName.setEnabled(true);
-                txtOsVers.setEnabled(true);
-                txtAppName.setEnabled(true);
-                txtAppVers.setEnabled(true);
-
-                // reload scout types
-                sources.add(Source.SCOUT);
-                types = ServiceCnf.getInstance().getScoutTypes();
-                renderer = new TypeListCellRenderer(Source.SCOUT);
-            } else {
-                // enable common filters, time interval, type, confidence
-                pnlStatus.enableComponents(false);
-                txtDupl.setEnabled(false);
-                txtUsername.setEnabled(false);
-                txtOsName.setEnabled(false);
-                txtOsVers.setEnabled(false);
-                txtAppName.setEnabled(false);
-                txtAppVers.setEnabled(false);
-
-                if (cbbMapillary.isSelected() && !cbbScout.isSelected()) {
-                    // reload Mapillary types
-                    sources.add(Source.MAPILLARY);
-                    types = ServiceCnf.getInstance().getMapillaryTypes();
-                    renderer = new TypeListCellRenderer(Source.MAPILLARY);
-                } else {
-                    types = ServiceCnf.getInstance().getCommonTypes();
-                    renderer = new TypeListCellRenderer(null);
-                }
-            }
-            listTypes = Builder.buildList(types, renderer, null);
-            cmpTypes.getViewport().setView(listTypes);
+            reloadTypes();
+            enableComponents();
             repaint();
         }
     }
@@ -157,6 +121,7 @@ class RoadSignFilterPanel extends JPanel {
     private static final Dimension TYPE_LIST_SIZE = new Dimension(300, 200);
 
     private JCheckBox cbbScout;
+
     private JCheckBox cbbMapillary;
     private JXDatePicker pickerTo;
     private JXDatePicker pickerFrom;
@@ -171,7 +136,6 @@ class RoadSignFilterPanel extends JPanel {
     private JTextField txtAppName;
     private JTextField txtAppVers;
 
-
     /**
      * Builds a new road sign filter panel.
      */
@@ -180,16 +144,18 @@ class RoadSignFilterPanel extends JPanel {
 
         // create and add panel components
         final SearchFilter filter = PrefManager.getInstance().loadSearchFilter();
+        addSourceFilter(filter.getSources());
         addTimeIntervalFilter(filter.getTimestampFilter());
-        addStatusFilter(filter.getStatus());
         addTypeFilter(filter.getSources(), filter.getTypes());
-        addDuplicateFilter(filter.getDuplicateOf());
         addConfidenceFilter(filter.getConfidence());
+        addStatusFilter(filter.getStatus());
+        addDuplicateFilter(filter.getDuplicateOf());
         addUsernameFilter(filter.getUsername());
         addDeviceFilter(filter.getDevice());
         addAppFilter(filter.getApp());
-        addSourceFilter(filter.getSources());
+        enableComponents();
     }
+
 
     /**
      * Returns the selected filters. If the user's input is invalid the method return null.
@@ -227,14 +193,11 @@ class RoadSignFilterPanel extends JPanel {
     void resetFilters() {
         cbbScout.setSelected(true);
         cbbMapillary.setSelected(true);
-        listTypes = Builder.buildList(ServiceCnf.getInstance().getCommonTypes(), new TypeListCellRenderer(null), null);
-        cmpTypes.getViewport().setView(listTypes);
         pickerFrom.getEditor().setText("");
         pickerFrom.setDate(null);
         pickerTo.getEditor().setText("");
         pickerTo.setDate(null);
         pnlStatus.clearSelection();
-        listTypes.clearSelection();
         txtDupl.setText("");
         txtConf.setText("" + SearchFilter.DEF_CONFIDENCE);
         txtUsername.setText("");
@@ -242,8 +205,10 @@ class RoadSignFilterPanel extends JPanel {
         txtAppVers.setText("");
         txtOsName.setText("");
         txtOsVers.setText("");
-        repaint();
+        reloadTypes();
+        enableComponents();
     }
+
 
     private void addAppFilter(final Application application) {
         add(Builder.buildLabel(GuiCnf.getInstance().getLblApp(), FontUtil.BOLD_12, null), Constraints.LBL_APP);
@@ -258,7 +223,6 @@ class RoadSignFilterPanel extends JPanel {
         txtAppVers = Builder.buildTextField(vers, null, Color.white);
         add(txtAppVers, Constraints.TXT_APP_VERS);
     }
-
     private void addConfidenceFilter(final Short confidence) {
         add(Builder.buildLabel(GuiCnf.getInstance().getLblConf(), FontUtil.BOLD_12, null), Constraints.LBL_CONF);
         final String txt = confidence != null ? confidence.toString() : "";
@@ -346,7 +310,6 @@ class RoadSignFilterPanel extends JPanel {
         add(pickerTo, Constraints.CBB_END);
     }
 
-
     private void addTypeFilter(final List<Source> sources, final List<String> selectedTypes) {
         add(Builder.buildLabel(GuiCnf.getInstance().getLblType(), FontUtil.BOLD_12, null), Constraints.LBL_TYPE);
 
@@ -369,12 +332,34 @@ class RoadSignFilterPanel extends JPanel {
         add(cmpTypes, Constraints.LIST_TYPE);
     }
 
-
     private void addUsernameFilter(final String username) {
         add(Builder.buildLabel(GuiCnf.getInstance().getLblUsername(), FontUtil.BOLD_12, null), Constraints.LBL_USERNAME);
         txtUsername = Builder.buildTextField(username, null, Color.white);
         add(txtUsername, Constraints.TXT_USERNAME);
     }
+
+
+    private void enableComponents() {
+        if (cbbScout.isSelected() && !cbbMapillary.isSelected()) {
+            pnlStatus.enableComponents(true);
+            txtDupl.setEnabled(true);
+            txtUsername.setEnabled(true);
+            txtOsName.setEnabled(true);
+            txtOsVers.setEnabled(true);
+            txtAppName.setEnabled(true);
+            txtAppVers.setEnabled(true);
+        } else {
+            // enable common filters, time interval, type, confidence
+            pnlStatus.enableComponents(false);
+            txtDupl.setEnabled(false);
+            txtUsername.setEnabled(false);
+            txtOsName.setEnabled(false);
+            txtOsVers.setEnabled(false);
+            txtAppName.setEnabled(false);
+            txtAppVers.setEnabled(false);
+        }
+    }
+
 
     private List<Source> getSelectedSources() {
         final List<Source> sources = new ArrayList<Source>();
@@ -385,6 +370,27 @@ class RoadSignFilterPanel extends JPanel {
             sources.add(Source.MAPILLARY);
         }
         return sources;
+    }
+
+    private void reloadTypes() {
+        List<String> types;
+        DefaultListCellRenderer renderer;
+        if (cbbScout.isSelected() && !cbbMapillary.isSelected()) {
+            // reload scout types
+            types = ServiceCnf.getInstance().getScoutTypes();
+            renderer = new TypeListCellRenderer(Source.SCOUT);
+        } else {
+            if (cbbMapillary.isSelected() && !cbbScout.isSelected()) {
+                // reload Mapillary types
+                types = ServiceCnf.getInstance().getMapillaryTypes();
+                renderer = new TypeListCellRenderer(Source.MAPILLARY);
+            } else {
+                types = ServiceCnf.getInstance().getCommonTypes();
+                renderer = new TypeListCellRenderer(null);
+            }
+        }
+        listTypes = Builder.buildList(types, renderer, null);
+        cmpTypes.getViewport().setView(listTypes);
     }
 
     private boolean verifyInput() {
