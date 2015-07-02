@@ -68,7 +68,7 @@ public final class PrefManager {
     }
 
     /**
-     * Loads the OSM username from the global preference file.
+     * Loads the OSM user name from the global preference file.
      *
      * @return a {@code String}
      */
@@ -143,6 +143,11 @@ public final class PrefManager {
         return Main.pref.getBoolean(Keys.ERROR_SUPPRESS);
     }
 
+    /**
+     * Loads the suppress Mapillary info flag.
+     *
+     * @return a boolean value
+     */
     public boolean loadSupressMapillaryInfoFlag() {
         final String flagVal = Main.pref.get(Keys.MAPILLARY_INFO_SUPPRESS);
         return flagVal.isEmpty() ? false : new Boolean(flagVal);
@@ -237,6 +242,12 @@ public final class PrefManager {
         Main.pref.put(Keys.CLUSTER_INFO_SUPPRESS, value);
     }
 
+    /**
+     * Saves the given value to the global preference file. Based on this value an info message is displayed to the user
+     * regarding Mapillary data.
+     *
+     * @param value a boolean value
+     */
     public void saveSuppressMapillaryInfoFlag(final boolean value) {
         Main.pref.put(Keys.MAPILLARY_INFO_SUPPRESS, value);
     }

@@ -64,7 +64,7 @@ class ButtonPanel extends JPanel {
             } else {
                 // apply filters
                 final PrefManager prefManager = PrefManager.getInstance();
-                final SearchFilter newFilter = parent.getSelectedFilters();
+                final SearchFilter newFilter = parent.selectedFilters();
                 if (newFilter != null) {
                     final SearchFilter oldFilter = prefManager.loadSearchFilter();
                     if (oldFilter.equals(newFilter)) {

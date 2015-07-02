@@ -70,18 +70,18 @@ public class RoadSignFilterDialog extends ModalDialog {
     }
 
     /**
-     * Returns the selected search filters.
-     *
-     * @return {@code SearchFilter} object
-     */
-    SearchFilter getSelectedFilters() {
-        return pnlFilter.getSelectedFilter();
-    }
-
-    /**
      * Resets the search filters to the default ones.
      */
     void resetFilters() {
         pnlFilter.resetFilters();
+    }
+
+    /**
+     * Returns the selected search filters.
+     *
+     * @return {@code SearchFilter} object
+     */
+    SearchFilter selectedFilters() {
+        return pnlFilter.selectedFilters();
     }
 }

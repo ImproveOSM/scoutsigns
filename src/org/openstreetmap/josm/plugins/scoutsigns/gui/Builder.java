@@ -180,9 +180,9 @@ public final class Builder {
      * @return a {@code JXDatePicker} object
      */
     public static JXDatePicker
-            buildDatePicker(final Icon icon, final AbstractFormatter formatter,
-                    final PropertyChangeListener changeListener, final Date lowerDate, final Date upperDate,
-                    final Date selDate) {
+    buildDatePicker(final Icon icon, final AbstractFormatter formatter,
+            final PropertyChangeListener changeListener, final Date lowerDate, final Date upperDate,
+            final Date selDate) {
         final JXDatePicker picker = new JXDatePicker();
 
         picker.setPreferredSize(PICKER_DIM);

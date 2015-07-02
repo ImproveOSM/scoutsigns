@@ -126,8 +126,4 @@ public final class ServiceCnf {
     public String getServiceUrl() {
         return serviceUrl;
     }
-
-    public void setSearchDelay(final int searchDelay) {
-        this.searchDelay = searchDelay;
-    }
 }

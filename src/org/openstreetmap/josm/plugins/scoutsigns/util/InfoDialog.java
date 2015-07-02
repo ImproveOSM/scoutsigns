@@ -26,7 +26,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Beata
+ * Created on Jul 1, 2015 by Beata
+ * Modified on $Date$
+ *          by $Author$
  */
 package org.openstreetmap.josm.plugins.scoutsigns.util;
 
@@ -37,8 +39,21 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ServiceCnf;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
 
 
+/**
+ * Helper class, displays a
+ */
 public final class InfoDialog {
 
+    /**
+     * Displays a dialog window with the corresponding message for the following situations:
+     * <ul>
+     * <li>user enters cluster view from previous road sign view - info regarding cluster view is displayed</li>
+     * <li>user is in cluster view - info regarding Mapillary road signs is displayeda</li>
+     * </ul>
+     *
+     * @param zoom the current zoom level
+     * @param prevZoom the previous zom level
+     */
     public void displayDialog(final int zoom, final int prevZoom) {
         final int maxZoom = ServiceCnf.getInstance().getMaxClusterZoom();
         if (!PrefManager.getInstance().loadSuppressClusterInfoFlag() && (zoom <= maxZoom && zoom < prevZoom)) {
