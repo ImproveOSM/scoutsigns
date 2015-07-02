@@ -78,7 +78,7 @@ class HttpQueryBuilder {
         addZoomFilter(zoom);
 
         // add filters
-        if (filter != null) {
+        if (zoom > ServiceCnf.getInstance().getMaxClusterZoom() && filter != null) {
             addSourceFilter(filter.getSources());
             addTimestampFilter(filter.getTimestampFilter());
             addStatusFilter(filter.getStatus());
