@@ -117,19 +117,16 @@ public final class TypeIconFactory {
         if (source == null) {
             icon = commonSignTypes.get(type);
             if (icon == null) {
-                System.out.println(type);
                 icon = defaultScoutType;
             }
         } else if (source == Source.MAPILLARY) {
             icon = mapillarySignTypes.get(type);
             if (icon == null) {
-                System.out.println(type);
                 icon = defaultMapillaryType;
             }
         } else {
             icon = scoutSignTypes.get(type);
             if (icon == null) {
-                System.out.println(type);
                 icon = defaultScoutType;
             }
         }

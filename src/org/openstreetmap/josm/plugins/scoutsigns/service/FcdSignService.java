@@ -143,7 +143,6 @@ public class FcdSignService {
     public DataSet searchSigns(final BoundingBox bbox, final SearchFilter filter, final int zoom)
             throws FcdSignServiceException {
         final String url = new HttpQueryBuilder(bbox, filter, zoom).build(Constants.SEARCH_SIGNS);
-        System.out.println(url);
         final Root root = executeGet(url);
         verifyStatus(root);
         return new DataSet(root.getRoadSigns(), root.getRoadSignClusters());

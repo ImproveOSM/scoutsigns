@@ -270,6 +270,8 @@ class ButtonPanel extends JPanel implements TripViewObservable {
                 imgFrame.update(roadSign);
                 imgFrame.repaint();
             }
+        } else if (imgFrame != null && imgFrame.isVisible()) {
+            imgFrame.dispose();
         }
         enableRoadSignActions();
     }

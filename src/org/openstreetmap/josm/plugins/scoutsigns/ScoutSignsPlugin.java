@@ -74,7 +74,7 @@ import org.openstreetmap.josm.tools.OsmUrlToBounds;
  * @version $Revision$
  */
 public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, ZoomChangeListener, MouseListener,
-        PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
+PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
 
     /*
      * Listens to toggle dialog button actions.
@@ -120,21 +120,21 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, Zoo
                     final int zoom = OsmUrlToBounds.getZoom(Main.map.mapView.getRealBounds());
                     final SearchFilter filter =
                             zoom > ServiceCnf.getInstance().getMaxClusterZoom() ? searchFilter : null;
-                    final DataSet result = ServiceHandler.getInstance().searchSigns(bbox, filter, zoom);
-                    SwingUtilities.invokeLater(new Runnable() {
+                            final DataSet result = ServiceHandler.getInstance().searchSigns(bbox, filter, zoom);
+                            SwingUtilities.invokeLater(new Runnable() {
 
-                        @Override
-                        public void run() {
-                            synchronized (this) {
-                                new InfoDialog().displayDialog(zoom, prevZoom);
-                                prevZoom = zoom;
-                                updateSelection(result);
-                                dialog.enableButtons(zoom);
-                                layer.setDataSet(result);
-                                Main.map.repaint();
-                            }
-                        }
-                    });
+                                @Override
+                                public void run() {
+                                    synchronized (this) {
+                                        new InfoDialog().displayDialog(zoom, prevZoom);
+                                        prevZoom = zoom;
+                                        updateSelection(result);
+                                        dialog.enableButtons(zoom);
+                                        layer.setDataSet(result);
+                                        Main.map.repaint();
+                                    }
+                                }
+                            });
                 }
             }
         }
@@ -143,7 +143,9 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, Zoo
             if (!result.getRoadSignClusters().isEmpty()) {
                 dialog.updateData(null);
             } else if (layer.lastSelRoadSign() != null) {
-                dialog.updateData(layer.lastSelRoadSign());
+                final RoadSign roadSign =
+                        result.getRoadSigns().contains(layer.lastSelRoadSign()) ? layer.lastSelRoadSign() : null;
+                dialog.updateData(roadSign);
             }
         }
     }
