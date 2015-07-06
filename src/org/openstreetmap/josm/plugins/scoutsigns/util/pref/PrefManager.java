@@ -84,18 +84,12 @@ public final class PrefManager {
      */
     public SearchFilter loadSearchFilter() {
         final Collection<String> sourceNames = Main.pref.getCollection(Keys.SOURCE);
-        List<Source> sources = new ArrayList<Source>();
+        final List<Source> sources = new ArrayList<Source>();
         if (sourceNames != null && !sourceNames.isEmpty()) {
-            sources = new ArrayList<Source>();
             for (final String name : sourceNames) {
                 sources.add(Source.valueOf(name));
             }
-        } else {
-            // default source filter
-            sources.add(Source.SCOUT);
-            sources.add(Source.MAPILLARY);
         }
-
         final List<String> types = (List<String>) Main.pref.getCollection(Keys.TYPE);
         final String statusStr = Main.pref.get(Keys.STATUS);
         final String confidenceStr = Main.pref.get(Keys.CONFIDENCE);
