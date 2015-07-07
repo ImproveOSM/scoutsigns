@@ -222,7 +222,7 @@ class HttpQueryBuilder {
             query.append(AND);
             query.append(Constants.TYPES).append(EQ);
             query.append(HttpUtil.utf8Encode(types));
-        } else if (sources == null || sources.size() > 1) {
+        } else if (sources == null || sources.isEmpty() || sources.size() > 1) {
             // request only common types
             query.append(AND);
             query.append(Constants.TYPES).append(EQ);

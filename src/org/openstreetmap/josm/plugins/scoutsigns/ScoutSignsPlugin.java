@@ -120,21 +120,21 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
                     final int zoom = OsmUrlToBounds.getZoom(Main.map.mapView.getRealBounds());
                     final SearchFilter filter =
                             zoom > ServiceCnf.getInstance().getMaxClusterZoom() ? searchFilter : null;
-                            final DataSet result = ServiceHandler.getInstance().searchSigns(bbox, filter, zoom);
-                            SwingUtilities.invokeLater(new Runnable() {
+                    final DataSet result = ServiceHandler.getInstance().searchSigns(bbox, filter, zoom);
+                    SwingUtilities.invokeLater(new Runnable() {
 
-                                @Override
-                                public void run() {
-                                    synchronized (this) {
-                                        new InfoDialog().displayDialog(zoom, prevZoom);
-                                        prevZoom = zoom;
-                                        updateSelection(result);
-                                        dialog.enableButtons(zoom);
-                                        layer.setDataSet(result);
-                                        Main.map.repaint();
-                                    }
-                                }
-                            });
+                        @Override
+                        public void run() {
+                            synchronized (this) {
+                                new InfoDialog().displayDialog(zoom, prevZoom);
+                                prevZoom = zoom;
+                                updateSelection(result);
+                                dialog.enableButtons(zoom);
+                                layer.setDataSet(result);
+                                Main.map.repaint();
+                            }
+                        }
+                    });
                 }
             }
         }
