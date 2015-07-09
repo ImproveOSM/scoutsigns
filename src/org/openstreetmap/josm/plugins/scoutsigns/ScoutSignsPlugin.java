@@ -74,7 +74,7 @@ import org.openstreetmap.josm.tools.OsmUrlToBounds;
  * @version $Revision$
  */
 public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, ZoomChangeListener, MouseListener,
-PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
+        PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
 
     /*
      * Listens to toggle dialog button actions.
@@ -197,8 +197,6 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
     @Override
     public void layerAdded(final Layer newLayer) {
         if (newLayer instanceof ScoutSignsLayer) {
-            Main.map.mapView.moveLayer(newLayer, 0);
-            Main.map.mapView.setActiveLayer(newLayer);
             zoomChanged();
         }
     }
@@ -206,20 +204,28 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
     @Override
     public void layerRemoved(final Layer currentLayer) {
         if (currentLayer instanceof ScoutSignsLayer) {
-            // remove the layer & toggle dialog
-            Main.map.mapView.removeLayer(layer);
-            Main.map.remove(dialog);
-            dialog.getButton().setSelected(false);
-            dialog.setVisible(false);
-            dialog.destroy();
-            layer = null;
-
+            
             // unregister listeners
             NavigatableComponent.removeZoomChangeListener(this);
             MapView.removeLayerChangeListener(this);
             Main.map.mapView.removeMouseListener(this);
             Main.pref.removePreferenceChangeListener(this);
             PrefManager.getInstance().saveSuppressMapillaryInfoFlag(false);
+
+            // remove the layer & toggle dialog
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+
+                    Main.map.mapView.removeLayer(layer);
+                    Main.map.remove(dialog);
+                    dialog.getButton().setSelected(false);
+                    dialog.setVisible(false);
+                    dialog.destroy();
+                    layer = null;
+                }
+            });
         }
     }
 
