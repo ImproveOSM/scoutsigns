@@ -204,7 +204,7 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, Zoo
     @Override
     public void layerRemoved(final Layer currentLayer) {
         if (currentLayer instanceof ScoutSignsLayer) {
-            
+
             // unregister listeners
             NavigatableComponent.removeZoomChangeListener(this);
             MapView.removeLayerChangeListener(this);
@@ -212,13 +212,11 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, Zoo
             Main.pref.removePreferenceChangeListener(this);
             PrefManager.getInstance().saveSuppressMapillaryInfoFlag(false);
 
-            // remove the layer & toggle dialog
+            // remove toggle dialog
             SwingUtilities.invokeLater(new Runnable() {
 
                 @Override
                 public void run() {
-
-                    Main.map.mapView.removeLayer(layer);
                     Main.map.remove(dialog);
                     dialog.getButton().setSelected(false);
                     dialog.setVisible(false);
