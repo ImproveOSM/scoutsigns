@@ -1,16 +1,3 @@
-/*
- * Copyright (c) 2014 SKOBBLER SRL.
- * Cuza Voda 1, Cluj-Napoca, Cluj, 400107, Romania
- * All rights reserved.
- *
- * This software is the confidential and proprietary information of SKOBBLER SRL
- * ("Confidential Information"). You shall not disclose such Confidential
- * Information and shall use it only in accordance with the terms of the license
- * agreement you entered into with SKOBBLER SRL.
- *
- * Created on Jul 29, 2014 by Bea
- * Modified on $DateTime$ by $Author$
- */
 package org.openstreetmap.josm.plugins.scoutsigns.util.cnf;
 
 import java.util.List;

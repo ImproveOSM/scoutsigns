@@ -1,34 +1,3 @@
-/*
- * Copyright (c) 2014, skobbler GmbH
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 3. Neither the name of the project nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * Created on Sep 24, 2014 by Beata
- * Modified on $DateTime$ by $Author$
- */
 package org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter;
 
 import java.awt.Color;
@@ -159,58 +128,6 @@ class RoadSignFilterPanel extends JPanel {
     }
 
 
-    /**
-     * Resets the filters to the default one.
-     */
-    void resetFilters() {
-        cbbScout.setSelected(true);
-        cbbMapillary.setSelected(true);
-        pickerFrom.getEditor().setText("");
-        pickerFrom.setDate(null);
-        pickerTo.getEditor().setText("");
-        pickerTo.setDate(null);
-        pnlStatus.clearSelection();
-        txtDupl.setText("");
-        txtConf.setText("" + SearchFilter.DEF_CONFIDENCE);
-        txtUsername.setText("");
-        txtAppName.setText("");
-        txtAppVers.setText("");
-        txtOsName.setText("");
-        txtOsVers.setText("");
-        reloadTypes();
-        enableComponents();
-    }
-
-    /**
-     * Returns the selected filters. If the user's input is invalid the method return null.
-     *
-     * @return a {@code SearchFilter} object.
-     */
-    SearchFilter selectedFilters() {
-        // verify text inputs
-        SearchFilter filter = null;
-        if (verifyInput()) {
-            final Long from = pickerFrom.getDate() != null ? pickerFrom.getDate().getTime() : null;
-            final Long to = pickerTo.getDate() != null ? pickerTo.getDate().getTime() : null;
-            final Status status = pnlStatus.getSelection();
-            final String duplicateStr = txtDupl.getText().trim();
-            final Long duplicate = !duplicateStr.isEmpty() ? Long.parseLong(duplicateStr) : null;
-            final String confidenceStr = txtConf.getText().trim();
-            final Short confidence = !confidenceStr.isEmpty() ? Short.parseShort(confidenceStr) : null;
-            final String appName = txtAppName.getText().trim();
-            final String appVersion = txtAppVers.getText().trim();
-            final String osName = txtOsName.getText().trim();
-            final String osVersion = txtOsVers.getText().trim();
-            final String username = txtUsername.getText().trim();
-            final List<Source> sources = selectedSources();
-            filter =
-                    new SearchFilter(sources, new TimestampFilter(from, to), listTypes.getSelectedValuesList(), status,
-                            duplicate, confidence, new Application(appName, appVersion), new Device(osName, osVersion),
-                            username);
-        }
-        return filter;
-    }
-
     private void addAppFilter(final Application application) {
         add(Builder.buildLabel(GuiCnf.getInstance().getLblApp(), FontUtil.BOLD_12, null), Constraints.LBL_APP);
         String name = "";
@@ -264,9 +181,8 @@ class RoadSignFilterPanel extends JPanel {
             mapillarySel = sources.contains(Source.MAPILLARY);
         }
         cbbScout = Builder.buildCheckBox(new SourceSelectionListener(), Source.SCOUT.name().toLowerCase(), scoutSel);
-        cbbMapillary =
-                Builder.buildCheckBox(new SourceSelectionListener(), Source.MAPILLARY.name().toLowerCase(),
-                        mapillarySel);
+        cbbMapillary = Builder.buildCheckBox(new SourceSelectionListener(), Source.MAPILLARY.name().toLowerCase(),
+                mapillarySel);
         final JPanel pnl = new JPanel(new GridBagLayout());
         pnl.add(cbbScout, Constraints.CBB_SCOUT);
         pnl.add(cbbMapillary, Constraints.CBB_MAPILLARY);
@@ -292,20 +208,18 @@ class RoadSignFilterPanel extends JPanel {
             upper = tstampFilter.getTo() != null ? new Date(tstampFilter.getTo()) : Calendar.getInstance().getTime();
         }
 
-        pickerFrom =
-                Builder.buildDatePicker(IconCnf.getInstance().getCalendarIcon(), new DateFormatter(),
-                        new DateFromChangeListener(), null, upper, lower);
+        pickerFrom = Builder.buildDatePicker(IconCnf.getInstance().getCalendarIcon(), new DateFormatter(),
+                new DateFromChangeListener(), null, upper, lower);
         pickerFrom.getEditor().setText(DateUtil.formatDay(from));
-        pickerFrom.getEditor().setInputVerifier(
-                new DateVerifier(pickerFrom.getEditor(), GuiCnf.getInstance().getTxtDateInvalid()));
+        pickerFrom.getEditor()
+        .setInputVerifier(new DateVerifier(pickerFrom.getEditor(), GuiCnf.getInstance().getTxtDateInvalid()));
         add(pickerFrom, Constraints.CBB_START);
 
-        pickerTo =
-                Builder.buildDatePicker(IconCnf.getInstance().getCalendarIcon(), new DateFormatter(),
-                        new DateToChangeListener(), lower, upper, null);
+        pickerTo = Builder.buildDatePicker(IconCnf.getInstance().getCalendarIcon(), new DateFormatter(),
+                new DateToChangeListener(), lower, upper, null);
         pickerTo.getEditor().setText(DateUtil.formatDay(to));
-        pickerTo.getEditor().setInputVerifier(
-                new DateVerifier(pickerTo.getEditor(), GuiCnf.getInstance().getTxtDateInvalid()));
+        pickerTo.getEditor()
+        .setInputVerifier(new DateVerifier(pickerTo.getEditor(), GuiCnf.getInstance().getTxtDateInvalid()));
         add(pickerTo, Constraints.CBB_END);
     }
 
@@ -318,7 +232,8 @@ class RoadSignFilterPanel extends JPanel {
     }
 
     private void addUsernameFilter(final String username) {
-        add(Builder.buildLabel(GuiCnf.getInstance().getLblUsername(), FontUtil.BOLD_12, null), Constraints.LBL_USERNAME);
+        add(Builder.buildLabel(GuiCnf.getInstance().getLblUsername(), FontUtil.BOLD_12, null),
+                Constraints.LBL_USERNAME);
         txtUsername = Builder.buildTextField(username, null, Color.white);
         add(txtUsername, Constraints.TXT_USERNAME);
     }
@@ -384,5 +299,56 @@ class RoadSignFilterPanel extends JPanel {
         return txtDupl.getInputVerifier().verify(txtDupl) && txtConf.getInputVerifier().verify(txtConf)
                 && pickerFrom.getEditor().getInputVerifier().verify(pickerFrom.getEditor())
                 && pickerTo.getEditor().getInputVerifier().verify(pickerTo.getEditor());
+    }
+
+    /**
+     * Resets the filters to the default one.
+     */
+    void resetFilters() {
+        cbbScout.setSelected(true);
+        cbbMapillary.setSelected(true);
+        pickerFrom.getEditor().setText("");
+        pickerFrom.setDate(null);
+        pickerTo.getEditor().setText("");
+        pickerTo.setDate(null);
+        pnlStatus.clearSelection();
+        txtDupl.setText("");
+        txtConf.setText("" + SearchFilter.DEF_CONFIDENCE);
+        txtUsername.setText("");
+        txtAppName.setText("");
+        txtAppVers.setText("");
+        txtOsName.setText("");
+        txtOsVers.setText("");
+        reloadTypes();
+        enableComponents();
+    }
+
+    /**
+     * Returns the selected filters. If the user's input is invalid the method return null.
+     *
+     * @return a {@code SearchFilter} object.
+     */
+    SearchFilter selectedFilters() {
+        // verify text inputs
+        SearchFilter filter = null;
+        if (verifyInput()) {
+            final Long from = pickerFrom.getDate() != null ? pickerFrom.getDate().getTime() : null;
+            final Long to = pickerTo.getDate() != null ? pickerTo.getDate().getTime() : null;
+            final Status status = pnlStatus.getSelection();
+            final String duplicateStr = txtDupl.getText().trim();
+            final Long duplicate = !duplicateStr.isEmpty() ? Long.parseLong(duplicateStr) : null;
+            final String confidenceStr = txtConf.getText().trim();
+            final Short confidence = !confidenceStr.isEmpty() ? Short.parseShort(confidenceStr) : null;
+            final String appName = txtAppName.getText().trim();
+            final String appVersion = txtAppVers.getText().trim();
+            final String osName = txtOsName.getText().trim();
+            final String osVersion = txtOsVers.getText().trim();
+            final String username = txtUsername.getText().trim();
+            final List<Source> sources = selectedSources();
+            filter = new SearchFilter(sources, new TimestampFilter(from, to), listTypes.getSelectedValuesList(), status,
+                    duplicate, confidence, new Application(appName, appVersion), new Device(osName, osVersion),
+                    username);
+        }
+        return filter;
     }
 }

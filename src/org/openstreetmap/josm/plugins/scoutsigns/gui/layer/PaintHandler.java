@@ -1,34 +1,3 @@
-/*
- * Copyright (c) 2014, skobbler GmbH
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 3. Neither the name of the project nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * Created on Jul 30, 2014 by Beata
- * Modified on $DateTime$ by $Author$
- */
 package org.openstreetmap.josm.plugins.scoutsigns.gui.layer;
 
 import java.awt.AlphaComposite;
@@ -74,6 +43,64 @@ class PaintHandler {
 
     private final TypeIconFactory iconFactory = TypeIconFactory.getInstance();
 
+
+    private void drawArrow(final Graphics2D g2D, final Point tip, final Point tail) {
+        final double theta = Math.atan2((tip.getY() - tail.getY()), (tip.getX() - tail.getX()));
+        double rho = theta + PHI;
+        g2D.setStroke(ARROW_STROKE);
+        for (int j = 0; j < 2; j++) {
+            g2D.draw(new Line2D.Double(tip.getX(), tip.getY(), tip.getX() - ARROW_WIDTH * Math.cos(rho),
+                    tip.getY() - ARROW_WIDTH * Math.sin(rho)));
+            rho = theta - PHI;
+        }
+    }
+
+    private void drawCircle(final Graphics2D g2D, final Point point, final Color color, final Double radius) {
+        final Ellipse2D.Double circle =
+                new Ellipse2D.Double(point.x - radius / 2, point.y - radius / 2, radius, radius);
+        g2D.setColor(color);
+        g2D.fill(circle);
+        g2D.draw(circle);
+    }
+
+    private void drawIcon(final Graphics2D g2D, final ImageIcon icon, final Point p) {
+        g2D.drawImage(icon.getImage(), p.x - (icon.getIconWidth() / 2), p.y - (icon.getIconHeight() / 2),
+                new ImageObserver() {
+
+            @Override
+            public boolean imageUpdate(final Image img, final int infoflags, final int x, final int y,
+                    final int width, final int height) {
+                return false;
+            }
+        });
+    }
+
+
+    private void drawLine(final Graphics2D g2D, final Point start, final Point end, final boolean forward,
+            final boolean drawArrow) {
+        g2D.setColor(Color.black);
+        g2D.setStroke(LINE_STROKE);
+        // draw line
+        g2D.draw(new Line2D.Double(start.getX(), start.getY(), end.getX(), end.getY()));
+        if (drawArrow) {
+            final Point midPoint = new Point((start.x + end.x) / 2, (start.y + end.y) / 2);
+            if (forward) {
+                drawArrow(g2D, midPoint, end);
+            } else {
+                drawArrow(g2D, midPoint, start);
+            }
+        }
+    }
+
+    private void drawRoadSign(final Graphics2D g2D, final MapView mv, final RoadSign roadSign, final boolean selected) {
+        final Point point = mv.getPoint(roadSign.getSignPos().getPosition());
+        if (mv.contains(point)) {
+            if (selected) {
+                drawIcon(g2D, IconCnf.getInstance().getSelRoadSignBgIcon(), point);
+            }
+            drawIcon(g2D, iconFactory.getIcon(roadSign.getSource(), roadSign.getType()), point);
+        }
+    }
 
     /**
      * Draws the given road signs clusters to the map. A road sign cluster is represented by an icon and the road sign
@@ -138,63 +165,5 @@ class PaintHandler {
             drawCircle(g2D, prevPoint, Color.red, RADIUS);
         }
         g2D.setComposite(COMP);
-    }
-
-
-    private void drawArrow(final Graphics2D g2D, final Point tip, final Point tail) {
-        final double theta = Math.atan2((tip.getY() - tail.getY()), (tip.getX() - tail.getX()));
-        double rho = theta + PHI;
-        g2D.setStroke(ARROW_STROKE);
-        for (int j = 0; j < 2; j++) {
-            g2D.draw(new Line2D.Double(tip.getX(), tip.getY(), tip.getX() - ARROW_WIDTH * Math.cos(rho), tip.getY()
-                    - ARROW_WIDTH * Math.sin(rho)));
-            rho = theta - PHI;
-        }
-    }
-
-    private void drawCircle(final Graphics2D g2D, final Point point, final Color color, final Double radius) {
-        final Ellipse2D.Double circle =
-                new Ellipse2D.Double(point.x - radius / 2, point.y - radius / 2, radius, radius);
-        g2D.setColor(color);
-        g2D.fill(circle);
-        g2D.draw(circle);
-    }
-
-    private void drawIcon(final Graphics2D g2D, final ImageIcon icon, final Point p) {
-        g2D.drawImage(icon.getImage(), p.x - (icon.getIconWidth() / 2), p.y - (icon.getIconHeight() / 2),
-                new ImageObserver() {
-
-                    @Override
-                    public boolean imageUpdate(final Image img, final int infoflags, final int x, final int y,
-                            final int width, final int height) {
-                        return false;
-                    }
-                });
-    }
-
-    private void drawLine(final Graphics2D g2D, final Point start, final Point end, final boolean forward,
-            final boolean drawArrow) {
-        g2D.setColor(Color.black);
-        g2D.setStroke(LINE_STROKE);
-        // draw line
-        g2D.draw(new Line2D.Double(start.getX(), start.getY(), end.getX(), end.getY()));
-        if (drawArrow) {
-            final Point midPoint = new Point((start.x + end.x) / 2, (start.y + end.y) / 2);
-            if (forward) {
-                drawArrow(g2D, midPoint, end);
-            } else {
-                drawArrow(g2D, midPoint, start);
-            }
-        }
-    }
-
-    private void drawRoadSign(final Graphics2D g2D, final MapView mv, final RoadSign roadSign, final boolean selected) {
-        final Point point = mv.getPoint(roadSign.getSignPos().getPosition());
-        if (mv.contains(point)) {
-            if (selected) {
-                drawIcon(g2D, IconCnf.getInstance().getSelRoadSignBgIcon(), point);
-            }
-            drawIcon(g2D, iconFactory.getIcon(roadSign.getSource(), roadSign.getType()), point);
-        }
     }
 }

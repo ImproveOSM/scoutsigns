@@ -1,34 +1,3 @@
-/*
- * Copyright (c) 2014, skobbler GmbH
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 3. Neither the name of the project nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * Created on Sep 30, 2014 by Beata
- * Modified on $DateTime$ by $Author$
- */
 package org.openstreetmap.josm.plugins.scoutsigns.gui.details;
 
 import java.awt.event.MouseEvent;
@@ -114,24 +83,22 @@ class EditPopupMenu extends JPopupMenu {
         final IconCnf iconCnf = IconCnf.getInstance();
 
         boolean enabled = statuses.contains(Status.SOLVED);
-        final JMenuItem itemSolve =
-                Builder.buildMenuItem(iconCnf.getSolvedIcon(), guiCnf.getTxtMenuSolve(), tltCnf.getBtnSolved(),
-                        new SelectionListener(Status.SOLVED, guiCnf.getDlgSolveTitle(), iconCnf.getSolvedIcon()),
-                        enabled);
+        final JMenuItem itemSolve = Builder.buildMenuItem(iconCnf.getSolvedIcon(), guiCnf.getTxtMenuSolve(),
+                tltCnf.getBtnSolved(),
+                new SelectionListener(Status.SOLVED, guiCnf.getDlgSolveTitle(), iconCnf.getSolvedIcon()), enabled);
         add(itemSolve);
 
         enabled = statuses.contains(Status.INVALID);
-        final JMenuItem itemInvalidate =
-                Builder.buildMenuItem(iconCnf.getInvalidIcon(), guiCnf.getTxtMenuInvalid(), tltCnf.getBtnInvalid(),
-                        new SelectionListener(Status.INVALID, guiCnf.getDlgInvalidTitle(), iconCnf.getInvalidIcon()),
-                        enabled);
+        final JMenuItem itemInvalidate = Builder.buildMenuItem(iconCnf.getInvalidIcon(), guiCnf.getTxtMenuInvalid(),
+                tltCnf.getBtnInvalid(),
+                new SelectionListener(Status.INVALID, guiCnf.getDlgInvalidTitle(), iconCnf.getInvalidIcon()), enabled);
         add(itemInvalidate);
 
         enabled = statuses.contains(Status.DUPLICATE);
-        final JMenuItem itemDuplicate =
-                Builder.buildMenuItem(iconCnf.getDuplicateIcon(), guiCnf.getTxtMenuDuplicate(), tltCnf
-                        .getBtnDuplicate(), new SelectionListener(Status.DUPLICATE, guiCnf.getDlgDuplicateTitle(),
-                        iconCnf.getDuplicateIcon()), enabled);
+        final JMenuItem itemDuplicate = Builder.buildMenuItem(iconCnf.getDuplicateIcon(), guiCnf.getTxtMenuDuplicate(),
+                tltCnf.getBtnDuplicate(),
+                new SelectionListener(Status.DUPLICATE, guiCnf.getDlgDuplicateTitle(), iconCnf.getDuplicateIcon()),
+                enabled);
         add(itemDuplicate);
 
         enabled = statuses.contains(Status.OPEN);

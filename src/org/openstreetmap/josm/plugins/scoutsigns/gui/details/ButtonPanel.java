@@ -1,16 +1,3 @@
-/*
- * Copyright (c) 2014 SKOBBLER SRL.
- * Cuza Voda 1, Cluj-Napoca, Cluj, 400107, Romania
- * All rights reserved.
- *
- * This software is the confidential and proprietary information of SKOBBLER SRL
- * ("Confidential Information"). You shall not disclose such Confidential
- * Information and shall use it only in accordance with the terms of the license
- * agreement you entered into with SKOBBLER SRL.
- *
- * Created on Jul 29, 2014 by Bea
- * Modified on $DateTime$ by $Author$
- */
 package org.openstreetmap.josm.plugins.scoutsigns.gui.details;
 
 import java.awt.Dimension;
@@ -222,70 +209,70 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     }
 
 
-    /**
-     * Enables or disabled action buttons based on the given zoom level.
-     *
-     * @param zoom the current zoom level.
-     */
-    void enableButtons(final int zoom) {
-        if (zoom > ServiceCnf.getInstance().getMaxClusterZoom()) {
-            btnFilter.setEnabled(true);
-            enableRoadSignActions();
-        } else {
-            btnFilter.setEnabled(false);
-            btnImage.setEnabled(false);
-            btnTrip.setEnabled(false);
-            btnComment.setEnabled(false);
-            btnMoreAction.setEnabled(false);
-        }
-    }
-
-    /**
-     * Registers the given observer.
-     *
-     * @param observer a {@code StatusChangeObserver}
-     */
-    void registerStatusChangeObserver(final StatusChangeObserver observer) {
-        statusChangeObserver = observer;
-    }
-
-    /**
-     * Sets the selected road sign.
-     *
-     * @param roadSign a {@code RoadSign}
-     */
-    void setRoadSign(final RoadSign roadSign) {
-        this.roadSign = roadSign;
-
-        // restore possible statuses & enable/disable selected road sign related
-        // actions
-        if (statuses.size() != Status.VALUES_LIST.size()) {
-            statuses = new ArrayList<>(Status.VALUES_LIST);
-        }
-        if (this.roadSign != null) {
-            statuses.remove(this.roadSign.getStatus());
-
-            // reload image
-            if (imgFrame != null && imgFrame.isVisible()) {
-                imgFrame.update(roadSign);
-                imgFrame.repaint();
-            }
-        } else if (imgFrame != null && imgFrame.isVisible()) {
-            imgFrame.dispose();
-        }
-        enableRoadSignActions();
-    }
-
     private void enableRoadSignActions() {
-        boolean enableImage = false;
-        boolean enableActions = false;
-        if (roadSign != null) {
-            enableActions = roadSign.getSource() == Source.MAPILLARY ? false : true;
-            enableImage = true;
-        }
-        btnImage.setEnabled(enableImage);
-        btnTrip.setEnabled(enableActions);
-        btnComment.setEnabled(enableActions);
-        btnMoreAction.setEnabled(enableActions);
-    }
+                boolean enableImage = false;
+                boolean enableActions = false;
+                if (roadSign != null) {
+                    enableActions = roadSign.getSource() == Source.MAPILLARY ? false : true;
+                    enableImage = true;
+                }
+                btnImage.setEnabled(enableImage);
+                btnTrip.setEnabled(enableActions);
+                btnComment.setEnabled(enableActions);
+                btnMoreAction.setEnabled(enableActions);
+            }
+
+    /**
+             * Enables or disabled action buttons based on the given zoom level.
+             *
+             * @param zoom the current zoom level.
+             */
+            void enableButtons(final int zoom) {
+                if (zoom > ServiceCnf.getInstance().getMaxClusterZoom()) {
+                    btnFilter.setEnabled(true);
+                    enableRoadSignActions();
+                } else {
+                    btnFilter.setEnabled(false);
+                    btnImage.setEnabled(false);
+                    btnTrip.setEnabled(false);
+                    btnComment.setEnabled(false);
+                    btnMoreAction.setEnabled(false);
+                }
+            }
+
+    /**
+             * Registers the given observer.
+             *
+             * @param observer a {@code StatusChangeObserver}
+             */
+            void registerStatusChangeObserver(final StatusChangeObserver observer) {
+                statusChangeObserver = observer;
+            }
+
+    /**
+             * Sets the selected road sign.
+             *
+             * @param roadSign a {@code RoadSign}
+             */
+            void setRoadSign(final RoadSign roadSign) {
+                this.roadSign = roadSign;
+
+                // restore possible statuses & enable/disable selected road sign related
+                // actions
+                if (statuses.size() != Status.VALUES_LIST.size()) {
+                    statuses = new ArrayList<>(Status.VALUES_LIST);
+                }
+                if (this.roadSign != null) {
+                    statuses.remove(this.roadSign.getStatus());
+
+                    // reload image
+                    if (imgFrame != null && imgFrame.isVisible()) {
+                        imgFrame.update(roadSign);
+                        imgFrame.repaint();
+                    }
+                } else if (imgFrame != null && imgFrame.isVisible()) {
+                    imgFrame.dispose();
+                }
+                enableRoadSignActions();
+            }
 }

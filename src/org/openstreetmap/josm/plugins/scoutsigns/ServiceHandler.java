@@ -1,16 +1,3 @@
-/*
- * Copyright (c) 2014 SKOBBLER SRL.
- * Cuza Voda 1, Cluj-Napoca, Cluj, 400107, Romania
- * All rights reserved.
- *
- * This software is the confidential and proprietary information of SKOBBLER SRL
- * ("Confidential Information"). You shall not disclose such Confidential
- * Information and shall use it only in accordance with the terms of the license
- * agreement you entered into with SKOBBLER SRL.
- *
- * Created on Jul 29, 2014 by Bea
- * Modified on $DateTime$ by $Author$
- */
 package org.openstreetmap.josm.plugins.scoutsigns;
 
 import java.util.ArrayList;
@@ -48,6 +35,18 @@ final class ServiceHandler {
 
     private final FcdSignService signService = new FcdSignService();
 
+    private void handleException(final Exception ex, final boolean suppress) {
+        if (suppress) {
+            if (!PrefManager.getInstance().loadSupressErrorFlag()) {
+                PrefManager.getInstance().saveSupressErrorFlag(suppress);
+                JOptionPane.showMessageDialog(Main.parent, ex.getMessage(), "Operation failed",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(Main.parent, ex.getMessage(), "Operation failed", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     /**
      * Adds a comment to the given road sign. If the status is not null, then also the road sign's status is modified.
      *
@@ -77,8 +76,8 @@ final class ServiceHandler {
      * @param status the new {@code Status} to be set
      * @param duplicateOf specifies the parent road sign's identifier, it is user only with {@code Status#DUPLICATE}
      */
-    void addComments(final List<RoadSign> roadSigns, final String username, final String text, final Status status,
-            final Long duplicateOf) {
+    void addComments(final List<RoadSign> roadSigns, final String username, final String text,
+            final Status status, final Long duplicateOf) {
         final List<Long> signIds = new ArrayList<>();
         for (final RoadSign roadSign : roadSigns) {
             signIds.add(roadSign.getId());
@@ -126,17 +125,5 @@ final class ServiceHandler {
             handleException(ex, true);
         }
         return result;
-    }
-
-    private void handleException(final Exception ex, final boolean suppress) {
-        if (suppress) {
-            if (!PrefManager.getInstance().loadSupressErrorFlag()) {
-                PrefManager.getInstance().saveSupressErrorFlag(suppress);
-                JOptionPane.showMessageDialog(Main.parent, ex.getMessage(), "Operation failed",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(Main.parent, ex.getMessage(), "Operation failed", JOptionPane.ERROR_MESSAGE);
-        }
     }
 }

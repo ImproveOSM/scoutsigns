@@ -1,35 +1,3 @@
-/*
- * Copyright (c) 2012, skobbler GmbH
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- * 3. Neither the name of the project nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * Created on Jun 21, 2012 by Bea
- * Modified on $Date$
- *          by $Author$
- */
 package org.openstreetmap.josm.plugins.scoutsigns.gui;
 
 import java.awt.Color;
@@ -179,8 +147,7 @@ public final class Builder {
      * @param selDate the selected {@code Date}
      * @return a {@code JXDatePicker} object
      */
-    public static JXDatePicker
-    buildDatePicker(final Icon icon, final AbstractFormatter formatter,
+    public static JXDatePicker buildDatePicker(final Icon icon, final AbstractFormatter formatter,
             final PropertyChangeListener changeListener, final Date lowerDate, final Date upperDate,
             final Date selDate) {
         final JXDatePicker picker = new JXDatePicker();
@@ -315,8 +282,8 @@ public final class Builder {
                         list.addSelectionInterval(idx, idx);
                     }
                     list.ensureIndexIsVisible(list.getSelectedIndex());
-                    list.scrollRectToVisible(list.getCellBounds(list.getMinSelectionIndex(),
-                            list.getMaxSelectionIndex()));
+                    list.scrollRectToVisible(
+                            list.getCellBounds(list.getMinSelectionIndex(), list.getMaxSelectionIndex()));
                 }
             }
         });
@@ -463,9 +430,8 @@ public final class Builder {
     }
 
     private static JScrollPane buildScrollPane(final Component component, final Color bgColor) {
-        final JScrollPane scrollPane =
-                new JScrollPane(component, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        final JScrollPane scrollPane = new JScrollPane(component, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBackground(bgColor);
         scrollPane.setAutoscrolls(true);
         return scrollPane;
