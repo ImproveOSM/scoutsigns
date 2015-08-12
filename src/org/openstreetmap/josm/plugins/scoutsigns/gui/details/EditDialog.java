@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2015 Telenav, Inc.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
 package org.openstreetmap.josm.plugins.scoutsigns.gui.details;
 
 import java.awt.BorderLayout;
@@ -52,24 +67,24 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
                 final Long duplicateId =
                         (status == Status.DUPLICATE) ? Long.parseLong(txtDuplicateId.getText().trim()) : null;
 
-                if (lblCommentError.isVisible()) {
-                    lblCommentError.setVisible(false);
-                }
-                dispose();
+                        if (lblCommentError.isVisible()) {
+                            lblCommentError.setVisible(false);
+                        }
+                        dispose();
 
-                // load username
-                final String username = PrefManager.getInstance().loadOsmUsername();
-                if (username.isEmpty()) {
-                    final String nemUsername =
-                            JOptionPane.showInputDialog(Main.parent, GuiCnf.getInstance().getTxtUsernameWarning(),
-                                    GuiCnf.getInstance().getDlgWarningTitle(), JOptionPane.WARNING_MESSAGE);
-                    if (nemUsername != null && !nemUsername.isEmpty()) {
-                        PrefManager.getInstance().saveOsmUsername(nemUsername);
-                        notifyObserver(nemUsername, txtComment.getText().trim(), status, duplicateId);
-                    }
-                } else {
-                    notifyObserver(username, txtComment.getText().trim(), status, duplicateId);
-                }
+                        // load username
+                        final String username = PrefManager.getInstance().loadOsmUsername();
+                        if (username.isEmpty()) {
+                            final String nemUsername =
+                                    JOptionPane.showInputDialog(Main.parent, GuiCnf.getInstance().getTxtUsernameWarning(),
+                                            GuiCnf.getInstance().getDlgWarningTitle(), JOptionPane.WARNING_MESSAGE);
+                            if (nemUsername != null && !nemUsername.isEmpty()) {
+                                PrefManager.getInstance().saveOsmUsername(nemUsername);
+                                notifyObserver(nemUsername, txtComment.getText().trim(), status, duplicateId);
+                            }
+                        } else {
+                            notifyObserver(username, txtComment.getText().trim(), status, duplicateId);
+                        }
             }
         }
 

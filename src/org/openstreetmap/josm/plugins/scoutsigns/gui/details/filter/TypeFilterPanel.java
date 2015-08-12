@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2015 Telenav, Inc.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
 package org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter;
 
 import java.awt.Color;
@@ -42,53 +57,53 @@ class TypeFilterPanel extends JPanel {
     }
 
     private void addComponents(final Map<String, ImageIcon> typesMap) {
-                group = new ButtonGroup();
-                for (final Map.Entry<String, ImageIcon> entry : typesMap.entrySet()) {
-                    final TypeRadioButton btn = new TypeRadioButton(entry.getKey(), entry.getValue());
-                    buttons.add(btn);
-                    group.add(btn.getRbSelection());
-                    add(btn);
-                }
-            }
+        group = new ButtonGroup();
+        for (final Map.Entry<String, ImageIcon> entry : typesMap.entrySet()) {
+            final TypeRadioButton btn = new TypeRadioButton(entry.getKey(), entry.getValue());
+            buttons.add(btn);
+            group.add(btn.getRbSelection());
+            add(btn);
+        }
+    }
 
 
     private void selectElement(final String selection) {
-                if (selection != null) {
-                    for (final TypeRadioButton btn : buttons) {
-                        if (btn.getType().equals(selection)) {
-                            btn.setSelected(true);
-                            break;
-                        }
-                    }
+        if (selection != null) {
+            for (final TypeRadioButton btn : buttons) {
+                if (btn.getType().equals(selection)) {
+                    btn.setSelected(true);
+                    break;
                 }
             }
+        }
+    }
 
     /**
-             * Clears previous selections.
-             */
-            void clearSelection() {
-                group.clearSelection();
-                repaint();
-            }
+     * Clears previous selections.
+     */
+    void clearSelection() {
+        group.clearSelection();
+        repaint();
+    }
 
     /**
-             * Returns the selected type.
-             *
-             * @return a string
-             */
-            String getSelection() {
-                String selection = null;
-                for (final TypeRadioButton btn : buttons) {
-                    if (btn.getRbSelection().isSelected()) {
-                        selection = btn.getType();
-                        break;
-                    }
-                }
-                return selection;
+     * Returns the selected type.
+     *
+     * @return a string
+     */
+    String getSelection() {
+        String selection = null;
+        for (final TypeRadioButton btn : buttons) {
+            if (btn.getRbSelection().isSelected()) {
+                selection = btn.getType();
+                break;
             }
+        }
+        return selection;
+    }
 
     void update(final Map<String, ImageIcon> typesMap) {
-                removeAll();
-                addComponents(typesMap);
-            }
+        removeAll();
+        addComponents(typesMap);
+    }
 }

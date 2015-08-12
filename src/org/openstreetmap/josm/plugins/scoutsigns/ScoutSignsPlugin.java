@@ -1,3 +1,18 @@
+/*
+ *  Copyright 2015 Telenav, Inc.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
 package org.openstreetmap.josm.plugins.scoutsigns;
 
 import java.awt.event.ActionEvent;
@@ -43,7 +58,7 @@ import org.openstreetmap.josm.tools.OsmUrlToBounds;
  * @version $Revision$
  */
 public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, ZoomChangeListener, MouseListener,
-        PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
+PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
 
     /*
      * Listens to toggle dialog button actions.
@@ -89,21 +104,21 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, Zoo
                     final int zoom = OsmUrlToBounds.getZoom(Main.map.mapView.getRealBounds());
                     final SearchFilter filter =
                             zoom > ServiceCnf.getInstance().getMaxClusterZoom() ? searchFilter : null;
-                    final DataSet result = ServiceHandler.getInstance().searchSigns(bbox, filter, zoom);
-                    SwingUtilities.invokeLater(new Runnable() {
+                            final DataSet result = ServiceHandler.getInstance().searchSigns(bbox, filter, zoom);
+                            SwingUtilities.invokeLater(new Runnable() {
 
-                        @Override
-                        public void run() {
-                            synchronized (this) {
-                                new InfoDialog().displayDialog(zoom, prevZoom);
-                                prevZoom = zoom;
-                                updateSelection(result);
-                                dialog.enableButtons(zoom);
-                                layer.setDataSet(result);
-                                Main.map.repaint();
-                            }
-                        }
-                    });
+                                @Override
+                                public void run() {
+                                    synchronized (this) {
+                                        new InfoDialog().displayDialog(zoom, prevZoom);
+                                        prevZoom = zoom;
+                                        updateSelection(result);
+                                        dialog.enableButtons(zoom);
+                                        layer.setDataSet(result);
+                                        Main.map.repaint();
+                                    }
+                                }
+                            });
                 }
             }
         }
@@ -114,7 +129,7 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, Zoo
             } else if (layer.lastSelRoadSign() != null) {
                 final RoadSign roadSign =
                         result.getRoadSigns().contains(layer.lastSelRoadSign()) ? layer.lastSelRoadSign() : null;
-                dialog.updateData(roadSign);
+                        dialog.updateData(roadSign);
             }
         }
     }
