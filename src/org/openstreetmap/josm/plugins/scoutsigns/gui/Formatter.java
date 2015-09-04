@@ -101,13 +101,9 @@ public final class Formatter {
         sb.append("</b><br>");
         if (value.getStatus() != null) {
             sb.append("changed status to ");
-            if (value.getStatus() == Status.SOLVED) {
-                sb.append(value.getStatus());
-            } else if (value.getStatus() == Status.DUPLICATE) {
-                sb.append(value.getStatus());
+            sb.append(value.getStatus());
+            if (value.getStatus() == Status.DUPLICATE) {
                 sb.append("(").append(value.getDuplicateOf()).append(")");
-            } else {
-                sb.append(value.getStatus());
             }
             sb.append("<br>").append("with ");
         } else {
