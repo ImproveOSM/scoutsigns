@@ -35,7 +35,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
  */
 class ButtonPanel extends JPanel {
 
-    private final class Action extends AbstractAction {
+    private class Action extends AbstractAction {
 
         private static final long serialVersionUID = -5379206652290290706L;
 

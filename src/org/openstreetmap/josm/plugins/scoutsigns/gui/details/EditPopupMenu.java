@@ -41,7 +41,7 @@ class EditPopupMenu extends JPopupMenu {
     /*
      * Menu item selection listener.
      */
-    private final class SelectionListener implements MouseListener {
+    private class SelectionListener implements MouseListener {
 
         private final String title;
         private final ImageIcon image;

@@ -38,7 +38,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.retry.RetrySetup;
 public class HttpConnector {
 
     /* connects to the specified URL */
-    private final class ConnectionRetryAgent extends RetryAgent<Boolean> {
+    private class ConnectionRetryAgent extends RetryAgent<Boolean> {
 
         private ConnectionRetryAgent() {
             super(retrySetup);
@@ -63,7 +63,7 @@ public class HttpConnector {
     /*
      * reads the input stream or the error stream depending if he operation has been executed with success
      */
-    private final class InputStreamRetryAgent extends RetryAgent<InputStream> {
+    private class InputStreamRetryAgent extends RetryAgent<InputStream> {
 
         private final boolean successStream;
 

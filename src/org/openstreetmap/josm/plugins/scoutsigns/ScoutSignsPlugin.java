@@ -63,7 +63,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
     /*
      * Listens to toggle dialog button actions.
      */
-    private final class ToggleButtonActionListener implements ActionListener {
+    private class ToggleButtonActionListener implements ActionListener {
 
         @Override
         public void actionPerformed(final ActionEvent event) {
@@ -94,7 +94,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
     /*
      * Downloads the road signs from the current view, and updates the plugin with the new data.
      */
-    private final class UpdateThread implements Runnable {
+    private class UpdateThread implements Runnable {
 
         @Override
         public void run() {

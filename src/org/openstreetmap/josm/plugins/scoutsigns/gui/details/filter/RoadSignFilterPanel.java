@@ -63,7 +63,7 @@ class RoadSignFilterPanel extends JPanel {
     /*
      * Listens to from date change value events.
      */
-    private final class DateFromChangeListener implements PropertyChangeListener {
+    private class DateFromChangeListener implements PropertyChangeListener {
 
         @Override
         public void propertyChange(final PropertyChangeEvent evt) {
@@ -77,7 +77,7 @@ class RoadSignFilterPanel extends JPanel {
     /*
      * Listens to to date change value events.
      */
-    private final class DateToChangeListener implements PropertyChangeListener {
+    private class DateToChangeListener implements PropertyChangeListener {
 
         @Override
         public void propertyChange(final PropertyChangeEvent evt) {
@@ -91,7 +91,7 @@ class RoadSignFilterPanel extends JPanel {
     /*
      * Listens to source filter changes.
      */
-    private final class SourceSelectionListener implements ActionListener {
+    private class SourceSelectionListener implements ActionListener {
 
         @Override
         public void actionPerformed(final ActionEvent event) {

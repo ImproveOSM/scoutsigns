@@ -56,7 +56,7 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
      * Creates a new comment for the selected road sign. A comment is created only if the comment component contains a
      * text.
      */
-    private final class AddCommentAction extends AbstractAction {
+    private class AddCommentAction extends AbstractAction {
 
         private static final long serialVersionUID = -5351629052918137710L;
 
@@ -67,24 +67,24 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
                 final Long duplicateId =
                         (status == Status.DUPLICATE) ? Long.parseLong(txtDuplicateId.getText().trim()) : null;
 
-                        if (lblCommentError.isVisible()) {
-                            lblCommentError.setVisible(false);
-                        }
-                        dispose();
+                if (lblCommentError.isVisible()) {
+                    lblCommentError.setVisible(false);
+                }
+                dispose();
 
-                        // load username
-                        final String username = PrefManager.getInstance().loadOsmUsername();
-                        if (username.isEmpty()) {
-                            final String nemUsername =
-                                    JOptionPane.showInputDialog(Main.parent, GuiCnf.getInstance().getTxtUsernameWarning(),
-                                            GuiCnf.getInstance().getDlgWarningTitle(), JOptionPane.WARNING_MESSAGE);
-                            if (nemUsername != null && !nemUsername.isEmpty()) {
-                                PrefManager.getInstance().saveOsmUsername(nemUsername);
-                                notifyObserver(nemUsername, txtComment.getText().trim(), status, duplicateId);
-                            }
-                        } else {
-                            notifyObserver(username, txtComment.getText().trim(), status, duplicateId);
-                        }
+                // load username
+                final String username = PrefManager.getInstance().loadOsmUsername();
+                if (username.isEmpty()) {
+                    final String nemUsername =
+                            JOptionPane.showInputDialog(Main.parent, GuiCnf.getInstance().getTxtUsernameWarning(),
+                                    GuiCnf.getInstance().getDlgWarningTitle(), JOptionPane.WARNING_MESSAGE);
+                    if (nemUsername != null && !nemUsername.isEmpty()) {
+                        PrefManager.getInstance().saveOsmUsername(nemUsername);
+                        notifyObserver(nemUsername, txtComment.getText().trim(), status, duplicateId);
+                    }
+                } else {
+                    notifyObserver(username, txtComment.getText().trim(), status, duplicateId);
+                }
             }
         }
 

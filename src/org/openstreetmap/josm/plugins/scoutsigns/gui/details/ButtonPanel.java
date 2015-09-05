@@ -49,7 +49,7 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     /*
      * Displays the comment dialog window.
      */
-    private final class DisplayCommentDialog extends AbstractAction {
+    private class DisplayCommentDialog extends AbstractAction {
 
         private static final long serialVersionUID = -2470311157850355646L;
 
@@ -65,7 +65,7 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     /*
      * Displays the edit menu.
      */
-    private final class DisplayEditMenu extends AbstractAction {
+    private class DisplayEditMenu extends AbstractAction {
 
         private static final long serialVersionUID = 5945560671001154104L;
 
@@ -82,7 +82,7 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     /*
      * Displays the filter dialog window. This dialog window is available only when road signs are displayed on the map.
      */
-    private final class DisplayFilterDialog extends AbstractAction {
+    private class DisplayFilterDialog extends AbstractAction {
 
         private static final long serialVersionUID = -7084091586699723933L;
 
@@ -96,7 +96,7 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     /*
      * Displays the selected road sign's image. If the frame is already opened updates it's content.
      */
-    private final class DisplayImageFrame extends AbstractAction {
+    private class DisplayImageFrame extends AbstractAction {
 
         private static final long serialVersionUID = 5500399753585606903L;
 
@@ -116,7 +116,7 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     /*
      * Displays the selected road sign's trip.
      */
-    private final class DisplayTrip extends AbstractAction {
+    private class DisplayTrip extends AbstractAction {
 
         private static final long serialVersionUID = 559317768633883689L;
 
@@ -136,7 +136,7 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     /*
      * Exit the trip view.
      */
-    private final class ExitTrip extends AbstractAction {
+    private class ExitTrip extends AbstractAction {
 
         private static final long serialVersionUID = -5015385030138059426L;
 

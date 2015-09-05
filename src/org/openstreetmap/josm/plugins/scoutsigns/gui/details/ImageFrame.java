@@ -56,7 +56,7 @@ class ImageFrame extends JFrame {
     /*
      * If the user clicks on a Mapillary image, the image home page is opened in a browser.
      */
-    private final class ImageMouseListener extends MouseAdapter {
+    private class ImageMouseListener extends MouseAdapter {
 
         @Override
         public void mouseClicked(final MouseEvent event) {
@@ -70,7 +70,7 @@ class ImageFrame extends JFrame {
     /*
      * Reloads the image of a Mapillary road sign.
      */
-    private final class ReloadImage extends AbstractAction {
+    private class ReloadImage extends AbstractAction {
 
         private static final long serialVersionUID = -5814556940033382729L;
         private final MapillaryImageSize size;
