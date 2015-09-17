@@ -40,7 +40,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.gui.ModalDialog;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.DuplicateIdVerifier;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObservable;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
 
 
@@ -76,8 +76,8 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
                 final String username = PrefManager.getInstance().loadOsmUsername();
                 if (username.isEmpty()) {
                     final String nemUsername =
-                            JOptionPane.showInputDialog(Main.parent, GuiCnf.getInstance().getTxtUsernameWarning(),
-                                    GuiCnf.getInstance().getDlgWarningTitle(), JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.showInputDialog(Main.parent, GuiConfig.getInstance().getTxtUsernameWarning(),
+                                    GuiConfig.getInstance().getDlgWarningTitle(), JOptionPane.WARNING_MESSAGE);
                     if (nemUsername != null && !nemUsername.isEmpty()) {
                         PrefManager.getInstance().saveOsmUsername(nemUsername);
                         notifyObserver(nemUsername, txtComment.getText().trim(), status, duplicateId);
@@ -151,11 +151,11 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
 
     private void addBtnPnl() {
         lblCommentError =
-                Builder.buildLabel(GuiCnf.getInstance().getTxtCommentInvalid(), FontUtil.BOLD_12, Color.red, false);
+                Builder.buildLabel(GuiConfig.getInstance().getTxtCommentInvalid(), FontUtil.BOLD_12, Color.red, false);
 
         final JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.TRAILING));
-        pnlBtn.add(Builder.buildButton(new AddCommentAction(), GuiCnf.getInstance().getBtnOk()));
-        pnlBtn.add(Builder.buildButton(new CancelAction(this), GuiCnf.getInstance().getBtnCancel()));
+        pnlBtn.add(Builder.buildButton(new AddCommentAction(), GuiConfig.getInstance().getBtnOk()));
+        pnlBtn.add(Builder.buildButton(new CancelAction(this), GuiConfig.getInstance().getBtnCancel()));
 
         final JPanel pnlSouth = new JPanel(new BorderLayout());
         pnlSouth.add(lblCommentError, BorderLayout.LINE_START);
@@ -179,7 +179,7 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
         txtDuplicateId.setBorder(BorderFactory.createLineBorder(Color.gray));
 
         final JLabel lblDuplError =
-                Builder.buildLabel(GuiCnf.getInstance().getTxtDuplIdInvalid(), FontUtil.BOLD_12, Color.red, false);
+                Builder.buildLabel(GuiConfig.getInstance().getTxtDuplIdInvalid(), FontUtil.BOLD_12, Color.red, false);
         txtDuplicateId.setInputVerifier(new DuplicateIdVerifier(txtDuplicateId, lblDuplError));
 
         final JPanel pnlDuplicate = new JPanel(new GridLayout(1, 0, 1, 1));
@@ -188,7 +188,7 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
 
         final JPanel pnlNorth = new JPanel(new BorderLayout());
         pnlNorth.setBorder(BORDER);
-        pnlNorth.add(Builder.buildLabel(GuiCnf.getInstance().getLblDupl(), FontUtil.BOLD_12, null),
+        pnlNorth.add(Builder.buildLabel(GuiConfig.getInstance().getLblDupl(), FontUtil.BOLD_12, null),
                 BorderLayout.LINE_START);
         pnlNorth.add(pnlDuplicate, BorderLayout.CENTER);
         add(pnlNorth, BorderLayout.NORTH);

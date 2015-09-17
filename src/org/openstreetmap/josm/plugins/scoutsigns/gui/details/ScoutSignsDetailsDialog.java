@@ -23,9 +23,9 @@ import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.TripViewObserver;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltConfig;
 import org.openstreetmap.josm.tools.Shortcut;
 
 
@@ -43,7 +43,7 @@ public class ScoutSignsDetailsDialog extends ToggleDialog {
     private static final int DLG_HEIGHT = 50;
 
     /** the shortcut which will be shown on the left side of JOSM */
-    private static Shortcut sh = Shortcut.registerShortcut(GuiCnf.getInstance().getDlgDetailsTitle(), TltCnf
+    private static Shortcut sh = Shortcut.registerShortcut(GuiConfig.getInstance().getDlgDetailsTitle(), TltConfig
             .getInstance().getPluginTlt(), KeyEvent.VK_F, Shortcut.ALT_SHIFT);
 
     private final DetailsPanel pnlDetails;
@@ -54,7 +54,7 @@ public class ScoutSignsDetailsDialog extends ToggleDialog {
      * Builds a new {@code SkoSignsDetailsDialog} window with the default settings.
      */
     public ScoutSignsDetailsDialog() {
-        super(GuiCnf.getInstance().getDlgDetailsTitle(), IconCnf.getInstance().getShcName(), TltCnf.getInstance()
+        super(GuiConfig.getInstance().getDlgDetailsTitle(), IconConfig.getInstance().getShcName(), TltConfig.getInstance()
                 .getPluginTlt(), sh, DLG_HEIGHT);
         setPreferredSize(new Dimension(DLG_HEIGHT, DLG_HEIGHT));
 

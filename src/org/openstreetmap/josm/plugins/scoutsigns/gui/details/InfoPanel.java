@@ -19,7 +19,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import javax.swing.JPanel;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
 
 
 /**
@@ -43,10 +43,10 @@ abstract class InfoPanel<T> extends JPanel {
     protected static final int RECT_Y = 0;
 
     /** holds GUI texts */
-    private static GuiCnf guiCnf = GuiCnf.getInstance();
+    private static GuiConfig guiCnf = GuiConfig.getInstance();
 
 
-    static GuiCnf getGuiCnf() {
+    static GuiConfig getGuiCnf() {
         return guiCnf;
     }
 

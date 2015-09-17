@@ -24,9 +24,9 @@ import javax.swing.JPopupMenu;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltConfig;
 
 
 /**
@@ -93,9 +93,9 @@ class EditPopupMenu extends JPopupMenu {
      * @param status the {@code Status} of the selected road sign
      */
     EditPopupMenu(final List<Status> statuses) {
-        final GuiCnf guiCnf = GuiCnf.getInstance();
-        final TltCnf tltCnf = TltCnf.getInstance();
-        final IconCnf iconCnf = IconCnf.getInstance();
+        final GuiConfig guiCnf = GuiConfig.getInstance();
+        final TltConfig tltCnf = TltConfig.getInstance();
+        final IconConfig iconCnf = IconConfig.getInstance();
 
         boolean enabled = statuses.contains(Status.SOLVED);
         final JMenuItem itemSolve = Builder.buildMenuItem(iconCnf.getSolvedIcon(), guiCnf.getTxtMenuSolve(),

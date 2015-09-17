@@ -88,14 +88,14 @@ public final class PrefManager {
         final Status status = (statusStr != null && !statusStr.isEmpty()) ? Status.valueOf(statusStr) : null;
         final Long duplicate = loadLongValue(Keys.DUPLICATE);
 
-        Short confidence;
+        Double confidence;
         if (confidenceStr.isEmpty()) {
             // never set
             confidence = SearchFilter.DEF_CONFIDENCE;
         } else if (confidenceStr.equals(NULL)) {
             confidence = null;
         } else {
-            confidence = Short.valueOf(confidenceStr);
+            confidence = Double.valueOf(confidenceStr);
         }
 
         return new SearchFilter(sources, new TimestampFilter(from, to), types, status, duplicate, confidence,

@@ -17,15 +17,17 @@ package org.openstreetmap.josm.plugins.scoutsigns.util;
 
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ServiceCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.Config;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
 
 
 /**
- * Helper class, displays a
+ * Helper class, displays an info dialog window.
  */
 public final class InfoDialog {
+
+    private static boolean isDisplayed = false;
 
     /**
      * Displays a dialog window with the corresponding message for the following situations:
@@ -37,20 +39,26 @@ public final class InfoDialog {
      * @param zoom the current zoom level
      * @param prevZoom the previous zom level
      */
-    public void displayDialog(final int zoom, final int prevZoom) {
-        final int maxZoom = ServiceCnf.getInstance().getMaxClusterZoom();
-        if (!PrefManager.getInstance().loadSuppressClusterInfoFlag() && (zoom <= maxZoom && zoom < prevZoom)) {
-            final int val = JOptionPane.showOptionDialog(Main.map.mapView, GuiCnf.getInstance().getInfoClusterTxt(),
-                    GuiCnf.getInstance().getInfoClusterTitle(), JOptionPane.YES_NO_OPTION,
-                    JOptionPane.INFORMATION_MESSAGE, null, null, null);
-            final boolean flag = val == JOptionPane.YES_OPTION;
-            PrefManager.getInstance().saveSuppressClusterInfoFlag(flag);
-        } else if (!PrefManager.getInstance().loadSupressMapillaryInfoFlag() && zoom < maxZoom) {
-            final int val = JOptionPane.showOptionDialog(Main.map.mapView, GuiCnf.getInstance().getInfoMapillaryTxt(),
-                    GuiCnf.getInstance().getInfoMapillaryTitle(), JOptionPane.YES_NO_OPTION,
-                    JOptionPane.INFORMATION_MESSAGE, null, null, null);
-            final boolean flag = val == JOptionPane.YES_OPTION;
-            PrefManager.getInstance().saveSuppressMapillaryInfoFlag(flag);
+    public synchronized void displayDialog(final int zoom, final int prevZoom) {
+        if (!isDisplayed) {
+            final int maxZoom = Config.getInstance().getMaxClusterZoom();
+            if (!PrefManager.getInstance().loadSuppressClusterInfoFlag() && (zoom <= maxZoom && zoom < prevZoom)) {
+                isDisplayed = true;
+                final int val = JOptionPane.showOptionDialog(Main.map.mapView,
+                        GuiConfig.getInstance().getInfoClusterTxt(), GuiConfig.getInstance().getInfoClusterTitle(),
+                        JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+                final boolean flag = val == JOptionPane.YES_OPTION;
+                PrefManager.getInstance().saveSuppressClusterInfoFlag(flag);
+                isDisplayed = false;
+            } else if (!PrefManager.getInstance().loadSupressMapillaryInfoFlag() && zoom < maxZoom) {
+                isDisplayed = true;
+                final int val = JOptionPane.showOptionDialog(Main.map.mapView,
+                        GuiConfig.getInstance().getInfoMapillaryTxt(), GuiConfig.getInstance().getInfoMapillaryTitle(),
+                        JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+                final boolean flag = val == JOptionPane.YES_OPTION;
+                PrefManager.getInstance().saveSuppressMapillaryInfoFlag(flag);
+                isDisplayed = false;
+            }
         }
     }
 }

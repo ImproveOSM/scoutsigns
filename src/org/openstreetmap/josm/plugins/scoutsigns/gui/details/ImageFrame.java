@@ -39,9 +39,9 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Source;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.util.ImageUtil;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ServiceCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.MapillaryConfig;
 import org.openstreetmap.josm.tools.OpenBrowser;
 
 
@@ -61,7 +61,7 @@ class ImageFrame extends JFrame {
         @Override
         public void mouseClicked(final MouseEvent event) {
             if ((event.getSource() instanceof JLabel) && roadSign != null && roadSign.getKey() != null) {
-                final String link = ServiceCnf.getInstance().getMapillaryImagePage() + roadSign.getKey();
+                final String link = MapillaryConfig.getInstance().getImagePag() + roadSign.getKey();
                 OpenBrowser.displayUrl(link);
             }
         }
@@ -102,8 +102,8 @@ class ImageFrame extends JFrame {
 
 
     private ImageFrame() {
-        setTitle(GuiCnf.getInstance().getFrmPhotoTitle());
-        setIconImage(IconCnf.getInstance().getPhotoIcon().getImage());
+        setTitle(GuiConfig.getInstance().getFrmPhotoTitle());
+        setIconImage(IconConfig.getInstance().getPhotoIcon().getImage());
         setResizable(true);
         setLocationRelativeTo(Main.map);
         setAlwaysOnTop(true);
@@ -129,14 +129,14 @@ class ImageFrame extends JFrame {
 
     private void updateComponents() {
         if (roadSign.getImage() == null) {
-            lblImage.setText(GuiCnf.getInstance().getLblPhotoMissing());
+            lblImage.setText(GuiConfig.getInstance().getLblPhotoMissing());
         } else {
             try {
                 final BufferedImage bi = ImageUtil.base64ToImage(roadSign.getImage().getData(),
                         roadSign.getImage().getWidth(), roadSign.getImage().getHeight());
                 lblImage.setIcon(new ImageIcon(bi));
             } catch (final IOException e) {
-                lblImage.setText(GuiCnf.getInstance().getLblPhotoError());
+                lblImage.setText(GuiConfig.getInstance().getLblPhotoError());
             }
         }
         setPreferredSize(DIM);
@@ -146,16 +146,16 @@ class ImageFrame extends JFrame {
 
     private void updateComponents(final MapillaryImageSize imageSize) {
         BufferedImage image = null;
-        final StringBuilder link = new StringBuilder(ServiceCnf.getInstance().getMapillaryImageUrl());
+        final StringBuilder link = new StringBuilder(MapillaryConfig.getInstance().getImageUrl());
         link.append(roadSign.getKey()).append(THUMB).append(imageSize.getValue()).append(EXT);
         try {
             image = ImageIO.read(new URL(link.toString()));
         } catch (final IOException ex) {
-            lblImage.setText(GuiCnf.getInstance().getLblPhotoError());
+            lblImage.setText(GuiConfig.getInstance().getLblPhotoError());
             setPreferredSize(DIM);
         }
         if (image == null) {
-            lblImage.setText(GuiCnf.getInstance().getLblPhotoMissing());
+            lblImage.setText(GuiConfig.getInstance().getLblPhotoMissing());
             setPreferredSize(DIM);
         } else {
             lblImage.setIcon(new ImageIcon(image));

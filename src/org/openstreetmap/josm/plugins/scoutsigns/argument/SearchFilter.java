@@ -31,17 +31,17 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
  */
 public class SearchFilter {
 
-    public static final short DEF_CONFIDENCE = 90;
+    public static final Double DEF_CONFIDENCE = 90.0;
 
-    private final List<Source> sources;
+    private List<Source> sources;
     private final TimestampFilter timestampFilter;
     private final List<String> types;
-    private final Status status;
-    private final Long duplicateOf;
-    private final Short confidence;
-    private final Application app;
-    private final Device device;
-    private final String username;
+    private Status status;
+    private Long duplicateOf;
+    private final Double confidence;
+    private Application app;
+    private Device device;
+    private String username;
 
 
     /**
@@ -58,17 +58,28 @@ public class SearchFilter {
      * @param username the user's OSM user name
      */
     public SearchFilter(final List<Source> sources, final TimestampFilter timestampFilter, final List<String> types,
-            final Status status, final Long duplicateOf, final Short confidence, final Application app,
+            final Status status, final Long duplicateOf, final Double confidence, final Application app,
             final Device device, final String username) {
+        this(timestampFilter, types, confidence);
         this.sources = sources;
-        this.timestampFilter = timestampFilter;
-        this.types = types;
         this.status = status;
         this.duplicateOf = duplicateOf;
-        this.confidence = confidence;
         this.app = app;
         this.device = device;
         this.username = username;
+    }
+
+    /**
+     * Builds a new filter with the given arguments.
+     *
+     * @param timestampFilter defines the interval of time in which the returned road signs have been created
+     * @param types a list of road sign type
+     * @param confidence specifies the confidence with which the sign has been recognized (0-300)
+     */
+    public SearchFilter(final TimestampFilter timestampFilter, final List<String> types, final Double confidence) {
+        this.timestampFilter = timestampFilter;
+        this.types = types;
+        this.confidence = confidence;
     }
 
 
@@ -96,7 +107,7 @@ public class SearchFilter {
         return app;
     }
 
-    public Short getConfidence() {
+    public Double getConfidence() {
         return confidence;
     }
 

@@ -27,15 +27,15 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @author Bea
  * @version $Revision$
  */
-public final class IconCnf {
+public final class IconConfig {
 
     /** The name of the configuration file */
     private static final String CNF_FILE = "scoutsigns_icon.properties";
 
     /** The unique instance of the object */
-    private static final IconCnf INSTANCE = new IconCnf();
+    private static final IconConfig INSTANCE = new IconConfig();
 
-    public static IconCnf getInstance() {
+    public static IconConfig getInstance() {
         return INSTANCE;
     }
 
@@ -68,7 +68,7 @@ public final class IconCnf {
     private final ImageIcon calendarIcon;
 
 
-    private IconCnf() {
+    private IconConfig() {
         final Properties properties = CnfUtil.load(CNF_FILE);
         shcName = CnfUtil.readProperty(properties, "dialog.shc");
         layerIcon = getIcon(properties, "layer.icon");

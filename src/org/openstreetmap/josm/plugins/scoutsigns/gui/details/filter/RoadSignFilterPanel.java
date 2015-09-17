@@ -46,9 +46,9 @@ import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.ConfidenceVerifier;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.DateVerifier;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.DuplicateIdVerifier;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ServiceCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.Config;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
 
 
@@ -144,7 +144,7 @@ class RoadSignFilterPanel extends JPanel {
 
 
     private void addAppFilter(final Application application) {
-        add(Builder.buildLabel(GuiCnf.getInstance().getLblApp(), FontUtil.BOLD_12, null), Constraints.LBL_APP);
+        add(Builder.buildLabel(GuiConfig.getInstance().getLblApp(), FontUtil.BOLD_12, null), Constraints.LBL_APP);
         String name = "";
         String vers = "";
         if (application != null) {
@@ -157,16 +157,16 @@ class RoadSignFilterPanel extends JPanel {
         add(txtAppVers, Constraints.TXT_APP_VERS);
     }
 
-    private void addConfidenceFilter(final Short confidence) {
-        add(Builder.buildLabel(GuiCnf.getInstance().getLblConf(), FontUtil.BOLD_12, null), Constraints.LBL_CONF);
-        final String txt = confidence != null ? confidence.toString() : "";
+    private void addConfidenceFilter(final Double confidence) {
+        add(Builder.buildLabel(GuiConfig.getInstance().getLblConf(), FontUtil.BOLD_12, null), Constraints.LBL_CONF);
+        final String txt = confidence != null ? "" + confidence.intValue() : "";
         txtConf = Builder.buildTextField(txt, null, Color.white);
-        txtConf.setInputVerifier(new ConfidenceVerifier(txtConf, GuiCnf.getInstance().getTxtConfInvalid()));
+        txtConf.setInputVerifier(new ConfidenceVerifier(txtConf, GuiConfig.getInstance().getTxtConfInvalid()));
         add(txtConf, Constraints.TXT_CONF);
     }
 
     private void addDeviceFilter(final Device device) {
-        add(Builder.buildLabel(GuiCnf.getInstance().getLblDevice(), FontUtil.BOLD_12, null), Constraints.LBL_DEV);
+        add(Builder.buildLabel(GuiConfig.getInstance().getLblDevice(), FontUtil.BOLD_12, null), Constraints.LBL_DEV);
         String name = "";
         String vers = "";
         if (device != null) {
@@ -180,15 +180,15 @@ class RoadSignFilterPanel extends JPanel {
     }
 
     private void addDuplicateFilter(final Long duplicate) {
-        add(Builder.buildLabel(GuiCnf.getInstance().getLblDupl(), FontUtil.BOLD_12, null), Constraints.LBL_DUPL);
+        add(Builder.buildLabel(GuiConfig.getInstance().getLblDupl(), FontUtil.BOLD_12, null), Constraints.LBL_DUPL);
         final String txt = duplicate != null ? duplicate.toString() : "";
         txtDupl = Builder.buildTextField(txt, null, Color.white);
         add(txtDupl, Constraints.TXT_DUPL);
-        txtDupl.setInputVerifier(new DuplicateIdVerifier(txtDupl, GuiCnf.getInstance().getTxtDuplIdInvalid()));
+        txtDupl.setInputVerifier(new DuplicateIdVerifier(txtDupl, GuiConfig.getInstance().getTxtDuplIdInvalid()));
     }
 
     private void addSourceFilter(final List<Source> sources) {
-        add(Builder.buildLabel(GuiCnf.getInstance().getLblSources(), FontUtil.BOLD_12, null), Constraints.LBL_SOURCES);
+        add(Builder.buildLabel(GuiConfig.getInstance().getLblSources(), FontUtil.BOLD_12, null), Constraints.LBL_SOURCES);
         boolean scoutSel = false;
         boolean mapillarySel = false;
         if (sources != null) {
@@ -205,13 +205,13 @@ class RoadSignFilterPanel extends JPanel {
     }
 
     private void addStatusFilter(final Status status) {
-        add(Builder.buildLabel(GuiCnf.getInstance().getLblStatus(), FontUtil.BOLD_12, null), Constraints.LBL_STATUS);
+        add(Builder.buildLabel(GuiConfig.getInstance().getLblStatus(), FontUtil.BOLD_12, null), Constraints.LBL_STATUS);
         pnlStatus = new StatusFilterPanel(status);
         add(pnlStatus, Constraints.PNL_STATUS);
     }
 
     private void addTimeIntervalFilter(final TimestampFilter tstampFilter) {
-        add(Builder.buildLabel(GuiCnf.getInstance().getLblTimeInt(), FontUtil.BOLD_12, null), Constraints.LBL_INT);
+        add(Builder.buildLabel(GuiConfig.getInstance().getLblTimeInt(), FontUtil.BOLD_12, null), Constraints.LBL_INT);
         Date lower = null;
         Date upper = null;
         Long from = null;
@@ -223,23 +223,23 @@ class RoadSignFilterPanel extends JPanel {
             upper = tstampFilter.getTo() != null ? new Date(tstampFilter.getTo()) : Calendar.getInstance().getTime();
         }
 
-        pickerFrom = Builder.buildDatePicker(IconCnf.getInstance().getCalendarIcon(), new DateFormatter(),
+        pickerFrom = Builder.buildDatePicker(IconConfig.getInstance().getCalendarIcon(), new DateFormatter(),
                 new DateFromChangeListener(), null, upper, lower);
         pickerFrom.getEditor().setText(DateUtil.formatDay(from));
         pickerFrom.getEditor()
-        .setInputVerifier(new DateVerifier(pickerFrom.getEditor(), GuiCnf.getInstance().getTxtDateInvalid()));
+        .setInputVerifier(new DateVerifier(pickerFrom.getEditor(), GuiConfig.getInstance().getTxtDateInvalid()));
         add(pickerFrom, Constraints.CBB_START);
 
-        pickerTo = Builder.buildDatePicker(IconCnf.getInstance().getCalendarIcon(), new DateFormatter(),
+        pickerTo = Builder.buildDatePicker(IconConfig.getInstance().getCalendarIcon(), new DateFormatter(),
                 new DateToChangeListener(), lower, upper, null);
         pickerTo.getEditor().setText(DateUtil.formatDay(to));
         pickerTo.getEditor()
-        .setInputVerifier(new DateVerifier(pickerTo.getEditor(), GuiCnf.getInstance().getTxtDateInvalid()));
+        .setInputVerifier(new DateVerifier(pickerTo.getEditor(), GuiConfig.getInstance().getTxtDateInvalid()));
         add(pickerTo, Constraints.CBB_END);
     }
 
     private void addTypeFilter(final List<String> selectedTypes) {
-        add(Builder.buildLabel(GuiCnf.getInstance().getLblType(), FontUtil.BOLD_12, null), Constraints.LBL_TYPE);
+        add(Builder.buildLabel(GuiConfig.getInstance().getLblType(), FontUtil.BOLD_12, null), Constraints.LBL_TYPE);
         buildTypesList(selectedTypes);
         cmpTypes = Builder.buildScrollPane(listTypes, Color.white, false);
         cmpTypes.getViewport().setViewSize(TYPE_LIST_SIZE);
@@ -247,7 +247,7 @@ class RoadSignFilterPanel extends JPanel {
     }
 
     private void addUsernameFilter(final String username) {
-        add(Builder.buildLabel(GuiCnf.getInstance().getLblUsername(), FontUtil.BOLD_12, null),
+        add(Builder.buildLabel(GuiConfig.getInstance().getLblUsername(), FontUtil.BOLD_12, null),
                 Constraints.LBL_USERNAME);
         txtUsername = Builder.buildTextField(username, null, Color.white);
         add(txtUsername, Constraints.TXT_USERNAME);
@@ -259,14 +259,14 @@ class RoadSignFilterPanel extends JPanel {
 
         if (cbbScout.isSelected() && !cbbMapillary.isSelected()) {
             // reload scout types
-            types = ServiceCnf.getInstance().getScoutTypes();
+            types = Config.getInstance().getScoutTypes();
             renderer = new TypeListCellRenderer(Source.SCOUT);
         } else {
             if (cbbMapillary.isSelected() && !cbbScout.isSelected()) {
-                types = ServiceCnf.getInstance().getMapillaryTypes();
+                types = Config.getInstance().getMapillaryTypes();
                 renderer = new TypeListCellRenderer(Source.MAPILLARY);
             } else {
-                types = ServiceCnf.getInstance().getCommonTypes();
+                types = Config.getInstance().getCommonTypes();
                 renderer = new TypeListCellRenderer(null);
             }
         }
@@ -353,7 +353,7 @@ class RoadSignFilterPanel extends JPanel {
             final String duplicateStr = txtDupl.getText().trim();
             final Long duplicate = !duplicateStr.isEmpty() ? Long.parseLong(duplicateStr) : null;
             final String confidenceStr = txtConf.getText().trim();
-            final Short confidence = !confidenceStr.isEmpty() ? Short.parseShort(confidenceStr) : null;
+            final Double confidence = !confidenceStr.isEmpty() ? Double.parseDouble(confidenceStr) : null;
             final String appName = txtAppName.getText().trim();
             final String appVersion = txtAppVers.getText().trim();
             final String osName = txtOsName.getText().trim();

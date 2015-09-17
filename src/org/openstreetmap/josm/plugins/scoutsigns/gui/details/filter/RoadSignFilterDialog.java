@@ -19,8 +19,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.ModalDialog;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
 
 
 /**
@@ -41,7 +41,7 @@ public class RoadSignFilterDialog extends ModalDialog {
      * Builds a new {@code RoadSignFilterDialog}
      */
     public RoadSignFilterDialog() {
-        super(GuiCnf.getInstance().getDlgFilterTitle(), IconCnf.getInstance().getFilterIcon().getImage(), DIM);
+        super(GuiConfig.getInstance().getDlgFilterTitle(), IconConfig.getInstance().getFilterIcon().getImage(), DIM);
         createComponents();
     }
 

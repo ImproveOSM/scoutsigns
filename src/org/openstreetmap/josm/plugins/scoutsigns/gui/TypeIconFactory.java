@@ -19,8 +19,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.swing.ImageIcon;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Source;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ServiceCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.Config;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 
@@ -58,7 +58,7 @@ public final class TypeIconFactory {
 
 
     private TypeIconFactory() {
-        final ServiceCnf serviceCnf = ServiceCnf.getInstance();
+        final Config serviceCnf = Config.getInstance();
 
         scoutSignTypes = new LinkedHashMap<String, ImageIcon>();
         for (final String type : serviceCnf.getScoutTypes()) {
@@ -84,8 +84,8 @@ public final class TypeIconFactory {
                 commonSignTypes.put(type, icon);
             }
         }
-        defaultScoutType = loadIcon(Source.SCOUT, IconCnf.getInstance().getDefaultTypeIconName());
-        defaultMapillaryType = loadIcon(Source.MAPILLARY, IconCnf.getInstance().getDefaultTypeIconName());
+        defaultScoutType = loadIcon(Source.SCOUT, IconConfig.getInstance().getDefaultTypeIconName());
+        defaultMapillaryType = loadIcon(Source.MAPILLARY, IconConfig.getInstance().getDefaultTypeIconName());
     }
 
     /**
@@ -126,7 +126,7 @@ public final class TypeIconFactory {
      */
     private ImageIcon loadIcon(final Source source, final String type) {
         ImageIcon icon;
-        final IconCnf iconCnf = IconCnf.getInstance();
+        final IconConfig iconCnf = IconConfig.getInstance();
         final String iconPath =
                 source == Source.MAPILLARY ? iconCnf.getMapillaryTypesIconPath() : iconCnf.getScoutTypesIconPath();
                 try {

@@ -29,18 +29,18 @@ import org.openstreetmap.josm.tools.Pair;
  * @author Beata
  * @version $Revision$
  */
-public final class ClusterIconCnf {
+public final class ClusterIconConfig {
 
     private static final String CNF_FILE = "scoutsigns_cluster_icon.properties";
 
-    private static final ClusterIconCnf INSTANCE = new ClusterIconCnf();
+    private static final ClusterIconConfig INSTANCE = new ClusterIconConfig();
 
     /**
      * Returns the instance of the {@code ClusterIconCnf}
      *
      * @return a {@code ClusterIconCnf}
      */
-    public static ClusterIconCnf getInstance() {
+    public static ClusterIconConfig getInstance() {
         return INSTANCE;
     }
 
@@ -49,7 +49,7 @@ public final class ClusterIconCnf {
 
     private final Map<Integer, Pair<ImageIcon, Float>> map;
 
-    private ClusterIconCnf() {
+    private ClusterIconConfig() {
         final Properties properties = CnfUtil.load(CNF_FILE);
         def = buildPair(properties.getProperty("default"));
         properties.remove("default");

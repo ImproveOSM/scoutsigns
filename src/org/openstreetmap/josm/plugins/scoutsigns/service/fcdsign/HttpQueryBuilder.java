@@ -13,7 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package org.openstreetmap.josm.plugins.scoutsigns.service;
+package org.openstreetmap.josm.plugins.scoutsigns.service.fcdsign;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +25,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.Application;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Device;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Source;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ServiceCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.Config;
 import org.openstreetmap.josm.plugins.scoutsigns.util.http.HttpUtil;
 
 
@@ -53,6 +53,15 @@ class HttpQueryBuilder {
      * @param filter specify the current search filters
      * @param zoom specify the current zoom level
      */
+    HttpQueryBuilder(final BoundingBox bbox, final int zoom) {
+        query = new StringBuilder();
+
+        // add mandatory filters
+        addFormatFilter();
+        addBBoxFilter(bbox);
+        addZoomFilter(zoom);
+    }
+
     HttpQueryBuilder(final BoundingBox bbox, final SearchFilter filter, final int zoom) {
         query = new StringBuilder();
 
@@ -62,7 +71,7 @@ class HttpQueryBuilder {
         addZoomFilter(zoom);
 
         // add filters
-        if (zoom > ServiceCnf.getInstance().getMaxClusterZoom() && filter != null) {
+        if (zoom > Config.getInstance().getMaxClusterZoom() && filter != null) {
             addSourceFilter(filter.getSources());
             addTimestampFilter(filter.getTimestampFilter());
             addStatusFilter(filter.getStatus());
@@ -74,6 +83,7 @@ class HttpQueryBuilder {
             addUsernameFilter(filter.getUsername());
         }
     }
+
 
     /**
      * Creates a new builder with the given argument.
@@ -116,10 +126,10 @@ class HttpQueryBuilder {
         query.append(Constants.WEST).append(EQ).append(bbox.getWest());
     }
 
-    private void addConfidenceFilter(final Short confidence) {
+    private void addConfidenceFilter(final Double confidence) {
         if (confidence != null) {
             query.append(AND);
-            query.append(Constants.CONFIDENCE).append(EQ).append(confidence);
+            query.append(Constants.CONFIDENCE).append(EQ).append(confidence.shortValue());
         }
     }
 
@@ -197,7 +207,7 @@ class HttpQueryBuilder {
             // request only common types
             query.append(AND);
             query.append(Constants.TYPES).append(EQ);
-            query.append(HttpUtil.utf8Encode(ServiceCnf.getInstance().getCommonTypes()));
+            query.append(HttpUtil.utf8Encode(Config.getInstance().getCommonTypes()));
         }
     }
 
@@ -221,7 +231,7 @@ class HttpQueryBuilder {
      * @return a {@code String} object
      */
     String build(final String method) {
-        final StringBuilder url = new StringBuilder(ServiceCnf.getInstance().getServiceUrl());
+        final StringBuilder url = new StringBuilder(Config.getInstance().getServiceUrl());
         url.append(method).append(QUESTIONM);
         url.append(query);
         return url.toString();

@@ -20,12 +20,12 @@ import java.util.Properties;
 
 
 /**
- * Utility class holds run-time configuration properties.
+ * Holds general run-time configuration properties.
  *
  * @author Bea
  * @version $Revision$
  */
-public final class ServiceCnf {
+public final class Config {
 
     /** The name of the configuration file */
     private static final String CNF_FILE = "scoutsigns.properties";
@@ -35,33 +35,26 @@ public final class ServiceCnf {
     private static final int MAX_CLUSTER_ZOOM = 10;
 
     /** The unique instance of the object */
-    private static final ServiceCnf UNIQUE_INSTANCE = new ServiceCnf();
+    private static final Config UNIQUE_INSTANCE = new Config();
 
     /**
      * Returns the unique instance of the {@code ServiceCnf} object
      *
      * @return a {@code ServiceCnf} object
      */
-    public static ServiceCnf getInstance() {
+    public static Config getInstance() {
         return UNIQUE_INSTANCE;
     }
 
     private final String serviceUrl;
-    private final String mapillaryImageUrl;
-    private final String mapillaryImagePage;
-
-
     private int searchDelay;
     private int maxClusterZoom;
     private final List<String> scoutTypes;
-
     private final List<String> mapillaryTypes;
-
-
     private final List<String> commonTypes;
 
 
-    private ServiceCnf() {
+    private Config() {
         final Properties properties = CnfUtil.load(CNF_FILE);
         serviceUrl = properties.getProperty("service.url");
         if (serviceUrl == null) {
@@ -69,13 +62,6 @@ public final class ServiceCnf {
             // mechanism
             throw new ExceptionInInitializerError("Missing FcdSignService url.");
         }
-        mapillaryImageUrl = properties.getProperty("mapillary.image.url");
-        if (mapillaryImageUrl == null) {
-            // no need to catch this error, it is handled by JOSM error
-            // mechanism
-            throw new ExceptionInInitializerError("Missing Mapillary image url.");
-        }
-        mapillaryImagePage = properties.getProperty("mapillary.image.page");
         try {
             searchDelay = Integer.parseInt(properties.getProperty("search.delay"));
         } catch (final NumberFormatException ex) {
@@ -99,14 +85,6 @@ public final class ServiceCnf {
 
     public List<String> getCommonTypes() {
         return commonTypes;
-    }
-
-    public String getMapillaryImagePage() {
-        return mapillaryImagePage;
-    }
-
-    public String getMapillaryImageUrl() {
-        return mapillaryImageUrl;
     }
 
     public List<String> getMapillaryTypes() {

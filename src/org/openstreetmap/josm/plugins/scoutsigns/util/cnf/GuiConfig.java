@@ -24,14 +24,14 @@ import java.util.Properties;
  * @author Bea
  * @version $Revision$
  */
-public final class GuiCnf {
+public final class GuiConfig {
 
     /** The name of the configuration file */
     private static final String CNF_FILE = "scoutsigns_gui.properties";
 
-    private static final GuiCnf INSTANCE = new GuiCnf();
+    private static final GuiConfig INSTANCE = new GuiConfig();
 
-    public static GuiCnf getInstance() {
+    public static GuiConfig getInstance() {
         return INSTANCE;
     }
 
@@ -109,7 +109,7 @@ public final class GuiCnf {
     private final String dlgReopenTitle;
 
 
-    private GuiCnf() {
+    private GuiConfig() {
         final Properties properties = CnfUtil.load(CNF_FILE);
         dlgDetailsTitle = CnfUtil.readProperty(properties, "dialog.title");
 

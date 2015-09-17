@@ -30,9 +30,9 @@ import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.DataSet;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.util.Util;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltConfig;
 
 
 /**
@@ -54,19 +54,19 @@ public class ScoutSignsLayer extends Layer {
      * Builds a new {@code SkoSignsLayer} with default functionality.
      */
     public ScoutSignsLayer() {
-        super(GuiCnf.getInstance().getDlgDetailsTitle());
+        super(GuiConfig.getInstance().getDlgDetailsTitle());
         paintHandler = new PaintHandler();
         selRoadSigns = new ArrayList<>();
     }
 
     @Override
     public Icon getIcon() {
-        return IconCnf.getInstance().getLayerIcon();
+        return IconConfig.getInstance().getLayerIcon();
     }
 
     @Override
     public Object getInfoComponent() {
-        return TltCnf.getInstance().getLayerInfo();
+        return TltConfig.getInstance().getLayerInfo();
     }
 
     @Override
@@ -88,7 +88,7 @@ public class ScoutSignsLayer extends Layer {
 
     @Override
     public String getToolTipText() {
-        return TltCnf.getInstance().getPluginTlt();
+        return TltConfig.getInstance().getPluginTlt();
     }
 
     @Override

@@ -24,14 +24,14 @@ import java.util.Properties;
  * @author Bea
  * @version $Revision$
  */
-public final class TltCnf {
+public final class TltConfig {
 
     /** The name of the configuration file */
     private static final String CNF_FILE = "scoutsigns_tlt.properties";
 
-    private static final TltCnf INSTANCE = new TltCnf();
+    private static final TltConfig INSTANCE = new TltConfig();
 
-    public static TltCnf getInstance() {
+    public static TltConfig getInstance() {
         return INSTANCE;
     }
 
@@ -53,7 +53,7 @@ public final class TltCnf {
     private final String btnOpen;
 
 
-    private TltCnf() {
+    private TltConfig() {
         final Properties properties = CnfUtil.load(CNF_FILE);
         pluginTlt = CnfUtil.readProperty(properties, "plugin.tlt");
         layerInfo = CnfUtil.readProperty(properties, "layer.info");

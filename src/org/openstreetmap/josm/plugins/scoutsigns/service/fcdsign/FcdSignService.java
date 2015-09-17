@@ -13,7 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package org.openstreetmap.josm.plugins.scoutsigns.service;
+package org.openstreetmap.josm.plugins.scoutsigns.service.fcdsign;
 
 import java.util.List;
 import java.util.Map;
@@ -21,14 +21,14 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.CarPosition;
-import org.openstreetmap.josm.plugins.scoutsigns.entity.DataSet;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
+import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSignCluster;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.SignPosition;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
-import org.openstreetmap.josm.plugins.scoutsigns.service.deserializer.CarPositionDeserializer;
-import org.openstreetmap.josm.plugins.scoutsigns.service.deserializer.LatLonDeserializer;
-import org.openstreetmap.josm.plugins.scoutsigns.service.deserializer.SignPositionDeserializer;
-import org.openstreetmap.josm.plugins.scoutsigns.service.entity.Root;
+import org.openstreetmap.josm.plugins.scoutsigns.service.fcdsign.deserializer.CarPositionDeserializer;
+import org.openstreetmap.josm.plugins.scoutsigns.service.fcdsign.deserializer.LatLonDeserializer;
+import org.openstreetmap.josm.plugins.scoutsigns.service.fcdsign.deserializer.SignPositionDeserializer;
+import org.openstreetmap.josm.plugins.scoutsigns.service.fcdsign.entity.Root;
 import org.openstreetmap.josm.plugins.scoutsigns.util.http.HttpConnector;
 import org.openstreetmap.josm.plugins.scoutsigns.util.http.HttpException;
 import org.openstreetmap.josm.plugins.scoutsigns.util.http.HttpMethod;
@@ -116,20 +116,35 @@ public class FcdSignService {
     }
 
     /**
+     * Searches for road sign clusters from the specified area.
+     *
+     * @param bbox a {@code BoundingBox} specifies the searching area
+     * @param zoom the current zoom level
+     * @return a list of {@code RoadSignCluster}s
+     * @throws FcdSignServiceException if an error occurred during the FcdSignService method execution
+     */
+    public List<RoadSignCluster> searchClusters(final BoundingBox bbox, final int zoom) throws FcdSignServiceException {
+        final String url = new HttpQueryBuilder(bbox, zoom).build(Constants.SEARCH_SIGNS);
+        final Root root = executeGet(url);
+        verifyStatus(root);
+        return root.getRoadSignClusters();
+    }
+
+    /**
      * Searches for the road signs from the specified area that satisfy the given filters. Null filters are ignored.
      *
      * @param bbox a {@code BoundingBox} specifies the searching area
      * @param filter specifies the search filters
      * @param zoom the current zoom level
-     * @return a {@code DataSet} containing a list of road signs or a list of road sign clusters
+     * @return a list of {@code RoadSign}s
      * @throws FcdSignServiceException if an error occurred during the FcdSignService method execution
      */
-    public DataSet searchSigns(final BoundingBox bbox, final SearchFilter filter, final int zoom)
+    public List<RoadSign> searchSigns(final BoundingBox bbox, final SearchFilter filter, final int zoom)
             throws FcdSignServiceException {
         final String url = new HttpQueryBuilder(bbox, filter, zoom).build(Constants.SEARCH_SIGNS);
         final Root root = executeGet(url);
         verifyStatus(root);
-        return new DataSet(root.getRoadSigns(), root.getRoadSignClusters());
+        return root.getRoadSigns();
     }
 
     private Root buildRoot(final String response) throws FcdSignServiceException {

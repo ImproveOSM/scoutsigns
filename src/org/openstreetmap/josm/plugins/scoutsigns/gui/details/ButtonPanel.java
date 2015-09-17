@@ -32,10 +32,10 @@ import org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter.RoadSignFilt
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.TripViewObservable;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.TripViewObserver;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ServiceCnf;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.Config;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltConfig;
 
 
 /**
@@ -55,8 +55,8 @@ class ButtonPanel extends JPanel implements TripViewObservable {
 
         @Override
         public void actionPerformed(final ActionEvent event) {
-            final EditDialog dlgComment = new EditDialog(null, GuiCnf.getInstance().getDlgCommentTitle(),
-                    IconCnf.getInstance().getCommentIcon().getImage());
+            final EditDialog dlgComment = new EditDialog(null, GuiConfig.getInstance().getDlgCommentTitle(),
+                    IconConfig.getInstance().getCommentIcon().getImage());
             dlgComment.registerObserver(statusChangeObserver);
             dlgComment.setVisible(true);
         }
@@ -183,8 +183,8 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         super(new GridLayout(ROWS, COLS));
 
         // create components
-        final IconCnf iconCnf = IconCnf.getInstance();
-        final TltCnf tltCnf = TltCnf.getInstance();
+        final IconConfig iconCnf = IconConfig.getInstance();
+        final TltConfig tltCnf = TltConfig.getInstance();
         btnFilter = Builder.buildButton(new DisplayFilterDialog(), iconCnf.getFilterIcon(), tltCnf.getBtnFilter());
         btnBack = Builder.buildButton(new ExitTrip(), iconCnf.getBackIcon(), tltCnf.getBtnBack());
         btnTrip = Builder.buildButton(new DisplayTrip(), iconCnf.getTripIcon(), tltCnf.getBtnTrip());
@@ -242,7 +242,7 @@ class ButtonPanel extends JPanel implements TripViewObservable {
      * @param zoom the current zoom level.
      */
     void enableButtons(final int zoom) {
-        if (zoom > ServiceCnf.getInstance().getMaxClusterZoom()) {
+        if (zoom > Config.getInstance().getMaxClusterZoom()) {
             btnFilter.setEnabled(true);
             enableRoadSignActions();
         } else {

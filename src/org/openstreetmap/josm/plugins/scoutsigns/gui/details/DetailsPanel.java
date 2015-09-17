@@ -24,7 +24,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.Comment;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Trip;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
 
 
 /**
@@ -58,7 +58,7 @@ class DetailsPanel extends JTabbedPane {
         pnlTrip = new TripPanel();
         pnlCarPos = new CarPositionPanel();
         pnlComments = new CommentsPanel();
-        final GuiCnf guiCnf = GuiCnf.getInstance();
+        final GuiConfig guiCnf = GuiConfig.getInstance();
         final JScrollPane cmpRoadSign =
                 Builder.buildScrollPane(guiCnf.getPnlRoadSignTitle(), pnlRoadSign, getBackground(), DIM);
         add(cmpRoadSign);

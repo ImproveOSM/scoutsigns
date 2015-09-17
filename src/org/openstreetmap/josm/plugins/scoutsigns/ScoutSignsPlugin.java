@@ -43,9 +43,10 @@ import org.openstreetmap.josm.plugins.scoutsigns.gui.details.ScoutSignsDetailsDi
 import org.openstreetmap.josm.plugins.scoutsigns.gui.layer.ScoutSignsLayer;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.TripViewObserver;
+import org.openstreetmap.josm.plugins.scoutsigns.service.ServiceHandler;
 import org.openstreetmap.josm.plugins.scoutsigns.util.InfoDialog;
 import org.openstreetmap.josm.plugins.scoutsigns.util.Util;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ServiceCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.Config;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.Keys;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
 import org.openstreetmap.josm.tools.OsmUrlToBounds;
@@ -102,23 +103,22 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
                 final BoundingBox bbox = Util.buildBBox(Main.map.mapView);
                 if (bbox != null) {
                     final int zoom = OsmUrlToBounds.getZoom(Main.map.mapView.getRealBounds());
-                    final SearchFilter filter =
-                            zoom > ServiceCnf.getInstance().getMaxClusterZoom() ? searchFilter : null;
-                            final DataSet result = ServiceHandler.getInstance().searchSigns(bbox, filter, zoom);
-                            SwingUtilities.invokeLater(new Runnable() {
+                    final SearchFilter filter = zoom > Config.getInstance().getMaxClusterZoom() ? searchFilter : null;
+                    final DataSet result = ServiceHandler.getInstance().search(bbox, filter, zoom);
+                    SwingUtilities.invokeLater(new Runnable() {
 
-                                @Override
-                                public void run() {
-                                    synchronized (this) {
-                                        new InfoDialog().displayDialog(zoom, prevZoom);
-                                        prevZoom = zoom;
-                                        updateSelection(result);
-                                        dialog.enableButtons(zoom);
-                                        layer.setDataSet(result);
-                                        Main.map.repaint();
-                                    }
-                                }
-                            });
+                        @Override
+                        public void run() {
+                            synchronized (this) {
+                                new InfoDialog().displayDialog(zoom, prevZoom);
+                                prevZoom = zoom;
+                                updateSelection(result);
+                                dialog.enableButtons(zoom);
+                                layer.setDataSet(result);
+                                Main.map.repaint();
+                            }
+                        }
+                    });
                 }
             }
         }
@@ -320,7 +320,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
             if (zoomTimer != null && zoomTimer.isRunning()) {
                 zoomTimer.restart();
             } else {
-                zoomTimer = new Timer(ServiceCnf.getInstance().getSearchDelay(), new ActionListener() {
+                zoomTimer = new Timer(Config.getInstance().getSearchDelay(), new ActionListener() {
 
                     @Override
                     public void actionPerformed(final ActionEvent e) {

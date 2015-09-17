@@ -31,8 +31,8 @@ import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSignCluster;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.TypeIconFactory;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ClusterIconCnf;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconCnf;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ClusterIconConfig;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
 import org.openstreetmap.josm.tools.Pair;
 
 
@@ -111,7 +111,7 @@ class PaintHandler {
         final Point point = mv.getPoint(roadSign.getSignPos().getPosition());
         if (mv.contains(point)) {
             if (selected) {
-                drawIcon(g2D, IconCnf.getInstance().getSelRoadSignBgIcon(), point);
+                drawIcon(g2D, IconConfig.getInstance().getSelRoadSignBgIcon(), point);
             }
             drawIcon(g2D, iconFactory.getIcon(roadSign.getSource(), roadSign.getType()), point);
         }
@@ -128,7 +128,7 @@ class PaintHandler {
     void drawRoadSignClusters(final Graphics2D g2D, final MapView mv, final List<RoadSignCluster> clusterList) {
         for (final RoadSignCluster cluster : clusterList) {
             final Point point = mv.getPoint(cluster.getPosition());
-            final Pair<ImageIcon, Float> pair = ClusterIconCnf.getInstance().getIcon(cluster.getCount());
+            final Pair<ImageIcon, Float> pair = ClusterIconConfig.getInstance().getIcon(cluster.getCount());
             g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pair.b));
             drawIcon(g2D, pair.a, point);
         }
