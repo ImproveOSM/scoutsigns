@@ -63,7 +63,7 @@ public class MapillaryService {
      * @return a collection of {@code RoadSign} objects
      * @throws MapillaryException if the operation failed
      */
-    public Collection<RoadSign> searchSigns(final BoundingBox bbox, final SearchFilter filter)
+    public List<RoadSign> searchSigns(final BoundingBox bbox, final SearchFilter filter)
             throws MapillaryServiceException {
         List<String> types = null;
 
@@ -84,7 +84,7 @@ public class MapillaryService {
         }
         final String url = queryBuilder.buildSearchQuery(bbox, newFilter);
         final MRoot root = executeGet(url);
-        return buildRoadSignCollection(root.getIms(), types, confidence);
+        return buildRoadSignList(root.getIms(), types, confidence);
     }
 
     private MRoot buildMRoot(final String response) throws MapillaryServiceException {
@@ -102,9 +102,9 @@ public class MapillaryService {
         return root;
     }
 
-    private Collection<RoadSign> buildRoadSignCollection(final Collection<MImage> input, final List<String> types,
+    private List<RoadSign> buildRoadSignList(final Collection<MImage> input, final List<String> types,
             final Double confidence) {
-        final Collection<RoadSign> output = new ArrayList<RoadSign>();
+        final List<RoadSign> output = new ArrayList<RoadSign>();
         for (final MImage mImg : input) {
             if (mImg.getRects() != null) {
                 final SignPosition position = new SignPosition(new LatLon(mImg.getLat(), mImg.getLon()), null);
