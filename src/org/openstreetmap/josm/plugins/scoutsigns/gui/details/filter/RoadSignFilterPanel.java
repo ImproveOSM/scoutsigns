@@ -328,7 +328,7 @@ class RoadSignFilterPanel extends JPanel {
         pickerTo.setDate(null);
         pnlStatus.clearSelection();
         txtDupl.setText("");
-        txtConf.setText("" + SearchFilter.DEF_CONFIDENCE);
+        txtConf.setText("" + SearchFilter.DEF_CONFIDENCE.intValue());
         txtUsername.setText("");
         txtAppName.setText("");
         txtAppVers.setText("");
