@@ -189,12 +189,16 @@ public final class ServiceHandler {
             try {
                 result.addAll(futureList.get(i).get());
             } catch (final Exception ex) {
-                errorMessages.add(sources.get(i) + ex.getMessage());
+                errorMessages.add("Could not obtain data from " + sources.get(i) + ": " + ex.getMessage());
             }
         }
         executor.shutdown();
         if (errorMessages.size() == sources.size()) {
-            throw new Exception(errorMessages.toString());
+            String message = "";
+            for (final String elem : errorMessages) {
+                message += elem + "\n";
+            }
+            throw new Exception(message);
         }
         return result;
     }
