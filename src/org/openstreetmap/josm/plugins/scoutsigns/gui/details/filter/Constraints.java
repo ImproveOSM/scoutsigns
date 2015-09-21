@@ -29,7 +29,7 @@ final class Constraints {
     static final GridBagConstraints LBL_SOURCES = new GridBagConstraints(0, 0, 1, 1, 1, 1,
             GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(7, 5, 3, 5), 0, 0);
     static final GridBagConstraints PNL_SOURCES = new GridBagConstraints(1, 0, 1, 1, 1, 0,
-            GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 3, 5), 0, 0);
+            GridBagConstraints.PAGE_START, GridBagConstraints.HORIZONTAL, new Insets(0, 2, 3, 5), 0, 0);
     static final GridBagConstraints CBB_SCOUT = new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
             GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0);
     static final GridBagConstraints CBB_MAPILLARY = new GridBagConstraints(1, 0, 1, 1, 0, 0,
