@@ -50,14 +50,6 @@ public final class InfoDialog {
                 final boolean flag = val == JOptionPane.YES_OPTION;
                 PrefManager.getInstance().saveSuppressClusterInfoFlag(flag);
                 isDisplayed = false;
-            } else if (!PrefManager.getInstance().loadSupressMapillaryInfoFlag() && zoom < maxZoom) {
-                isDisplayed = true;
-                final int val = JOptionPane.showOptionDialog(Main.map.mapView,
-                        GuiConfig.getInstance().getInfoMapillaryTxt(), GuiConfig.getInstance().getInfoMapillaryTitle(),
-                        JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
-                final boolean flag = val == JOptionPane.YES_OPTION;
-                PrefManager.getInstance().saveSuppressMapillaryInfoFlag(flag);
-                isDisplayed = false;
             }
         }
     }

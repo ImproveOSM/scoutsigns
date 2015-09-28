@@ -49,9 +49,7 @@ public final class Config {
     private final String serviceUrl;
     private int searchDelay;
     private int maxClusterZoom;
-    private final List<String> scoutTypes;
-    private final List<String> mapillaryTypes;
-    private final List<String> commonTypes;
+    private final List<String> signTypes;
 
 
     private Config() {
@@ -73,30 +71,12 @@ public final class Config {
             maxClusterZoom = MAX_CLUSTER_ZOOM;
         }
         // scout road sign types
-        scoutTypes = CnfUtil.readPropertiesList(properties, "types.scout");
-
-        // mapillary road sign types
-        mapillaryTypes = CnfUtil.readPropertiesList(properties, "types.mapillary");
-
-        // read common types
-        commonTypes = CnfUtil.readPropertiesList(properties, "types.common");
+        signTypes = CnfUtil.readPropertiesList(properties, "types");
     }
 
-
-    public List<String> getCommonTypes() {
-        return commonTypes;
-    }
-
-    public List<String> getMapillaryTypes() {
-        return mapillaryTypes;
-    }
 
     public int getMaxClusterZoom() {
         return maxClusterZoom;
-    }
-
-    public List<String> getScoutTypes() {
-        return scoutTypes;
     }
 
     public int getSearchDelay() {
@@ -105,5 +85,9 @@ public final class Config {
 
     public String getServiceUrl() {
         return serviceUrl;
+    }
+
+    public List<String> getSignTypes() {
+        return signTypes;
     }
 }

@@ -18,16 +18,11 @@ package org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JCheckBox;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -37,7 +32,6 @@ import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.TimestampFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Application;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Device;
-import org.openstreetmap.josm.plugins.scoutsigns.entity.Source;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.DateFormatter;
@@ -87,27 +81,9 @@ class RoadSignFilterPanel extends JPanel {
         }
     }
 
-
-    /*
-     * Listens to source filter changes.
-     */
-    private class SourceSelectionListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(final ActionEvent event) {
-            reloadTypes();
-            enableComponents();
-            repaint();
-        }
-    }
-
-
     private static final long serialVersionUID = 31048161544787922L;
     private static final Dimension TYPE_LIST_SIZE = new Dimension(300, 200);
 
-
-    private JCheckBox cbbScout;
-    private JCheckBox cbbMapillary;
     private JXDatePicker pickerTo;
     private JXDatePicker pickerFrom;
     private StatusFilterPanel pnlStatus;
@@ -130,7 +106,6 @@ class RoadSignFilterPanel extends JPanel {
 
         // create and add panel components
         final SearchFilter filter = PrefManager.getInstance().loadSearchFilter();
-        addSourceFilter(filter.getSources());
         addTimeIntervalFilter(filter.getTimestampFilter());
         addTypeFilter(filter.getTypes());
         addConfidenceFilter(filter.getConfidence());
@@ -187,23 +162,6 @@ class RoadSignFilterPanel extends JPanel {
         txtDupl.setInputVerifier(new DuplicateIdVerifier(txtDupl, GuiConfig.getInstance().getTxtDuplIdInvalid()));
     }
 
-    private void addSourceFilter(final List<Source> sources) {
-        add(Builder.buildLabel(GuiConfig.getInstance().getLblSources(), FontUtil.BOLD_12, null), Constraints.LBL_SOURCES);
-        boolean scoutSel = false;
-        boolean mapillarySel = false;
-        if (sources != null) {
-            scoutSel = sources.contains(Source.SCOUT);
-            mapillarySel = sources.contains(Source.MAPILLARY);
-        }
-        cbbScout = Builder.buildCheckBox(new SourceSelectionListener(), Source.SCOUT.name().toLowerCase(), scoutSel);
-        cbbMapillary = Builder.buildCheckBox(new SourceSelectionListener(), Source.MAPILLARY.name().toLowerCase(),
-                mapillarySel);
-        final JPanel pnl = new JPanel(new GridBagLayout());
-        pnl.add(cbbScout, Constraints.CBB_SCOUT);
-        pnl.add(cbbMapillary, Constraints.CBB_MAPILLARY);
-        add(pnl, Constraints.PNL_SOURCES);
-    }
-
     private void addStatusFilter(final Status status) {
         add(Builder.buildLabel(GuiConfig.getInstance().getLblStatus(), FontUtil.BOLD_12, null), Constraints.LBL_STATUS);
         pnlStatus = new StatusFilterPanel(status);
@@ -226,8 +184,8 @@ class RoadSignFilterPanel extends JPanel {
         pickerFrom = Builder.buildDatePicker(IconConfig.getInstance().getCalendarIcon(), new DateFormatter(),
                 new DateFromChangeListener(), null, upper, lower);
         pickerFrom.getEditor().setText(DateUtil.formatDay(from));
-        pickerFrom.getEditor()
-        .setInputVerifier(new DateVerifier(pickerFrom.getEditor(), GuiConfig.getInstance().getTxtDateInvalid()));
+        pickerFrom.getEditor().setInputVerifier(
+                new DateVerifier(pickerFrom.getEditor(), GuiConfig.getInstance().getTxtDateInvalid()));
         add(pickerFrom, Constraints.CBB_START);
 
         pickerTo = Builder.buildDatePicker(IconConfig.getInstance().getCalendarIcon(), new DateFormatter(),
@@ -240,7 +198,7 @@ class RoadSignFilterPanel extends JPanel {
 
     private void addTypeFilter(final List<String> selectedTypes) {
         add(Builder.buildLabel(GuiConfig.getInstance().getLblType(), FontUtil.BOLD_12, null), Constraints.LBL_TYPE);
-        buildTypesList(selectedTypes);
+        listTypes = Builder.buildList(Config.getInstance().getSignTypes(), new TypeListCellRenderer(), selectedTypes);
         cmpTypes = Builder.buildScrollPane(listTypes, Color.white, false);
         cmpTypes.getViewport().setViewSize(TYPE_LIST_SIZE);
         add(cmpTypes, Constraints.LIST_TYPE);
@@ -253,61 +211,16 @@ class RoadSignFilterPanel extends JPanel {
         add(txtUsername, Constraints.TXT_USERNAME);
     }
 
-    private void buildTypesList(final List<String> selectedTypes) {
-        List<String> types;
-        DefaultListCellRenderer renderer;
-
-        if (cbbScout.isSelected() && !cbbMapillary.isSelected()) {
-            // reload scout types
-            types = Config.getInstance().getScoutTypes();
-            renderer = new TypeListCellRenderer(Source.SCOUT);
-        } else {
-            if (cbbMapillary.isSelected() && !cbbScout.isSelected()) {
-                types = Config.getInstance().getMapillaryTypes();
-                renderer = new TypeListCellRenderer(Source.MAPILLARY);
-            } else {
-                types = Config.getInstance().getCommonTypes();
-                renderer = new TypeListCellRenderer(null);
-            }
-        }
-        listTypes = Builder.buildList(types, renderer, selectedTypes);
-    }
 
     private void enableComponents() {
-        if (cbbScout.isSelected() && !cbbMapillary.isSelected()) {
-            pnlStatus.enableComponents(true);
-            txtDupl.setEnabled(true);
-            txtUsername.setEnabled(true);
-            txtOsName.setEnabled(true);
-            txtOsVers.setEnabled(true);
-            txtAppName.setEnabled(true);
-            txtAppVers.setEnabled(true);
-        } else {
-            // enable common filters, time interval, type, confidence
-            pnlStatus.enableComponents(false);
-            txtDupl.setEnabled(false);
-            txtUsername.setEnabled(false);
-            txtOsName.setEnabled(false);
-            txtOsVers.setEnabled(false);
-            txtAppName.setEnabled(false);
-            txtAppVers.setEnabled(false);
-        }
-    }
+        pnlStatus.enableComponents(true);
+        txtDupl.setEnabled(true);
+        txtUsername.setEnabled(true);
+        txtOsName.setEnabled(true);
+        txtOsVers.setEnabled(true);
+        txtAppName.setEnabled(true);
+        txtAppVers.setEnabled(true);
 
-    private void reloadTypes() {
-        buildTypesList(null);
-        cmpTypes.getViewport().setView(listTypes);
-    }
-
-    private List<Source> selectedSources() {
-        final List<Source> sources = new ArrayList<Source>();
-        if (cbbScout.isSelected()) {
-            sources.add(Source.SCOUT);
-        }
-        if (cbbMapillary.isSelected()) {
-            sources.add(Source.MAPILLARY);
-        }
-        return sources;
     }
 
     private boolean verifyInput() {
@@ -320,8 +233,6 @@ class RoadSignFilterPanel extends JPanel {
      * Resets the filters to the default one.
      */
     void resetFilters() {
-        cbbScout.setSelected(true);
-        cbbMapillary.setSelected(true);
         pickerFrom.getEditor().setText("");
         pickerFrom.setDate(null);
         pickerTo.getEditor().setText("");
@@ -334,7 +245,7 @@ class RoadSignFilterPanel extends JPanel {
         txtAppVers.setText("");
         txtOsName.setText("");
         txtOsVers.setText("");
-        reloadTypes();
+        listTypes.clearSelection();
         enableComponents();
     }
 
@@ -359,8 +270,7 @@ class RoadSignFilterPanel extends JPanel {
             final String osName = txtOsName.getText().trim();
             final String osVersion = txtOsVers.getText().trim();
             final String username = txtUsername.getText().trim();
-            final List<Source> sources = selectedSources();
-            filter = new SearchFilter(sources, new TimestampFilter(from, to), listTypes.getSelectedValuesList(), status,
+            filter = new SearchFilter(new TimestampFilter(from, to), listTypes.getSelectedValuesList(), status,
                     duplicate, confidence, new Application(appName, appVersion), new Device(osName, osVersion),
                     username);
         }

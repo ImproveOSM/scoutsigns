@@ -28,9 +28,7 @@ public final class Keys {
     static final String ERROR_SUPPRESS = "scoutsigns.error.suppress";
 
     static final String CLUSTER_INFO_SUPPRESS = "scoutsigns.cluster.info.suppress";
-    static final String MAPILLARY_INFO_SUPPRESS = "scoutsigns.mapillary.info.suppress";
     public static final String FILTERS_CHANGED = "scoutsigns.filter.changed";
-    static final String SOURCE = "scoutsigns.filter.source";
     static final String FROM = "scoutsigns.filter.from";
     static final String TO = "scoutsigns.filter.to";
     static final String STATUS = "scoutsigns.filter.status";

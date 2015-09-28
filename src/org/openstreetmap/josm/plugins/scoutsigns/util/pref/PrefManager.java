@@ -15,7 +15,6 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.util.pref;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.openstreetmap.josm.Main;
@@ -23,7 +22,6 @@ import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.TimestampFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Application;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Device;
-import org.openstreetmap.josm.plugins.scoutsigns.entity.Source;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 
 
@@ -67,13 +65,6 @@ public final class PrefManager {
      * @return a {@code SearchFilter} object
      */
     public SearchFilter loadSearchFilter() {
-        final Collection<String> sourceNames = Main.pref.getCollection(Keys.SOURCE);
-        final List<Source> sources = new ArrayList<Source>();
-        if (sourceNames != null && !sourceNames.isEmpty()) {
-            for (final String name : sourceNames) {
-                sources.add(Source.valueOf(name));
-            }
-        }
         final List<String> types = (List<String>) Main.pref.getCollection(Keys.TYPE);
         final String statusStr = Main.pref.get(Keys.STATUS);
         final String confidenceStr = Main.pref.get(Keys.CONFIDENCE);
@@ -98,7 +89,7 @@ public final class PrefManager {
             confidence = Double.valueOf(confidenceStr);
         }
 
-        return new SearchFilter(sources, new TimestampFilter(from, to), types, status, duplicate, confidence,
+        return new SearchFilter(new TimestampFilter(from, to), types, status, duplicate, confidence,
                 new Application(appName, appVersion), new Device(osName, osVersion), username);
     }
 
@@ -119,16 +110,6 @@ public final class PrefManager {
      */
     public boolean loadSupressErrorFlag() {
         return Main.pref.getBoolean(Keys.ERROR_SUPPRESS);
-    }
-
-    /**
-     * Loads the suppress Mapillary info flag.
-     *
-     * @return a boolean value
-     */
-    public boolean loadSupressMapillaryInfoFlag() {
-        final String flagVal = Main.pref.get(Keys.MAPILLARY_INFO_SUPPRESS);
-        return flagVal.isEmpty() ? false : new Boolean(flagVal);
     }
 
     /**
@@ -166,16 +147,9 @@ public final class PrefManager {
         String appVersion = "";
         String osName = "";
         String osVersion = "";
-        Collection<String> sources = null;
         Collection<String> types = null;
 
         if (filter != null) {
-            if (filter.getSources() != null) {
-                sources = new ArrayList<>();
-                for (final Source source : filter.getSources()) {
-                    sources.add(source.name());
-                }
-            }
             if (filter.getTimestampFilter() != null) {
                 final TimestampFilter tstpFilter = filter.getTimestampFilter();
                 from = tstpFilter.getFrom() != null ? tstpFilter.getFrom().toString() : "";
@@ -196,7 +170,6 @@ public final class PrefManager {
             }
         }
         // clear collection is no types is set
-        Main.pref.putCollection(Keys.SOURCE, sources);
         Main.pref.put(Keys.FROM, from);
         Main.pref.put(Keys.TO, to);
         Main.pref.put(Keys.STATUS, status);
@@ -220,15 +193,6 @@ public final class PrefManager {
         Main.pref.put(Keys.CLUSTER_INFO_SUPPRESS, value);
     }
 
-    /**
-     * Saves the given value to the global preference file. Based on this value an info message is displayed to the user
-     * regarding Mapillary data.
-     *
-     * @param value a boolean value
-     */
-    public void saveSuppressMapillaryInfoFlag(final boolean value) {
-        Main.pref.put(Keys.MAPILLARY_INFO_SUPPRESS, value);
-    }
     /**
      * Saves the given value to the global preference file. Based on this value an occurred error is shown or not to the
      * end user.

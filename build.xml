@@ -42,7 +42,7 @@
     -->
 	<target name="compile" depends="init">
 		<echo message="compiling sources for  ${plugin.jar} ... " />
-		<javac srcdir="src" classpathref="classpath" debug="false" destdir="${plugin.build.dir}" includeantruntime="true" excludes="**/package-info.java">
+		<javac srcdir="src" classpathref="classpath" debug="true" destdir="${plugin.build.dir}" includeantruntime="true" excludes="**/package-info.java">
 			<compilerarg value="-Xlint:deprecation" />
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>

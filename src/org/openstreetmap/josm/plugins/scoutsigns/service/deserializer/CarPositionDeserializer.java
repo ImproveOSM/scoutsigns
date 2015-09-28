@@ -13,7 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package org.openstreetmap.josm.plugins.scoutsigns.service.fcdsign.deserializer;
+package org.openstreetmap.josm.plugins.scoutsigns.service.deserializer;
 
 import java.lang.reflect.Type;
 import org.openstreetmap.josm.data.coor.LatLon;

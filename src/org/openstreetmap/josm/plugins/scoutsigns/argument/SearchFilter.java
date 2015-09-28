@@ -19,7 +19,6 @@ import java.util.List;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Application;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Device;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.ObjectUtil;
-import org.openstreetmap.josm.plugins.scoutsigns.entity.Source;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 
 
@@ -33,7 +32,6 @@ public class SearchFilter {
 
     public static final Double DEF_CONFIDENCE = 90.0;
 
-    private List<Source> sources;
     private final TimestampFilter timestampFilter;
     private final List<String> types;
     private Status status;
@@ -43,31 +41,6 @@ public class SearchFilter {
     private Device device;
     private String username;
 
-
-    /**
-     * Builds a new filter with the given arguments.
-     *
-     * @param sources defines the source list from which search for road signs
-     * @param timestampFilter defines the interval of time in which the returned road signs have been created
-     * @param types a list of road sign type
-     * @param status the status of the returned road signs
-     * @param duplicateOf the id of road sign of which all returned road signs are duplicates
-     * @param confidence specifies the confidence with which the sign has been recognized (0-300)
-     * @param app defines the application from which the returned road sign have been created
-     * @param device defines the device from which the returned road sign have been created
-     * @param username the user's OSM user name
-     */
-    public SearchFilter(final List<Source> sources, final TimestampFilter timestampFilter, final List<String> types,
-            final Status status, final Long duplicateOf, final Double confidence, final Application app,
-            final Device device, final String username) {
-        this(timestampFilter, types, confidence);
-        this.sources = sources;
-        this.status = status;
-        this.duplicateOf = duplicateOf;
-        this.app = app;
-        this.device = device;
-        this.username = username;
-    }
 
     /**
      * Builds a new filter with the given arguments.
@@ -82,6 +55,29 @@ public class SearchFilter {
         this.confidence = confidence;
     }
 
+    /**
+     * Builds a new filter with the given arguments.
+     *
+     * @param timestampFilter defines the interval of time in which the returned road signs have been created
+     * @param types a list of road sign type
+     * @param status the status of the returned road signs
+     * @param duplicateOf the id of road sign of which all returned road signs are duplicates
+     * @param confidence specifies the confidence with which the sign has been recognized (0-300)
+     * @param app defines the application from which the returned road sign have been created
+     * @param device defines the device from which the returned road sign have been created
+     * @param username the user's OSM user name
+     */
+    public SearchFilter(final TimestampFilter timestampFilter, final List<String> types, final Status status,
+            final Long duplicateOf, final Double confidence, final Application app, final Device device,
+            final String username) {
+        this(timestampFilter, types, confidence);
+        this.status = status;
+        this.duplicateOf = duplicateOf;
+        this.app = app;
+        this.device = device;
+        this.username = username;
+    }
+
 
     @Override
     public boolean equals(final Object obj) {
@@ -90,7 +86,6 @@ public class SearchFilter {
             result = true;
         } else if (obj instanceof SearchFilter) {
             final SearchFilter other = (SearchFilter) obj;
-            result = ObjectUtil.bothNullOrEqual(sources, other.getSources());
             result = result && ObjectUtil.bothNullOrEqual(timestampFilter, other.getTimestampFilter());
             result = result && ObjectUtil.bothNullOrEqual(status, other.getStatus());
             result = result && ObjectUtil.bothNullOrEqual(types, other.getTypes());
@@ -119,10 +114,6 @@ public class SearchFilter {
         return duplicateOf;
     }
 
-    public List<Source> getSources() {
-        return sources;
-    }
-
     public Status getStatus() {
         return status;
     }
@@ -144,7 +135,6 @@ public class SearchFilter {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ObjectUtil.hashCode(sources);
         result = prime * result + ObjectUtil.hashCode(app);
         result = prime * result + ObjectUtil.hashCode(device);
         result = prime * result + ObjectUtil.hashCode(duplicateOf);

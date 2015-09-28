@@ -25,16 +25,15 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
-import org.openstreetmap.josm.plugins.scoutsigns.entity.Source;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter.RoadSignFilterDialog;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.TripViewObservable;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.TripViewObserver;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.Config;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.Config;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltConfig;
 
 
@@ -222,15 +221,12 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         this.observer = observer;
     }
 
-
     private void enableRoadSignActions() {
-        boolean enableImage = false;
         boolean enableActions = false;
         if (roadSign != null) {
-            enableActions = roadSign.getSource() == Source.MAPILLARY ? false : true;
-            enableImage = true;
+            enableActions = true;
         }
-        btnImage.setEnabled(enableImage);
+        btnImage.setEnabled(enableActions);
         btnTrip.setEnabled(enableActions);
         btnComment.setEnabled(enableActions);
         btnMoreAction.setEnabled(enableActions);

@@ -93,8 +93,6 @@ public final class GuiConfig {
     /* info texts */
     private final String infoClusterTitle;
     private final String infoClusterTxt;
-    private final String infoMapillaryTitle;
-    private final String infoMapillaryTxt;
     private final String txtMenuSolve;
     private final String txtMenuInvalid;
     private final String txtMenuDuplicate;
@@ -166,8 +164,6 @@ public final class GuiConfig {
 
         infoClusterTitle = CnfUtil.readProperty(properties, "info.cluster.title");
         infoClusterTxt = CnfUtil.readProperty(properties, "info.cluster.txt");
-        infoMapillaryTitle = CnfUtil.readProperty(properties, "info.mapillary.title");
-        infoMapillaryTxt = CnfUtil.readProperty(properties, "info.mapillary.txt");
 
         /* menu item texts */
         txtMenuSolve = CnfUtil.readProperty(properties, "edit.menu.solve");
@@ -235,14 +231,6 @@ public final class GuiConfig {
 
     public String getInfoClusterTxt() {
         return infoClusterTxt;
-    }
-
-    public String getInfoMapillaryTitle() {
-        return infoMapillaryTitle;
-    }
-
-    public String getInfoMapillaryTxt() {
-        return infoMapillaryTxt;
     }
 
     public String getLblAcc() {

@@ -18,9 +18,8 @@ package org.openstreetmap.josm.plugins.scoutsigns.gui;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.swing.ImageIcon;
-import org.openstreetmap.josm.plugins.scoutsigns.entity.Source;
-import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.Config;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 
@@ -46,46 +45,22 @@ public final class TypeIconFactory {
         return UNIQUE_INSTANCE;
     }
 
-    private final ImageIcon defaultScoutType;
-    private final ImageIcon defaultMapillaryType;
-    private final Map<String, ImageIcon> scoutSignTypes;
-
-
-    private final Map<String, ImageIcon> mapillarySignTypes;
-
-
-    private final Map<String, ImageIcon> commonSignTypes;
+    private final ImageIcon defaultIcon;
+    private final Map<String, ImageIcon> map;
 
 
     private TypeIconFactory() {
         final Config serviceCnf = Config.getInstance();
 
-        scoutSignTypes = new LinkedHashMap<String, ImageIcon>();
-        for (final String type : serviceCnf.getScoutTypes()) {
-            final ImageIcon icon = loadIcon(Source.SCOUT, type);
+        map = new LinkedHashMap<String, ImageIcon>();
+        for (final String type : serviceCnf.getSignTypes()) {
+            final ImageIcon icon = loadIcon(type);
             if (icon != null) {
-                scoutSignTypes.put(type, icon);
+                map.put(type, icon);
             }
         }
 
-        mapillarySignTypes = new LinkedHashMap<String, ImageIcon>();
-        for (final String type : serviceCnf.getMapillaryTypes()) {
-            final ImageIcon icon = loadIcon(Source.MAPILLARY, type);
-            if (icon != null) {
-                mapillarySignTypes.put(type, icon);
-            }
-        }
-
-        // use same icons as for scout road signs
-        commonSignTypes = new LinkedHashMap<String, ImageIcon>();
-        for (final String type : serviceCnf.getCommonTypes()) {
-            final ImageIcon icon = getIcon(Source.SCOUT, type);
-            if (icon != null) {
-                commonSignTypes.put(type, icon);
-            }
-        }
-        defaultScoutType = loadIcon(Source.SCOUT, IconConfig.getInstance().getDefaultTypeIconName());
-        defaultMapillaryType = loadIcon(Source.MAPILLARY, IconConfig.getInstance().getDefaultTypeIconName());
+        defaultIcon = loadIcon(IconConfig.getInstance().getDefaultTypeIconName());
     }
 
     /**
@@ -96,23 +71,11 @@ public final class TypeIconFactory {
      * @param type specifies the road sign's type
      * @return a {@code ImageIcon} object
      */
-    public ImageIcon getIcon(final Source source, final String type) {
+    public ImageIcon getIcon(final String type) {
         ImageIcon icon;
-        if (source == null) {
-            icon = commonSignTypes.get(type);
-            if (icon == null) {
-                icon = defaultScoutType;
-            }
-        } else if (source == Source.MAPILLARY) {
-            icon = mapillarySignTypes.get(type);
-            if (icon == null) {
-                icon = defaultMapillaryType;
-            }
-        } else {
-            icon = scoutSignTypes.get(type);
-            if (icon == null) {
-                icon = defaultScoutType;
-            }
+        icon = map.get(type);
+        if (icon == null) {
+            icon = defaultIcon;
         }
         return icon;
     }
@@ -124,16 +87,14 @@ public final class TypeIconFactory {
      * @param type specifies a road sign type
      * @return an {@code ImageIcon} object
      */
-    private ImageIcon loadIcon(final Source source, final String type) {
+    private ImageIcon loadIcon(final String type) {
         ImageIcon icon;
         final IconConfig iconCnf = IconConfig.getInstance();
-        final String iconPath =
-                source == Source.MAPILLARY ? iconCnf.getMapillaryTypesIconPath() : iconCnf.getScoutTypesIconPath();
-                try {
-                    icon = ImageProvider.get(iconPath + "" + type + EXT);
-                } catch (final RuntimeException e) {
-                    icon = null;
-                }
-                return icon;
+        try {
+            icon = ImageProvider.get(iconCnf.getTypesIconPath() + "" + type + EXT);
+        } catch (final RuntimeException e) {
+            icon = null;
+        }
+        return icon;
     }
 }

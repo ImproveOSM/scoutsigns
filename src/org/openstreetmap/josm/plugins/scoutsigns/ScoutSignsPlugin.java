@@ -153,7 +153,6 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
     public ScoutSignsPlugin(final PluginInformation info) {
         super(info);
         PrefManager.getInstance().saveSupressErrorFlag(false);
-        PrefManager.getInstance().saveSuppressMapillaryInfoFlag(false);
         searchFilter = PrefManager.getInstance().loadSearchFilter();
     }
 
@@ -194,7 +193,6 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
             MapView.removeLayerChangeListener(this);
             Main.map.mapView.removeMouseListener(this);
             Main.pref.removePreferenceChangeListener(this);
-            PrefManager.getInstance().saveSuppressMapillaryInfoFlag(false);
 
             // remove toggle dialog
             SwingUtilities.invokeLater(new Runnable() {

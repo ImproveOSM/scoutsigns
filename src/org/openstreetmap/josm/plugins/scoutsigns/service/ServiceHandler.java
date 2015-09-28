@@ -16,12 +16,7 @@
 package org.openstreetmap.josm.plugins.scoutsigns.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
@@ -29,12 +24,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.DataSet;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSignCluster;
-import org.openstreetmap.josm.plugins.scoutsigns.entity.Source;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
-import org.openstreetmap.josm.plugins.scoutsigns.service.fcdsign.FcdSignService;
-import org.openstreetmap.josm.plugins.scoutsigns.service.fcdsign.FcdSignServiceException;
-import org.openstreetmap.josm.plugins.scoutsigns.service.mapillary.MapillaryService;
-import org.openstreetmap.josm.plugins.scoutsigns.service.mapillary.MapillaryServiceException;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.Config;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
 
@@ -59,7 +49,6 @@ public final class ServiceHandler {
     }
 
     private final FcdSignService signService = new FcdSignService();
-    private final MapillaryService mapillaryService = new MapillaryService();
 
 
     /**
@@ -137,7 +126,7 @@ public final class ServiceHandler {
         List<RoadSignCluster> roadSignClusters = null;
         try {
             if (zoom > Config.getInstance().getMaxClusterZoom()) {
-                roadSigns = searchSigns(bbox, filter, zoom);
+                roadSigns = signService.searchSigns(bbox, filter, zoom);
             } else {
                 roadSignClusters = signService.searchClusters(bbox, zoom);
             }
@@ -158,51 +147,4 @@ public final class ServiceHandler {
             JOptionPane.showMessageDialog(Main.parent, ex.getMessage(), "Operation failed", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    private List<RoadSign> searchSigns(final BoundingBox bbox, final SearchFilter filter, final int zoom)
-            throws Exception {
-        // submit a thread per source
-        final List<Source> sources = new ArrayList<>();
-        for (final Source source : (filter.getSources() == null || filter.getSources().isEmpty()
-                ? Arrays.asList(Source.values()) : filter.getSources())) {
-            sources.add(source);
-        }
-        final ExecutorService executor = Executors.newFixedThreadPool(sources.size());
-        final List<Future<List<RoadSign>>> futureList = new ArrayList<>();
-        for (final Source source : sources) {
-            final Future<List<RoadSign>> future = executor.submit(new Callable<List<RoadSign>>() {
-
-                @Override
-                public List<RoadSign> call() throws MapillaryServiceException, FcdSignServiceException {
-                    return source == Source.SCOUT ? signService.searchSigns(bbox, filter, zoom)
-                            : mapillaryService.searchSigns(bbox, filter);
-                }
-            });
-            futureList.add(future);
-        }
-
-        // get the result
-        final List<RoadSign> result = new ArrayList<RoadSign>();
-        final List<String> errorMessages = new ArrayList<>();
-        for (int i = 0; i < sources.size(); i++) {
-            try {
-                final List<RoadSign> partialResult = futureList.get(i).get();
-                if (partialResult != null) {
-                    result.addAll(futureList.get(i).get());
-                }
-            } catch (final Exception ex) {
-                errorMessages.add("Could not obtain data from " + sources.get(i) + ": " + ex.getMessage());
-            }
-        }
-        executor.shutdown();
-        if (errorMessages.size() == sources.size()) {
-            String message = "";
-            for (final String elem : errorMessages) {
-                message += elem + "\n";
-            }
-            throw new Exception(message);
-        }
-        return result;
-    }
-
 }

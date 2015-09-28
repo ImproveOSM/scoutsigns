@@ -13,7 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package org.openstreetmap.josm.plugins.scoutsigns.service.fcdsign;
+package org.openstreetmap.josm.plugins.scoutsigns.service;
 
 import java.util.HashMap;
 import java.util.List;

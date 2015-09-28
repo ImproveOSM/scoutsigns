@@ -28,24 +28,18 @@ import org.openstreetmap.josm.data.coor.LatLon;
  */
 public class RoadSign {
 
-    private Long id;
+    private final Long id;
     private final String type;
-    private Source source;
-    private Long tstamp;
-    private Image image;
+    private final Long tstamp;
+    private final Image image;
     private final Short confidence;
-    private CarPosition carPos;
+    private final CarPosition carPos;
     private final SignPosition signPos;
-    private List<LatLon> nearbyPos;
-    private Trip trip;
-    private Status status;
-    private Long duplicateOf;
-    private Collection<Comment> comments;
-
-    // the identifier of the image, this property is used for external road
-    // signs
-    private String key;
-
+    private final List<LatLon> nearbyPos;
+    private final Trip trip;
+    private final Status status;
+    private final Long duplicateOf;
+    private final Collection<Comment> comments;
 
     /**
      * Builds a new object with the given arguments.
@@ -72,7 +66,6 @@ public class RoadSign {
             final Status status, final Long duplicateOf, final Collection<Comment> comments) {
         this.id = id;
         this.type = type;
-        this.source = Source.SCOUT;
         this.signPos = signPos;
         this.status = status;
         this.tstamp = tstamp;
@@ -85,24 +78,6 @@ public class RoadSign {
         this.comments = comments;
     }
 
-
-    /**
-     * Builds a new object with the given arguments.
-     *
-     * @param type the road sign's type
-     * @param confidence the confidence with which the sign has been recognized (0-100)
-     * @param signPos a {@code SignPosition} object, representing the geographic position of the road sign
-     * @param key represents the road sign's image identifier; this property is used only for external road signs
-     */
-    public RoadSign(final String key, final String type, final SignPosition signPos, final Short confidence) {
-        this.type = type;
-        this.confidence = confidence;
-        this.signPos = signPos;
-        this.key = key;
-        this.source = Source.MAPILLARY;
-    }
-
-
     @Override
     public boolean equals(final Object obj) {
         boolean result = false;
@@ -110,16 +85,7 @@ public class RoadSign {
             result = true;
         } else if (obj instanceof RoadSign) {
             final RoadSign other = (RoadSign) obj;
-
-            if (id != null) {
-                result = id.equals(other.getId());
-            } else {
-                // id is null for external signs
-                result = ObjectUtil.bothNullOrEqual(type, other.getType());
-                result = result && ObjectUtil.bothNullOrEqual(signPos, other.getSignPos());
-                result = result && ObjectUtil.bothNullOrEqual(confidence, other.getConfidence());
-                result = result && ObjectUtil.bothNullOrEqual(key, other.getKey());
-            }
+            result = id.equals(other.getId());
         }
         return result;
     }
@@ -148,20 +114,12 @@ public class RoadSign {
         return image;
     }
 
-    public String getKey() {
-        return key;
-    }
-
     public List<LatLon> getNearbyPos() {
         return nearbyPos;
     }
 
     public SignPosition getSignPos() {
         return signPos;
-    }
-
-    public Source getSource() {
-        return source;
     }
 
     public Status getStatus() {
@@ -184,22 +142,7 @@ public class RoadSign {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        if (id != null) {
-            result = prime * result + id.hashCode();
-        } else {
-            result = prime * result + ObjectUtil.hashCode(type);
-            result = prime * result + ObjectUtil.hashCode(signPos);
-            result = prime * result + ObjectUtil.hashCode(confidence);
-            result = prime * result + ObjectUtil.hashCode(key);
-        }
+        result = prime * result + id.hashCode();
         return result;
-    }
-
-    public void setSource(final Source source) {
-        if (source == null) {
-            this.source = Source.SCOUT;
-        } else {
-            this.source = source;
-        }
     }
 }

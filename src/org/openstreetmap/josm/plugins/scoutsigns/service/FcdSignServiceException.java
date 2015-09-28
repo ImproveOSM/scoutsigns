@@ -13,44 +13,45 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package org.openstreetmap.josm.plugins.scoutsigns.service.mapillary;
+package org.openstreetmap.josm.plugins.scoutsigns.service;
 
 
 /**
- * Custom exception used by the {@code MapillaryService} object.
+ * Custom exception used by the {@code FcdSignService} object.
  *
  * @author Beata
  * @version $Revision$
  */
-public class MapillaryServiceException extends Exception {
+public class FcdSignServiceException extends Exception {
 
-    private static final long serialVersionUID = 7522622092921556702L;
+    private static final long serialVersionUID = -1210836364186862213L;
+
 
     /**
-     * Builds a new {@code MapillaryServiceException} with he given message.
+     * Builds a new {@code FcdSignServiceException} with he given message.
      *
      * @param message the message of the exception
      */
-    public MapillaryServiceException(final String message) {
+    public FcdSignServiceException(final String message) {
         super(message);
     }
 
     /**
-     * Builds a new {@code MapillaryServiceException} with he given message.
+     * Builds a new {@code FcdSignServiceException} with he given message and cause.
      *
      * @param message the message of the exception
      * @param cause the cause of the exception
      */
-    public MapillaryServiceException(final String message, final Throwable cause) {
+    public FcdSignServiceException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
     /**
-     * Builds a new {@code MapillaryServiceException} with he given message.
+     * Builds a new {@code FcdSignServiceException} with he given cause.
      *
      * @param cause the cause of the exception
      */
-    public MapillaryServiceException(final Throwable cause) {
+    public FcdSignServiceException(final Throwable cause) {
         super(cause);
     }
 }

@@ -33,7 +33,7 @@ public class RoadSignFilterDialog extends ModalDialog {
 
     private static final long serialVersionUID = 7883099145424623783L;
 
-    private static final Dimension DIM = new Dimension(410, 412);
+    private static final Dimension DIM = new Dimension(410, 392);
     private RoadSignFilterPanel pnlFilter;
 
 
