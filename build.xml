@@ -42,7 +42,8 @@
     -->
 	<target name="compile" depends="init">
 		<echo message="compiling sources for  ${plugin.jar} ... " />
-		<javac srcdir="src" classpathref="classpath" debug="true" destdir="${plugin.build.dir}" includeantruntime="true" excludes="**/package-info.java">
+		<javac srcdir="src" classpathref="classpath" debug="false" destdir="${plugin.build.dir}" 
+			includeantruntime="true" excludes="**/package-info.java">
 			<compilerarg value="-Xlint:deprecation" />
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
@@ -91,7 +92,7 @@
 				<attribute name="Author" value="telenav" />
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.scoutsigns.ScoutSignsPlugin" />
 				<attribute name="Plugin-Date" value="${version.entry.commit.date}" />
-				<attribute name="Plugin-Description" value="The ScoutSigns plugin helps you quickly map speed limits and other information from actual road signs automatically captured by Scout users while driving."/>
+				<attribute name="Plugin-Description" value="The ScoutSigns plugin helps you quickly map speed limits and other information from actual road signs automatically captured by Scout users while driving." />
 				<attribute name="Plugin-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/ScoutSigns" />
 				<attribute name="Plugin-Mainversion" value="12" />
 				<attribute name="Plugin-Version" value="${build-label}" />
