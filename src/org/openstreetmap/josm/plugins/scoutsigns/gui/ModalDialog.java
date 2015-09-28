@@ -32,6 +32,20 @@ public abstract class ModalDialog extends JDialog {
 
     private static final long serialVersionUID = 1102099029345490735L;
 
+    /**
+     * Builds a new {@code ModalDialog} with the given arguments.
+     *
+     * @param title the dialog title
+     * @param icon the icon to be displayed in the dialog header
+     */
+    public ModalDialog(final String title, final Image icon) {
+        setLayout(new BorderLayout());
+        setModal(true);
+        setAlwaysOnTop(true);
+        setLocationRelativeTo(Main.map.mapView);
+        setTitle(title);
+        setIconImage(icon);
+    }
 
     /**
      * Builds a new {@code ModalDialog} with the given arguments.
@@ -41,12 +55,7 @@ public abstract class ModalDialog extends JDialog {
      * @param size the size of the dialog
      */
     public ModalDialog(final String title, final Image icon, final Dimension size) {
-        setLayout(new BorderLayout());
-        setModal(true);
-        setAlwaysOnTop(true);
-        setLocationRelativeTo(Main.map.mapView);
-        setTitle(title);
-        setIconImage(icon);
+        this(title, icon);
         setSize(size);
         setMinimumSize(size);
     }

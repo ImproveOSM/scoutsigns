@@ -17,6 +17,7 @@ package org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import javax.swing.UIManager;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.ModalDialog;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
@@ -34,6 +35,7 @@ public class RoadSignFilterDialog extends ModalDialog {
     private static final long serialVersionUID = 7883099145424623783L;
 
     private static final Dimension DIM = new Dimension(410, 392);
+    private static final Dimension DIM_NIMBUS = new Dimension(410, 410);
     private RoadSignFilterPanel pnlFilter;
 
 
@@ -41,8 +43,11 @@ public class RoadSignFilterDialog extends ModalDialog {
      * Builds a new {@code RoadSignFilterDialog}
      */
     public RoadSignFilterDialog() {
-        super(GuiConfig.getInstance().getDlgFilterTitle(), IconConfig.getInstance().getFilterIcon().getImage(), DIM);
+        super(GuiConfig.getInstance().getDlgFilterTitle(), IconConfig.getInstance().getFilterIcon().getImage());
         createComponents();
+        final Dimension dim = UIManager.getLookAndFeel().getName().contains("Nimbus") ? DIM_NIMBUS : DIM;
+        setSize(dim);
+        setMinimumSize(dim);
     }
 
 
