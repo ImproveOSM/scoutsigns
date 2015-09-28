@@ -59,11 +59,11 @@ final class Constraints {
     static final GridBagConstraints TXT_OS_VERS = new GridBagConstraints(2, 6, 1, 1, 1, 0, GridBagConstraints.CENTER,
             GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
     static final GridBagConstraints LBL_APP = new GridBagConstraints(0, 7, 1, 1, 1, 0, GridBagConstraints.PAGE_START,
-            GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
+            GridBagConstraints.HORIZONTAL, new Insets(3, 5, 0, 5), 0, 0);
     static final GridBagConstraints TXT_APP_NAME = new GridBagConstraints(1, 7, 1, 1, 1, 0, GridBagConstraints.CENTER,
-            GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
+            GridBagConstraints.HORIZONTAL, new Insets(3, 5, 0, 5), 0, 0);
     static final GridBagConstraints TXT_APP_VERS = new GridBagConstraints(2, 7, 1, 1, 1, 0, GridBagConstraints.CENTER,
-            GridBagConstraints.HORIZONTAL, new Insets(3, 5, 3, 5), 0, 0);
+            GridBagConstraints.HORIZONTAL, new Insets(3, 5, 0, 5), 0, 0);
 
     private Constraints() {}
 }
