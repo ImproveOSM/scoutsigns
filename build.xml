@@ -91,12 +91,14 @@
 			<manifest>
 				<attribute name="Author" value="telenav" />
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.scoutsigns.ScoutSignsPlugin" />
-				<attribute name="Plugin-Date" value="${version.entry.commit.date}" />
+				<attribute name="Plugin-Date" value="${BUILD_ID}" />
 				<attribute name="Plugin-Description" value="The ScoutSigns plugin helps you quickly map speed limits and other information from actual road signs automatically captured by Scout users while driving." />
 				<attribute name="Plugin-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/ScoutSigns" />
-				<attribute name="Plugin-Mainversion" value="12" />
+				<attribute name="Plugin-Mainversion" value="9759" />
 				<attribute name="Plugin-Version" value="${build-label}" />
 				<attribute name="Plugin-Icon" value="images/scoutsigns_logo_50x50.png" />
+				<attribute name="7636_Plugin-Url" value="71;http://developer.skobbler.com/public/scoutsigns/1.0/scoutsigns.jar"/>
+				<attribute name="9759_Plugin-Url" value="72;http://developer.skobbler.com/public/scoutsigns/2.0/scoutsigns.jar"/>
 			</manifest>
 		</jar>
 	</target>
