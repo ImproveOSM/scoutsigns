@@ -11,6 +11,11 @@
 	<property name="plugin.images.dir" value="${basedir}/images" />
 	<property name="plugin.jar" value="${plugin.dist.dir}/scoutsigns.jar" />
 
+	 <tstamp>
+	    <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
+	  </tstamp>
+
+	
 	<!--
     **********************************************************
     ** clean - clean up the build environment
@@ -91,7 +96,7 @@
 			<manifest>
 				<attribute name="Author" value="telenav" />
 				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.scoutsigns.ScoutSignsPlugin" />
-				<attribute name="Plugin-Date" value="${BUILD_ID}" />
+				<attribute name="Plugin-Date" value="${TODAY}" />
 				<attribute name="Plugin-Description" value="The ScoutSigns plugin helps you quickly map speed limits and other information from actual road signs automatically captured by Scout users while driving." />
 				<attribute name="Plugin-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/ScoutSigns" />
 				<attribute name="Plugin-Mainversion" value="9759" />
