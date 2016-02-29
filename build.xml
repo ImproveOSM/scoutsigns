@@ -1,44 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="scoutsigns" default="dist" basedir=".">
+<project name="scoutsigns"  xmlns:if="ant:if" default="dist" basedir=".">
 
 	<property name="plugin.main.version" value="1.0" />
-
 	<property name="plugin.build.dir" value="${basedir}/build/classes" />
 	<property name="plugin.apidoc.dir" value="${basedir}/build/doc" />
 	<property name="plugin.src.dir" value="${basedir}/src" />
 	<property name="plugin.dist.dir" value="${basedir}/dist" />
 	<property name="plugin.lib.dir" value="${basedir}/lib" />
 	<property name="plugin.images.dir" value="${basedir}/images" />
-	<property name="plugin.jar" value="${plugin.dist.dir}/scoutsigns.jar" />
+	<property name="plugin.name" value="scoutsigns.jar" />
+	<property name="JOSM_lib" value="josm-tested.jar" />
 
-	 <tstamp>
-	    <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
-	  </tstamp>
+	<tstamp>
+		<format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
+	</tstamp>
 
-	
-	<!--
-    **********************************************************
-    ** clean - clean up the build environment
-    **********************************************************
-    -->
-	<target name="clean">
-		<delete dir="${plugin.dist.dir}" />
+
+	<target name="init">
 		<delete dir="${plugin.build.dir}" />
 		<delete dir="${plugin.apidoc.dir}" />
-	</target>
-
-	<!--
-    **********************************************************
-    ** init - initializes the build
-    **********************************************************
-    -->
-	<target name="init">
 		<mkdir dir="${plugin.build.dir}" />
 	</target>
 
-	<path id="classpath">
-		<fileset dir="${plugin.lib.dir}" includes="**/*.jar" />
-	</path>
 
 	<!--
     **********************************************************
@@ -46,7 +29,10 @@
     **********************************************************
     -->
 	<target name="compile" depends="init">
-		<echo message="compiling sources for  ${plugin.jar} ... " />
+		<path id="classpath">
+			<fileset dir="${plugin.lib.dir}" includes="**/*.jar" excludes="josm-tested.jar,josm-latest.jar" />
+			<fileset dir="${plugin.lib.dir}" includes="${JOSM_lib}" />
+		</path>
 		<javac srcdir="src" classpathref="classpath" debug="false" destdir="${plugin.build.dir}" 
 			includeantruntime="true" excludes="**/package-info.java">
 			<compilerarg value="-Xlint:deprecation" />
@@ -61,6 +47,10 @@
     -->
 	<target name="javadoc">
 		<mkdir dir="${plugin.apidoc.dir}" />
+		<path id="classpath">
+			<fileset dir="${plugin.lib.dir}" includes="**/*.jar" excludes="josm-tested.jar,josm-latest.jar" />
+			<fileset dir="${plugin.lib.dir}" includes="${JOSM_lib}" />
+		</path>
 		<javadoc destdir="${plugin.apidoc.dir}" source="1.7" classpathref="classpath" windowtitle="scoutsigns plugin API">
 			<link href="http://java.sun.com/javase/7/docs/api/" />
 			<packageset dir="${plugin.src.dir}">
@@ -74,12 +64,17 @@
     ** dist - creates the plugin jar
     **********************************************************
     -->
-	<target name="dist" depends="clean,compile">
-		<echo message="creating ${plugin.jar} ... " />
-		<mkdir dir="${plugin.dist.dir}" />
+	<target name="dist" depends="compile">
+		<condition property="plugin.out.dir" value="${plugin.dist.dir}/${out.dir}" else="${plugin.dist.dir}">
+			<isset property="out.dir" />
+		</condition>
+		<echo message="out dir: ${plugin.out.dir}" />
+		<delete dir="${plugin.out.dir}" />
+		<mkdir dir="${plugin.out.dir}" />
 		<copy todir="${plugin.build.dir}">
 			<fileset dir="resources" />
 		</copy>
+		<replaceregexp if:set="url.key" file="${plugin.build.dir}/scoutsigns.properties" match="${url.key}" replace="${service_url}" />
 		<copy todir="${plugin.build.dir}/images">
 			<fileset dir="images" />
 		</copy>
@@ -89,7 +84,7 @@
 				<include name="LICENSE.txt" />
 			</fileset>
 		</copy>
-		<jar destfile="${plugin.jar}" basedir="${plugin.build.dir}">
+		<jar destfile="${plugin.out.dir}/${plugin.name}" basedir="${plugin.build.dir}">
 			<zipfileset src="${plugin.lib.dir}/gson-2.2.4.jar" />
 			<zipfileset src="${plugin.lib.dir}/commons-io-2.4.jar" />
 			<zipfileset src="${plugin.lib.dir}/swingx-all-1.6.5.jar" />
