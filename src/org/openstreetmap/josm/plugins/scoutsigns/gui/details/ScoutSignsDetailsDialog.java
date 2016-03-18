@@ -64,7 +64,7 @@ public class ScoutSignsDetailsDialog extends ToggleDialog {
         final JPanel pnlMain = new JPanel(new BorderLayout());
         pnlMain.add(pnlDetails, BorderLayout.CENTER);
         pnlMain.add(pnlBtn, BorderLayout.SOUTH);
-        add(pnlMain);
+        createLayout(pnlMain, false, null);
     }
 
 
