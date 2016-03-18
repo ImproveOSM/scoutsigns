@@ -115,7 +115,7 @@
 				<os family="windows" />
 			</and>
 		</condition>
-		<delete file="${josm.plugins.dir}/${plugin.jar}" failonerror="false" />
-		<copy file="${plugin.jar}" todir="${josm.plugins.dir}" />
+		<delete file="${josm.plugins.dir}/${plugin.name}" failonerror="false" />
+		<copy file="${plugin.out.dir}/${plugin.name}" todir="${josm.plugins.dir}" />
 	</target>
 </project>
