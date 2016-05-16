@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="scoutsigns"  xmlns:if="ant:if" default="dist" basedir=".">
+<project name="scoutsigns"  xmlns:if="ant:if" xmlns:unless="ant:unless" default="dist" basedir=".">
 
 	<property name="plugin.main.version" value="1.0" />
 	<property name="plugin.build.dir" value="${basedir}/build/classes" />
@@ -10,6 +10,10 @@
 	<property name="plugin.images.dir" value="${basedir}/images" />
 	<property name="plugin.name" value="scoutsigns.jar" />
 	<property name="JOSM_lib" value="josm-tested.jar" />
+
+	<condition property="isJosmTested">
+		<equals arg1="${JOSM_lib}" arg2="josm-tested.jar" />
+	</condition>
 
 	<tstamp>
 		<format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
@@ -30,7 +34,7 @@
     -->
 	<target name="compile" depends="init">
 		<path id="classpath">
-			<fileset dir="${plugin.lib.dir}" includes="**/*.jar" excludes="josm-tested.jar,josm-latest.jar" />
+			<fileset dir="${plugin.lib.dir}" includes="**/*.jar" excludes="josm-tested.jar,josm-old.jar" />
 			<fileset dir="${plugin.lib.dir}" includes="${JOSM_lib}" />
 		</path>
 		<javac srcdir="src" classpathref="classpath" debug="false" destdir="${plugin.build.dir}" 
@@ -94,11 +98,12 @@
 				<attribute name="Plugin-Date" value="${TODAY}" />
 				<attribute name="Plugin-Description" value="The ScoutSigns plugin helps you quickly map speed limits and other information from actual road signs automatically captured by Scout users while driving." />
 				<attribute name="Plugin-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/ScoutSigns" />
-				<attribute name="Plugin-Mainversion" value="9759" />
 				<attribute name="Plugin-Version" value="${build-label}" />
 				<attribute name="Plugin-Icon" value="images/scoutsigns_logo_50x50.png" />
-				<attribute name="7636_Plugin-Url" value="71;http://developer.skobbler.com/public/scoutsigns/1.0/scoutsigns.jar"/>
-				<attribute name="9759_Plugin-Url" value="${build-label};http://developer.skobbler.com/public/scoutsigns/2.0/scoutsigns.jar"/>
+				<attribute if:set="isJosmTested" name="Plugin-Mainversion" value="10092" />
+				<attribute unless:set="isJosmTested" name="Plugin-Mainversion" value="9759" />
+				<attribute name="9759_Plugin-Url" value="${build-label};http://developer.skobbler.com/public/scoutsigns/1.0/scoutsigns.jar"/>
+				<attribute name="10092_Plugin-Url" value="${build-label};http://developer.skobbler.com/public/scoutsigns/2.0/scoutsigns.jar"/>
 			</manifest>
 		</jar>
 	</target>
