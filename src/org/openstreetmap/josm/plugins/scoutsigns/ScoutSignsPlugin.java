@@ -59,7 +59,7 @@ import org.openstreetmap.josm.tools.OsmUrlToBounds;
  * @version $Revision$
  */
 public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, ZoomChangeListener, MouseListener,
-PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
+        PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
 
     /*
      * Listens to toggle dialog button actions.
@@ -129,7 +129,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
             } else if (layer.lastSelRoadSign() != null) {
                 final RoadSign roadSign =
                         result.getRoadSigns().contains(layer.lastSelRoadSign()) ? layer.lastSelRoadSign() : null;
-                        dialog.updateData(roadSign);
+                dialog.updateData(roadSign);
             }
         }
     }
@@ -187,25 +187,19 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
     @Override
     public void layerRemoved(final Layer currentLayer) {
         if (currentLayer instanceof ScoutSignsLayer) {
-
             // unregister listeners
             NavigatableComponent.removeZoomChangeListener(this);
             MapView.removeLayerChangeListener(this);
-            Main.map.mapView.removeMouseListener(this);
             Main.pref.removePreferenceChangeListener(this);
 
-            // remove toggle dialog
-            SwingUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    Main.map.remove(dialog);
-                    dialog.getButton().setSelected(false);
-                    dialog.setVisible(false);
-                    dialog.destroy();
-                    layer = null;
-                }
-            });
+            if (Main.map != null) {
+                Main.map.mapView.removeMouseListener(this);
+                Main.map.remove(dialog);
+                dialog.getButton().setSelected(false);
+                dialog.setVisible(false);
+                dialog.destroy();
+                layer = null;
+            }
         }
     }
 
