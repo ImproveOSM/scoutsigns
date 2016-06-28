@@ -46,7 +46,13 @@ public class CarPositionDeserializer implements JsonDeserializer<CarPosition> {
         final JsonObject obj = (JsonObject) jsonElement;
         final int heading = obj.get(HEADING).getAsInt();
         final int accuracy = obj.get(ACCURACY).getAsInt();
-        final String carPosType = obj.get(TYPE).getAsString();
+        final JsonElement carType = obj.get(TYPE);
+        String carPosType;
+        if (carType != null) {
+            carPosType = carType.getAsString();
+        } else {
+            carPosType = "";
+        }
         final double lat = obj.get(LATITUDE).getAsDouble();
         final double lon = obj.get(LONGITUDE).getAsDouble();
         return new CarPosition(new LatLon(lat, lon), heading, accuracy, carPosType);
