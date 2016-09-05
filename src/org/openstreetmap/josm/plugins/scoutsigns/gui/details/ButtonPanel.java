@@ -26,7 +26,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter.RoadSignFilterDialog;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.TripViewObservable;
@@ -35,6 +34,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.Config;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltConfig;
+import com.telenav.josm.common.gui.GuiBuilder;
 
 
 /**
@@ -184,16 +184,17 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         // create components
         final IconConfig iconCnf = IconConfig.getInstance();
         final TltConfig tltCnf = TltConfig.getInstance();
-        btnFilter = Builder.buildButton(new DisplayFilterDialog(), iconCnf.getFilterIcon(), tltCnf.getBtnFilter());
-        btnBack = Builder.buildButton(new ExitTrip(), iconCnf.getBackIcon(), tltCnf.getBtnBack());
-        btnTrip = Builder.buildButton(new DisplayTrip(), iconCnf.getTripIcon(), tltCnf.getBtnTrip());
-        btnImage = Builder.buildButton(new DisplayImageFrame(), iconCnf.getPhotoIcon(), tltCnf.getBtnPhoto());
-        btnComment = Builder.buildButton(new DisplayCommentDialog(), iconCnf.getCommentIcon(), tltCnf.getBtnComment());
-        btnMoreAction =
-                Builder.buildButton(new DisplayEditMenu(), iconCnf.getMoreActionIcon(), tltCnf.getBtnMoreAction());
+        btnFilter =
+                GuiBuilder.buildButton(new DisplayFilterDialog(), iconCnf.getFilterIcon(), tltCnf.getBtnFilter(), false);
+        btnBack = GuiBuilder.buildButton(new ExitTrip(), iconCnf.getBackIcon(), tltCnf.getBtnBack(), true);
+        btnTrip = GuiBuilder.buildButton(new DisplayTrip(), iconCnf.getTripIcon(), tltCnf.getBtnTrip(), true);
+        btnImage = GuiBuilder.buildButton(new DisplayImageFrame(), iconCnf.getPhotoIcon(), tltCnf.getBtnPhoto(), true);
+        btnComment = GuiBuilder.buildButton(new DisplayCommentDialog(), iconCnf.getCommentIcon(),
+                tltCnf.getBtnComment(), true);
+        btnMoreAction = GuiBuilder.buildButton(new DisplayEditMenu(), iconCnf.getMoreActionIcon(),
+                tltCnf.getBtnMoreAction(), true);
 
         // disable actions
-        btnFilter.setEnabled(false);
         enableRoadSignActions();
 
         // add components

@@ -16,7 +16,7 @@
 package org.openstreetmap.josm.plugins.scoutsigns.util.cnf;
 
 import java.util.List;
-import java.util.Properties;
+import com.telenav.josm.common.cnf.BaseConfig;
 
 
 /**
@@ -25,7 +25,7 @@ import java.util.Properties;
  * @author Bea
  * @version $Revision$
  */
-public final class Config {
+public final class Config extends BaseConfig {
 
     /** The name of the configuration file */
     private static final String CNF_FILE = "scoutsigns.properties";
@@ -53,25 +53,25 @@ public final class Config {
 
 
     private Config() {
-        final Properties properties = CnfUtil.load(CNF_FILE);
-        serviceUrl = properties.getProperty("service.url");
+        super(CNF_FILE);
+        serviceUrl = readProperty("service.url");
         if (serviceUrl == null) {
             // no need to catch this error, it is handled by JOSM error
             // mechanism
             throw new ExceptionInInitializerError("Missing FcdSignService url.");
         }
         try {
-            searchDelay = Integer.parseInt(properties.getProperty("search.delay"));
+            searchDelay = Integer.parseInt(readProperty("search.delay"));
         } catch (final NumberFormatException ex) {
             searchDelay = DEF_SEARCH_DELAY;
         }
         try {
-            maxClusterZoom = Integer.parseInt(properties.getProperty("zoom.cluster.max"));
+            maxClusterZoom = Integer.parseInt(readProperty("zoom.cluster.max"));
         } catch (final NumberFormatException ex) {
             maxClusterZoom = MAX_CLUSTER_ZOOM;
         }
         // scout road sign types
-        signTypes = CnfUtil.readPropertiesList(properties, "types");
+        signTypes = readPropertiesList("types");
     }
 
 

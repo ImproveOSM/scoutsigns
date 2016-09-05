@@ -45,12 +45,28 @@ class CommentsPanel extends InfoPanel<Collection<Comment>> {
 
 
     @Override
-    void createComponents(final Collection<Comment> comments) {
+    protected void createComponents(final Collection<Comment> comments) {
         setLayout(new BorderLayout());
         final String txt = Formatter.formatComments(comments);
-        final JTextPane txtPane = Builder.buildTextPane(txt, CONTENT_TYPE);
+        final JTextPane txtPane = buildTextPane(txt, CONTENT_TYPE);
         final JScrollPane cmp =
                 Builder.buildScrollPane(getGuiCnf().getPnlCommentsTitle(), txtPane, getBackground(), null);
         add(cmp, BorderLayout.CENTER);
+    }
+
+    /**
+     * Builds a {@code JTextPane} with the given text and content type.
+     *
+     * @param txt the text to be displayed in the text component
+     * @param contentType the text's content type
+     * @return a {@code JTextPane}
+     */
+    private JTextPane buildTextPane(final String txt, final String contentType) {
+        final JTextPane txtPane = new JTextPane();
+        txtPane.setCaretPosition(0);
+        txtPane.setEditable(false);
+        txtPane.setContentType(contentType);
+        txtPane.setText(txt);
+        return txtPane;
     }
 }

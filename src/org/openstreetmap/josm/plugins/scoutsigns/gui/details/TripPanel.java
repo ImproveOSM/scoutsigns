@@ -15,13 +15,16 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.gui.details;
 
+import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Application;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Device;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Trip;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
+import com.telenav.josm.common.gui.GuiBuilder;
 
 
 /**
@@ -41,34 +44,37 @@ class TripPanel extends InfoPanel<Trip> {
 
     private void addApp(final Application app, final int widthLbl) {
         if (app != null) {
-            add(Builder.buildLabel(getGuiCnf().getLblApp(), FontUtil.BOLD_12,
-                    new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
+            add(GuiBuilder.buildLabel(getGuiCnf().getLblApp(), FontUtil.BOLD_12, ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
             final String appStr = app.toString();
             final int widthVal = FontUtil.FM_PLAIN_12.stringWidth(appStr);
-            add(Builder.buildLabel(appStr, FontUtil.PLAIN_12, new Rectangle(widthLbl, y, widthVal, LHEIGHT)));
+            add(GuiBuilder.buildLabel(appStr, FontUtil.PLAIN_12, ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
             pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
-            y = y + LHEIGHT;
+            y = y + LINE_HEIGHT;
         }
     }
 
     private void addDevice(final Device device, final int widthLbl) {
         if (device != null) {
-            add(Builder.buildLabel(getGuiCnf().getLblDevice(), FontUtil.BOLD_12,
-                    new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
+            add(GuiBuilder.buildLabel(getGuiCnf().getLblDevice(), FontUtil.BOLD_12, ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
             final String deviceStr = device.toString();
             final int widthVal = FontUtil.FM_PLAIN_12.stringWidth(deviceStr);
-            add(Builder.buildLabel(deviceStr, FontUtil.PLAIN_12, new Rectangle(widthLbl, y, widthVal, LHEIGHT)));
+            add(GuiBuilder.buildLabel(deviceStr, FontUtil.PLAIN_12, ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
             pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
-            y = y + LHEIGHT;
+            y = y + LINE_HEIGHT;
         }
     }
 
     private void addId(final String id, final int widthLbl) {
         if (id != null) {
-            add(Builder.buildLabel(getGuiCnf().getLblId(), FontUtil.BOLD_12,
-                    new Rectangle(RECT_X, RECT_Y, widthLbl, LHEIGHT)));
-            add(Builder.buildTextArea(id, false, FontUtil.PLAIN_12, getBackground(),
-                    new Rectangle(widthLbl, RECT_Y, ID_WIDTH, ID_HEIGHT)));
+            add(GuiBuilder.buildLabel(getGuiCnf().getLblId(), FontUtil.BOLD_12, ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, RECT_Y, widthLbl, LINE_HEIGHT)));
+            final JTextArea txtArea = GuiBuilder.buildTextArea(id, getBackground(), false, FontUtil.PLAIN_12);
+            txtArea.setBounds(new Rectangle(widthLbl, RECT_Y, ID_WIDTH, ID_HEIGHT));
+            add(txtArea);
             pnlWidth = pnlWidth + widthLbl + ID_WIDTH;
             y = RECT_Y + ID_HEIGHT;
         }
@@ -76,28 +82,30 @@ class TripPanel extends InfoPanel<Trip> {
 
     private void addMode(final String mode, final int widthLbl) {
         if (mode != null && !mode.isEmpty()) {
-            add(Builder.buildLabel(getGuiCnf().getLblMode(), FontUtil.BOLD_12,
-                    new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
+            add(GuiBuilder.buildLabel(getGuiCnf().getLblMode(), FontUtil.BOLD_12, ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
             final int widthVal = FontUtil.FM_PLAIN_12.stringWidth(mode);
-            add(Builder.buildLabel(mode, FontUtil.PLAIN_12, new Rectangle(widthLbl, y, widthVal, LHEIGHT)));
+            add(GuiBuilder.buildLabel(mode, FontUtil.PLAIN_12, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
+                    SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
             pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
-            y = y + LHEIGHT;
+            y = y + LINE_HEIGHT;
         }
     }
 
     private void addProfile(final String profile, final int widthLbl) {
         if (profile != null && !profile.isEmpty()) {
-            add(Builder.buildLabel(getGuiCnf().getLblProfile(), FontUtil.BOLD_12,
-                    new Rectangle(RECT_X, y, widthLbl, LHEIGHT)));
+            add(GuiBuilder.buildLabel(getGuiCnf().getLblProfile(), FontUtil.BOLD_12, ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
             final int widthVal = FontUtil.FM_PLAIN_12.stringWidth(profile);
-            add(Builder.buildLabel(profile, FontUtil.PLAIN_12, new Rectangle(widthLbl, y, widthVal, LHEIGHT)));
+            add(GuiBuilder.buildLabel(profile, FontUtil.PLAIN_12, ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
             pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
-            y = y + LHEIGHT;
+            y = y + LINE_HEIGHT;
         }
     }
 
     @Override
-    void createComponents(final Trip trip) {
+    protected void createComponents(final Trip trip) {
         y = 0;
         pnlWidth = 0;
         final int widthLbl = getMaxWidth(FontUtil.FM_BOLD_12, getGuiCnf().getLblId(), getGuiCnf().getLblMode(),

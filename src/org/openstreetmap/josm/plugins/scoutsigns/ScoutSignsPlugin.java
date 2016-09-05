@@ -34,7 +34,6 @@ import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
-import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.DataSet;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
@@ -50,6 +49,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.Config;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.Keys;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
 import org.openstreetmap.josm.tools.OsmUrlToBounds;
+import com.telenav.josm.common.argument.BoundingBox;
 
 
 /**
@@ -59,7 +59,7 @@ import org.openstreetmap.josm.tools.OsmUrlToBounds;
  * @version $Revision$
  */
 public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, ZoomChangeListener, MouseListener,
-        PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
+PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
 
     /*
      * Listens to toggle dialog button actions.
@@ -129,7 +129,7 @@ public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, Zoo
             } else if (layer.lastSelRoadSign() != null) {
                 final RoadSign roadSign =
                         result.getRoadSigns().contains(layer.lastSelRoadSign()) ? layer.lastSelRoadSign() : null;
-                dialog.updateData(roadSign);
+                        dialog.updateData(roadSign);
             }
         }
     }

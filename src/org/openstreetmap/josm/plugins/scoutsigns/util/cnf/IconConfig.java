@@ -15,10 +15,10 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.util.cnf;
 
-import java.util.Properties;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import org.openstreetmap.josm.tools.ImageProvider;
+import com.telenav.josm.common.cnf.BaseConfig;
 
 
 /**
@@ -27,7 +27,7 @@ import org.openstreetmap.josm.tools.ImageProvider;
  * @author Bea
  * @version $Revision$
  */
-public final class IconConfig {
+public final class IconConfig extends BaseConfig {
 
     /** The name of the configuration file */
     private static final String CNF_FILE = "scoutsigns_icon.properties";
@@ -68,25 +68,25 @@ public final class IconConfig {
 
 
     private IconConfig() {
-        final Properties properties = CnfUtil.load(CNF_FILE);
-        shcName = CnfUtil.readProperty(properties, "dialog.shc");
-        layerIcon = getIcon(properties, "layer.icon");
-        filterIcon = getIcon(properties, "filter.icon");
-        photoIcon = getIcon(properties, "photo.icon");
-        tripIcon = getIcon(properties, "trip.icon");
-        commentIcon = getIcon(properties, "comment.icon");
-        moreActionIcon = getIcon(properties, "more.icon");
-        backIcon = getIcon(properties, "back.icon");
-        openIcon = getIcon(properties, "status.open.icon");
-        solvedIcon = getIcon(properties, "status.solved.icon");
-        invalidIcon = getIcon(properties, "status.invalid.icon");
-        duplicateIcon = getIcon(properties, "status.duplicate.icon");
+        super(CNF_FILE);
+        shcName = readProperty("dialog.shc");
+        layerIcon = getIcon("layer.icon");
+        filterIcon = getIcon("filter.icon");
+        photoIcon = getIcon("photo.icon");
+        tripIcon = getIcon("trip.icon");
+        commentIcon = getIcon("comment.icon");
+        moreActionIcon = getIcon("more.icon");
+        backIcon = getIcon("back.icon");
+        openIcon = getIcon("status.open.icon");
+        solvedIcon = getIcon("status.solved.icon");
+        invalidIcon = getIcon("status.invalid.icon");
+        duplicateIcon = getIcon("status.duplicate.icon");
 
-        selRoadSignBgIcon = getIcon(properties, "sign.sel.bg");
-        typesIconPath = CnfUtil.readProperty(properties, "sign.types.path");
-        defaultTypeIconName = CnfUtil.readProperty(properties, "sign.types.def");
+        selRoadSignBgIcon = getIcon("sign.sel.bg");
+        typesIconPath = readProperty("sign.types.path");
+        defaultTypeIconName = readProperty("sign.types.def");
 
-        calendarIcon = getIcon(properties, "calendar.icon");
+        calendarIcon = getIcon("calendar.icon");
     }
 
     public Icon getBackIcon() {
@@ -153,7 +153,7 @@ public final class IconConfig {
         return typesIconPath;
     }
 
-    private ImageIcon getIcon(final Properties properties, final String key) {
-        return ImageProvider.get(CnfUtil.readProperty(properties, key));
+    private ImageIcon getIcon(final String key) {
+        return ImageProvider.get(readProperty(key));
     }
 }

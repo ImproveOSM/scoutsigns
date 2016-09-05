@@ -16,11 +16,11 @@
 package org.openstreetmap.josm.plugins.scoutsigns.util.cnf;
 
 import java.util.Map;
-import java.util.Properties;
 import java.util.TreeMap;
 import javax.swing.ImageIcon;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.Pair;
+import com.telenav.josm.common.cnf.BaseConfig;
 
 
 /**
@@ -29,7 +29,7 @@ import org.openstreetmap.josm.tools.Pair;
  * @author Beata
  * @version $Revision$
  */
-public final class ClusterIconConfig {
+public final class ClusterIconConfig extends BaseConfig {
 
     private static final String CNF_FILE = "scoutsigns_cluster_icon.properties";
 
@@ -45,18 +45,18 @@ public final class ClusterIconConfig {
     }
 
     private final Pair<ImageIcon, Float> def;
-
-
     private final Map<Integer, Pair<ImageIcon, Float>> map;
 
+
     private ClusterIconConfig() {
-        final Properties properties = CnfUtil.load(CNF_FILE);
-        def = buildPair(properties.getProperty("default"));
-        properties.remove("default");
+        super(CNF_FILE);
+        def = buildPair(readProperty("default"));
         map = new TreeMap<>();
-        for (final Map.Entry<Object, Object> entry : properties.entrySet()) {
-            final Pair<ImageIcon, Float> pair = buildPair((String) entry.getValue());
-            map.put(new Integer((String) entry.getKey()), pair);
+        for (final Object key : keySet()) {
+            final Pair<ImageIcon, Float> pair = buildPair(readProperty(key.toString()));
+            if (!key.toString().equals("default")) {
+                map.put(new Integer((String) key), pair);
+            }
         }
     }
 

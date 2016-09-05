@@ -15,7 +15,7 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.util.cnf;
 
-import java.util.Properties;
+import com.telenav.josm.common.cnf.BaseConfig;
 
 
 /**
@@ -24,7 +24,7 @@ import java.util.Properties;
  * @author Bea
  * @version $Revision$
  */
-public final class TltConfig {
+public final class TltConfig extends BaseConfig {
 
     /** The name of the configuration file */
     private static final String CNF_FILE = "scoutsigns_tlt.properties";
@@ -54,19 +54,19 @@ public final class TltConfig {
 
 
     private TltConfig() {
-        final Properties properties = CnfUtil.load(CNF_FILE);
-        pluginTlt = CnfUtil.readProperty(properties, "plugin.tlt");
-        layerInfo = CnfUtil.readProperty(properties, "layer.info");
-        btnFilter = CnfUtil.readProperty(properties, "btn.filter");
-        btnPhoto = CnfUtil.readProperty(properties, "btn.photo");
-        btnTrip = CnfUtil.readProperty(properties, "btn.trip");
-        btnComment = CnfUtil.readProperty(properties, "btn.comment");
-        btnMoreAction = CnfUtil.readProperty(properties, "btn.more");
-        btnBack = CnfUtil.readProperty(properties, "btn.back");
-        btnInvalid = CnfUtil.readProperty(properties, "btn.invalid");
-        btnSolved = CnfUtil.readProperty(properties, "btn.solved");
-        btnDuplicate = CnfUtil.readProperty(properties, "btn.duplicate");
-        btnOpen = CnfUtil.readProperty(properties, "btn.open");
+        super(CNF_FILE);
+        pluginTlt = readProperty("plugin.tlt");
+        layerInfo = readProperty("layer.info");
+        btnFilter = readProperty("btn.filter");
+        btnPhoto = readProperty("btn.photo");
+        btnTrip = readProperty("btn.trip");
+        btnComment = readProperty("btn.comment");
+        btnMoreAction = readProperty("btn.more");
+        btnBack = readProperty("btn.back");
+        btnInvalid = readProperty("btn.invalid");
+        btnSolved = readProperty("btn.solved");
+        btnDuplicate = readProperty("btn.duplicate");
+        btnOpen = readProperty("btn.open");
     }
 
     public String getBtnBack() {
