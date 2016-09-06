@@ -18,7 +18,6 @@ package org.openstreetmap.josm.plugins.scoutsigns.gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import com.telenav.josm.common.gui.GuiBuilder;
@@ -31,24 +30,6 @@ import com.telenav.josm.common.gui.GuiBuilder;
  * @version $Revision$
  */
 public final class Builder {
-
-    /**
-     * Builds a {@code JScrollPane} with the given arguments. The scroll pane scroll bars are displayed as needed.
-     *
-     * @param component the {@code Component} to be added to the scroll pane
-     * @param bgColor the background color
-     * @param borderVisible if true the scroll pane is created with a black border
-     * @return a {@code JScrollPane} objects
-     */
-    public static JScrollPane buildScrollPane(final Component component, final Color bgColor,
-            final boolean borderVisible) {
-        final JScrollPane scrollPane = GuiBuilder.buildScrollPane(component, bgColor,
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        if (borderVisible) {
-            scrollPane.setBorder(BorderFactory.createLineBorder(Color.gray));
-        }
-        return scrollPane;
-    }
 
     /**
      * Builds a {@code JScrollPane} object with the given properties.
