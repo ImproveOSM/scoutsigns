@@ -34,6 +34,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.text.DefaultFormatterFactory;
@@ -43,7 +44,6 @@ import org.openstreetmap.josm.plugins.scoutsigns.argument.TimestampFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Application;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Device;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.DateUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.ConfidenceVerifier;
@@ -220,7 +220,9 @@ class RoadSignFilterPanel extends JPanel {
         add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblType(), FontUtil.BOLD_12,
                 ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_TYPE);
         listTypes = buildList(Config.getInstance().getSignTypes(), new TypeListCellRenderer(), selectedTypes);
-        cmpTypes = Builder.buildScrollPane(listTypes, Color.white, false);
+
+        cmpTypes = GuiBuilder.buildScrollPane(listTypes, Color.white, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         cmpTypes.getViewport().setViewSize(TYPE_LIST_SIZE);
         add(cmpTypes, Constraints.LIST_TYPE);
     }
