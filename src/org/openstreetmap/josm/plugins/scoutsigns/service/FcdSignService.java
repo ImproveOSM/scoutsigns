@@ -29,6 +29,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.service.deserializer.LatLonDese
 import org.openstreetmap.josm.plugins.scoutsigns.service.deserializer.SignPositionDeserializer;
 import org.openstreetmap.josm.plugins.scoutsigns.service.entity.Root;
 import org.openstreetmap.josm.plugins.scoutsigns.util.http.HttpConnector;
+import org.openstreetmap.josm.plugins.scoutsigns.util.http.HttpException;
 import org.openstreetmap.josm.plugins.scoutsigns.util.http.HttpMethod;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
