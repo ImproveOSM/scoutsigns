@@ -44,7 +44,6 @@ import org.openstreetmap.josm.plugins.scoutsigns.argument.TimestampFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Application;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Device;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.DateUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.ConfidenceVerifier;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.DateVerifier;
@@ -55,6 +54,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
 import com.telenav.josm.common.formatter.DateFormatter;
 import com.telenav.josm.common.gui.GuiBuilder;
+import com.telenav.josm.common.util.DateUtil;
 
 
 /**

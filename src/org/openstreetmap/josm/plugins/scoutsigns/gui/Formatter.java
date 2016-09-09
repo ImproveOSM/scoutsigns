@@ -20,6 +20,7 @@ import java.util.Collection;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Comment;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
+import com.telenav.josm.common.util.DateUtil;
 
 
 /**
