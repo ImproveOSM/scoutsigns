@@ -28,14 +28,15 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.DuplicateIdVerifier;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObservable;
@@ -170,9 +171,13 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
     private void addComment() {
         txtComment = GuiBuilder.buildTextArea(null, Color.white, true, FontUtil.PLAIN_12);
 
+        final JScrollPane scrollPane = GuiBuilder.buildScrollPane(txtComment, Color.white,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setBorder(BorderFactory.createLineBorder(Color.gray));
+
         final JPanel pnlComment = new JPanel(new BorderLayout());
         pnlComment.setBorder(BORDER);
-        pnlComment.add(Builder.buildScrollPane(txtComment, Color.white, true), BorderLayout.CENTER);
+        pnlComment.add(scrollPane, BorderLayout.CENTER);
         pnlComment.setVerifyInputWhenFocusTarget(true);
         add(pnlComment, BorderLayout.CENTER);
     }
