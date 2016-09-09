@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.DataSet;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
@@ -27,6 +26,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSignCluster;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.Config;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
+import com.telenav.josm.common.argument.BoundingBox;
 
 
 /**
@@ -74,7 +74,7 @@ public final class ServiceHandler {
      * status of the road signs are modified. This is a batch operation equivalent to calling "addComment" on each
      * individual road sign from the collection.
      *
-     * @param signIds the collection of road sign identifiers
+     * @param roadSigns the collection of road signs
      * @param username the user's OSM username
      * @param text the comment text
      * @param status the new {@code Status} to be set

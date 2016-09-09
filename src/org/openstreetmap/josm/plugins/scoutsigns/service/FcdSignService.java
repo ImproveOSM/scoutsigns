@@ -18,7 +18,6 @@ package org.openstreetmap.josm.plugins.scoutsigns.service;
 import java.util.List;
 import java.util.Map;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.CarPosition;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
@@ -30,11 +29,11 @@ import org.openstreetmap.josm.plugins.scoutsigns.service.deserializer.LatLonDese
 import org.openstreetmap.josm.plugins.scoutsigns.service.deserializer.SignPositionDeserializer;
 import org.openstreetmap.josm.plugins.scoutsigns.service.entity.Root;
 import org.openstreetmap.josm.plugins.scoutsigns.util.http.HttpConnector;
-import org.openstreetmap.josm.plugins.scoutsigns.util.http.HttpException;
 import org.openstreetmap.josm.plugins.scoutsigns.util.http.HttpMethod;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.telenav.josm.common.argument.BoundingBox;
 
 
 /**
