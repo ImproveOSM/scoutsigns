@@ -16,12 +16,13 @@
 package org.openstreetmap.josm.plugins.scoutsigns.gui.details;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.util.Collection;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Comment;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Formatter;
+import com.telenav.josm.common.gui.GuiBuilder;
 
 
 /**
@@ -33,6 +34,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.gui.Formatter;
 class CommentsPanel extends InfoPanel<Collection<Comment>> {
 
     private static final long serialVersionUID = 4341574605078192809L;
+    private static final Dimension DIM = new Dimension(150, 100);
     private static final String CONTENT_TYPE = "text/html";
 
 
@@ -49,8 +51,8 @@ class CommentsPanel extends InfoPanel<Collection<Comment>> {
         setLayout(new BorderLayout());
         final String txt = Formatter.formatComments(comments);
         final JTextPane txtPane = buildTextPane(txt, CONTENT_TYPE);
-        final JScrollPane cmp =
-                Builder.buildScrollPane(getGuiCnf().getPnlCommentsTitle(), txtPane, getBackground(), null);
+        final JScrollPane cmp = GuiBuilder.buildScrollPane(txtPane, getGuiCnf().getPnlCommentsTitle(), getBackground(),
+                null, 100, false, DIM);
         add(cmp, BorderLayout.CENTER);
     }
 
