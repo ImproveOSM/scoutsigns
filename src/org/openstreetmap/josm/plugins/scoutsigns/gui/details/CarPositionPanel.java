@@ -23,6 +23,8 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.CarPosition;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Formatter;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
+import com.telenav.josm.common.gui.BasicInfoPanel;
 import com.telenav.josm.common.gui.GuiBuilder;
 
 
@@ -32,19 +34,25 @@ import com.telenav.josm.common.gui.GuiBuilder;
  * @author Bea
  * @version $Revision$
  */
-class CarPositionPanel extends InfoPanel<CarPosition> {
+class CarPositionPanel extends BasicInfoPanel<CarPosition> {
 
     private static final long serialVersionUID = -1633702812150337414L;
 
     private static final int LIMIT = 180;
+    private static final GuiConfig GUI_CONF = GuiConfig.getInstance();
 
     private int y = 0;
     private int pnlWidth = 0;
 
+    CarPositionPanel() {
+        super();
+        updateData(null);
+    }
+
 
     private void addAccuracy(final Integer accuracy, final int widthLbl) {
         if (accuracy != null) {
-            add(GuiBuilder.buildLabel(getGuiCnf().getLblAcc(), FontUtil.BOLD_12, ComponentOrientation.LEFT_TO_RIGHT,
+            add(GuiBuilder.buildLabel(GUI_CONF.getLblAcc(), FontUtil.BOLD_12, ComponentOrientation.LEFT_TO_RIGHT,
                     SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
             final String accStr = accuracy.toString();
             final int widthVal = FontUtil.FM_PLAIN_12.stringWidth(accStr);
@@ -56,9 +64,9 @@ class CarPositionPanel extends InfoPanel<CarPosition> {
     }
 
     private void addDirection(final Integer heading, final int widthLbl) {
-        add(GuiBuilder.buildLabel(getGuiCnf().getLblDirection(), FontUtil.BOLD_12, ComponentOrientation.LEFT_TO_RIGHT,
+        add(GuiBuilder.buildLabel(GUI_CONF.getLblDirection(), FontUtil.BOLD_12, ComponentOrientation.LEFT_TO_RIGHT,
                 SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
-        final String direction = heading < LIMIT ? getGuiCnf().getLblForward() : getGuiCnf().getLblBackward();
+        final String direction = heading < LIMIT ? GUI_CONF.getLblForward() : GUI_CONF.getLblBackward();
         final int widthVal = FontUtil.FM_PLAIN_12.stringWidth(direction);
         add(GuiBuilder.buildLabel(direction, FontUtil.PLAIN_12, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
                 SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
@@ -67,7 +75,7 @@ class CarPositionPanel extends InfoPanel<CarPosition> {
     }
 
     private void addHeading(final Integer heading, final int widthLbl) {
-        add(GuiBuilder.buildLabel(getGuiCnf().getLblHeading(), FontUtil.BOLD_12, ComponentOrientation.LEFT_TO_RIGHT,
+        add(GuiBuilder.buildLabel(GUI_CONF.getLblHeading(), FontUtil.BOLD_12, ComponentOrientation.LEFT_TO_RIGHT,
                 SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
         final String headingStr = heading.toString();
         final int widthVal = FontUtil.FM_PLAIN_12.stringWidth(headingStr);
@@ -79,20 +87,20 @@ class CarPositionPanel extends InfoPanel<CarPosition> {
 
     private void addPoint(final LatLon point, final int widthLbl) {
         if (point != null) {
-            add(GuiBuilder.buildLabel(getGuiCnf().getLblPoint(), FontUtil.BOLD_12, ComponentOrientation.LEFT_TO_RIGHT,
-                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, RECT_Y, widthLbl, LINE_HEIGHT)));
+            add(GuiBuilder.buildLabel(GUI_CONF.getLblPoint(), FontUtil.BOLD_12, ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
             final String pointStr = Formatter.formatLatLon(point);
             final int widthVal = FontUtil.FM_PLAIN_12.stringWidth(pointStr);
             add(GuiBuilder.buildLabel(pointStr, FontUtil.PLAIN_12, ComponentOrientation.LEFT_TO_RIGHT,
-                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(widthLbl, RECT_Y, widthVal, LINE_HEIGHT)));
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
             pnlWidth = pnlWidth + widthLbl + widthVal;
-            y = RECT_Y + LINE_HEIGHT;
+            y = y + LINE_HEIGHT;
         }
     }
 
     private void addType(final String type, final int widthLbl) {
         if (type != null) {
-            add(GuiBuilder.buildLabel(getGuiCnf().getLblType(), FontUtil.BOLD_12, ComponentOrientation.LEFT_TO_RIGHT,
+            add(GuiBuilder.buildLabel(GUI_CONF.getLblType(), FontUtil.BOLD_12, ComponentOrientation.LEFT_TO_RIGHT,
                     SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
             final int widthVal = FontUtil.FM_PLAIN_12.stringWidth(type);
             add(GuiBuilder.buildLabel(type, FontUtil.PLAIN_12, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
@@ -106,8 +114,8 @@ class CarPositionPanel extends InfoPanel<CarPosition> {
     protected void createComponents(final CarPosition obj) {
         y = 0;
         pnlWidth = 0;
-        final int widthLbl = getMaxWidth(FontUtil.FM_BOLD_12, getGuiCnf().getLblPoint(), getGuiCnf().getLblType(),
-                getGuiCnf().getLblHeading(), getGuiCnf().getLblDirection(), getGuiCnf().getLblAcc());
+        final int widthLbl = getMaxWidth(FontUtil.FM_BOLD_12, GUI_CONF.getLblPoint(), GUI_CONF.getLblType(),
+                GUI_CONF.getLblHeading(), GUI_CONF.getLblDirection(), GUI_CONF.getLblAcc());
         addPoint(obj.getPosition(), widthLbl);
         addType(obj.getType(), widthLbl);
         if (obj.getHeading() != null) {
