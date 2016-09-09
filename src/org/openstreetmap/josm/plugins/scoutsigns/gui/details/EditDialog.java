@@ -20,6 +20,7 @@ import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -169,7 +170,7 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
     }
 
     private void addComment() {
-        txtComment = GuiBuilder.buildTextArea(null, Color.white, true, FontUtil.PLAIN_12);
+        txtComment = GuiBuilder.buildTextArea(null, Color.white, true, getFont().deriveFont(Font.PLAIN, 12));
 
         final JScrollPane scrollPane = GuiBuilder.buildScrollPane(txtComment, Color.white,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -184,11 +185,12 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
 
 
     private void addDuplicateId() {
-        txtDuplicateId = GuiBuilder.buildTextField(null, FontUtil.PLAIN_12, Color.white);
+        txtDuplicateId = GuiBuilder.buildTextField(null, getFont().deriveFont(Font.PLAIN, 12), Color.white);
         txtDuplicateId.setBorder(BorderFactory.createLineBorder(Color.gray));
 
         final JLabel lblDuplError = GuiBuilder.buildLabel(GuiConfig.getInstance().getTxtDuplIdInvalid(), Color.red,
-                FontUtil.BOLD_12, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP, false);
+                getFont().deriveFont(Font.BOLD, 12), ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
+                SwingConstants.TOP, false);
         txtDuplicateId.setInputVerifier(new DuplicateIdVerifier(txtDuplicateId, lblDuplError));
 
         final JPanel pnlDuplicate = new JPanel(new GridLayout(1, 0, 1, 1));
@@ -197,8 +199,9 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
 
         final JPanel pnlNorth = new JPanel(new BorderLayout());
         pnlNorth.setBorder(BORDER);
-        pnlNorth.add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblDupl(), FontUtil.BOLD_12,
-                ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP),
+        pnlNorth.add(
+                GuiBuilder.buildLabel(GuiConfig.getInstance().getLblDupl(), getFont().deriveFont(Font.BOLD, 12),
+                        ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP),
                 BorderLayout.LINE_START);
 
         pnlNorth.add(pnlDuplicate, BorderLayout.CENTER);

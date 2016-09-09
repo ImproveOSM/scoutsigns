@@ -18,6 +18,7 @@ package org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -141,9 +142,9 @@ class RoadSignFilterPanel extends JPanel {
             name = application.getName();
             vers = application.getVersion();
         }
-        txtAppName = GuiBuilder.buildTextField(name, FontUtil.PLAIN_12, Color.white);
+        txtAppName = GuiBuilder.buildTextField(name, getFont().deriveFont(Font.PLAIN, 12), Color.white);
         add(txtAppName, Constraints.TXT_APP_NAME);
-        txtAppVers = GuiBuilder.buildTextField(vers, FontUtil.PLAIN_12, Color.white);
+        txtAppVers = GuiBuilder.buildTextField(vers, getFont().deriveFont(Font.PLAIN, 12), Color.white);
         add(txtAppVers, Constraints.TXT_APP_VERS);
     }
 
@@ -151,7 +152,7 @@ class RoadSignFilterPanel extends JPanel {
         add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblConf(), FontUtil.BOLD_12,
                 ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_CONF);
         final String txt = confidence != null ? "" + confidence.intValue() : "";
-        txtConf = GuiBuilder.buildTextField(txt, FontUtil.PLAIN_12, Color.white);
+        txtConf = GuiBuilder.buildTextField(txt, getFont().deriveFont(Font.PLAIN, 12), Color.white);
         txtConf.setInputVerifier(new ConfidenceVerifier(txtConf, GuiConfig.getInstance().getTxtConfInvalid()));
         add(txtConf, Constraints.TXT_CONF);
     }
@@ -165,9 +166,9 @@ class RoadSignFilterPanel extends JPanel {
             name = device.getOsName();
             vers = device.getOsVersion();
         }
-        txtOsName = GuiBuilder.buildTextField(name, FontUtil.PLAIN_12, Color.white);
+        txtOsName = GuiBuilder.buildTextField(name, getFont().deriveFont(Font.PLAIN, 12), Color.white);
         add(txtOsName, Constraints.TXT_OS_NAME);
-        txtOsVers = GuiBuilder.buildTextField(vers, FontUtil.PLAIN_12, Color.white);
+        txtOsVers = GuiBuilder.buildTextField(vers, getFont().deriveFont(Font.PLAIN, 12), Color.white);
         add(txtOsVers, Constraints.TXT_OS_VERS);
     }
 
@@ -175,7 +176,7 @@ class RoadSignFilterPanel extends JPanel {
         add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblDupl(), FontUtil.BOLD_12,
                 ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_DUPL);
         final String txt = duplicate != null ? duplicate.toString() : "";
-        txtDupl = GuiBuilder.buildTextField(txt, FontUtil.PLAIN_12, Color.white);
+        txtDupl = GuiBuilder.buildTextField(txt, getFont().deriveFont(Font.PLAIN, 12), Color.white);
         add(txtDupl, Constraints.TXT_DUPL);
         txtDupl.setInputVerifier(new DuplicateIdVerifier(txtDupl, GuiConfig.getInstance().getTxtDuplIdInvalid()));
     }
@@ -234,7 +235,7 @@ class RoadSignFilterPanel extends JPanel {
             model.addElement(elem);
         }
         final JList<T> list = new JList<>(model);
-        list.setFont(FontUtil.PLAIN_12);
+        list.setFont(getFont().deriveFont(Font.PLAIN, 12));
         list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         list.setVisibleRowCount(-1);
         list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -259,9 +260,8 @@ class RoadSignFilterPanel extends JPanel {
 
     private void addUsernameFilter(final String username) {
         add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblUsername(), FontUtil.BOLD_12,
-                ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP),
-                Constraints.LBL_USERNAME);
-        txtUsername = GuiBuilder.buildTextField(username, FontUtil.PLAIN_12, Color.white);
+                ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_USERNAME);
+        txtUsername = GuiBuilder.buildTextField(username, getFont().deriveFont(Font.PLAIN, 12), Color.white);
         add(txtUsername, Constraints.TXT_USERNAME);
     }
 

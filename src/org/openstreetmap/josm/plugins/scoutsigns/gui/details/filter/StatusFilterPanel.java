@@ -24,7 +24,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
 import com.telenav.josm.common.gui.GuiBuilder;
 
 
@@ -68,19 +67,23 @@ class StatusFilterPanel extends JPanel {
 
 
     private void addComponents() {
-        cboxOpen = buildRadioButton(Status.OPEN.toString().toLowerCase(), FontUtil.PLAIN_12, getBackground());
+        cboxOpen = buildRadioButton(Status.OPEN.toString().toLowerCase(), getFont().deriveFont(Font.PLAIN, 12),
+                getBackground());
         btnGroup.add(cboxOpen);
         add(cboxOpen, CB_OPEN);
 
-        cboxSolved = buildRadioButton(Status.SOLVED.toString().toLowerCase(), FontUtil.PLAIN_12, getBackground());
+        cboxSolved = buildRadioButton(Status.SOLVED.toString().toLowerCase(), getFont().deriveFont(Font.PLAIN, 12),
+                getBackground());
         btnGroup.add(cboxSolved);
         add(cboxSolved, CB_SOLVED);
 
-        cboxInvalid = buildRadioButton(Status.INVALID.toString().toLowerCase(), FontUtil.PLAIN_12, getBackground());
+        cboxInvalid = buildRadioButton(Status.INVALID.toString().toLowerCase(), getFont().deriveFont(Font.PLAIN, 12),
+                getBackground());
         btnGroup.add(cboxInvalid);
         add(cboxInvalid, CB_INVALID);
 
-        cboxDuplicate = buildRadioButton(Status.DUPLICATE.toString().toLowerCase(), FontUtil.PLAIN_12, getBackground());
+        cboxDuplicate = buildRadioButton(Status.DUPLICATE.toString().toLowerCase(),
+                getFont().deriveFont(Font.PLAIN, 12), getBackground());
         btnGroup.add(cboxDuplicate);
         add(cboxDuplicate, CB_DUPL);
     }
