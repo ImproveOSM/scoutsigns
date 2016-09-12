@@ -15,7 +15,7 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.util.cnf;
 
-import java.util.Properties;
+import com.telenav.josm.common.cnf.BaseConfig;
 
 
 /**
@@ -24,7 +24,7 @@ import java.util.Properties;
  * @author Bea
  * @version $Revision$
  */
-public final class GuiConfig {
+public final class GuiConfig extends BaseConfig {
 
     /** The name of the configuration file */
     private static final String CNF_FILE = "scoutsigns_gui.properties";
@@ -108,73 +108,73 @@ public final class GuiConfig {
 
 
     private GuiConfig() {
-        final Properties properties = CnfUtil.load(CNF_FILE);
-        dlgDetailsTitle = CnfUtil.readProperty(properties, "dialog.title");
+        super(CNF_FILE);
+        dlgDetailsTitle = readProperty("dialog.title");
 
         /* details panel tab titles */
-        pnlRoadSignTitle = CnfUtil.readProperty(properties, "details.roadSign");
-        pnlCarPosTitle = CnfUtil.readProperty(properties, "details.carPos");
-        pnlTripTitle = CnfUtil.readProperty(properties, "details.trip");
-        pnlCommentsTitle = CnfUtil.readProperty(properties, "details.comments");
+        pnlRoadSignTitle = readProperty("details.roadSign");
+        pnlCarPosTitle = readProperty("details.carPos");
+        pnlTripTitle = readProperty("details.trip");
+        pnlCommentsTitle = readProperty("details.comments");
 
         /* details panel labels */
-        lblId = CnfUtil.readProperty(properties, "details.id");
-        lblPoint = CnfUtil.readProperty(properties, "details.point");
-        lblHeight = CnfUtil.readProperty(properties, "details.height");
-        lblConf = CnfUtil.readProperty(properties, "details.conf");
-        lblCreated = CnfUtil.readProperty(properties, "details.created");
-        lblHeading = CnfUtil.readProperty(properties, "details.heading");
-        lblDirection = CnfUtil.readProperty(properties, "details.dir");
-        lblForward = CnfUtil.readProperty(properties, "details.dir.fwd");
-        lblBackward = CnfUtil.readProperty(properties, "details.dir.bwd");
-        lblAcc = CnfUtil.readProperty(properties, "details.acc");
-        lblMode = CnfUtil.readProperty(properties, "details.mode");
-        lblProfile = CnfUtil.readProperty(properties, "details.profile");
+        lblId = readProperty("details.id");
+        lblPoint = readProperty("details.point");
+        lblHeight = readProperty("details.height");
+        lblConf = readProperty("details.conf");
+        lblCreated = readProperty("details.created");
+        lblHeading = readProperty("details.heading");
+        lblDirection = readProperty("details.dir");
+        lblForward = readProperty("details.dir.fwd");
+        lblBackward = readProperty("details.dir.bwd");
+        lblAcc = readProperty("details.acc");
+        lblMode = readProperty("details.mode");
+        lblProfile = readProperty("details.profile");
 
         /* photo frame texts */
-        frmPhotoTitle = CnfUtil.readProperty(properties, "photo.title");
-        lblPhotoError = CnfUtil.readProperty(properties, "photo.error");
-        lblPhotoMissing = CnfUtil.readProperty(properties, "photo.missing");
+        frmPhotoTitle = readProperty("photo.title");
+        lblPhotoError = readProperty("photo.error");
+        lblPhotoMissing = readProperty("photo.missing");
 
         /* filter dialog texts */
-        dlgFilterTitle = CnfUtil.readProperty(properties, "filter.title");
-        lblSources = CnfUtil.readProperty(properties, "filter.sources");
-        lblTimeInt = CnfUtil.readProperty(properties, "filter.int");
-        lblUsername = CnfUtil.readProperty(properties, "filter.username");
-        dlgCommentTitle = CnfUtil.readProperty(properties, "comment.title");
-        txtUsernameWarning = CnfUtil.readProperty(properties, "warning.missing.username");
+        dlgFilterTitle = readProperty("filter.title");
+        lblSources = readProperty("filter.sources");
+        lblTimeInt = readProperty("filter.int");
+        lblUsername = readProperty("filter.username");
+        dlgCommentTitle = readProperty("comment.title");
+        txtUsernameWarning = readProperty("warning.missing.username");
 
         /* commonly used texts */
-        lblType = CnfUtil.readProperty(properties, "type");
-        lblStatus = CnfUtil.readProperty(properties, "status");
-        lblDupl = CnfUtil.readProperty(properties, "dupl");
-        lblApp = CnfUtil.readProperty(properties, "app");
-        lblDevice = CnfUtil.readProperty(properties, "device");
+        lblType = readProperty("type");
+        lblStatus = readProperty("status");
+        lblDupl = readProperty("dupl");
+        lblApp = readProperty("app");
+        lblDevice = readProperty("device");
 
         /* button texts */
-        btnOk = CnfUtil.readProperty(properties, "btn.ok");
-        btnReset = CnfUtil.readProperty(properties, "btn.reset");
-        btnCancel = CnfUtil.readProperty(properties, "bnt.cancel");
+        btnOk = readProperty("btn.ok");
+        btnReset = readProperty("btn.reset");
+        btnCancel = readProperty("bnt.cancel");
 
-        dlgWarningTitle = CnfUtil.readProperty(properties, "warning.general.title");
-        txtDuplIdInvalid = CnfUtil.readProperty(properties, "warning.invalid.dupl");
-        txtConfInvalid = CnfUtil.readProperty(properties, "warning.invalid.conf");
-        txtCommentInvalid = CnfUtil.readProperty(properties, "warning.invalid.comment");
-        txtDateInvalid = CnfUtil.readProperty(properties, "warning.invalid.date");
+        dlgWarningTitle = readProperty("warning.general.title");
+        txtDuplIdInvalid = readProperty("warning.invalid.dupl");
+        txtConfInvalid = readProperty("warning.invalid.conf");
+        txtCommentInvalid = readProperty("warning.invalid.comment");
+        txtDateInvalid = readProperty("warning.invalid.date");
 
-        infoClusterTitle = CnfUtil.readProperty(properties, "info.cluster.title");
-        infoClusterTxt = CnfUtil.readProperty(properties, "info.cluster.txt");
+        infoClusterTitle = readProperty("info.cluster.title");
+        infoClusterTxt = readProperty("info.cluster.txt");
 
         /* menu item texts */
-        txtMenuSolve = CnfUtil.readProperty(properties, "edit.menu.solve");
-        txtMenuInvalid = CnfUtil.readProperty(properties, "edit.menu.invalid");
-        txtMenuDuplicate = CnfUtil.readProperty(properties, "edit.meuu.duplicate");
-        txtMenuReopen = CnfUtil.readProperty(properties, "edit.menu.reopen");
+        txtMenuSolve = readProperty("edit.menu.solve");
+        txtMenuInvalid = readProperty("edit.menu.invalid");
+        txtMenuDuplicate = readProperty("edit.meuu.duplicate");
+        txtMenuReopen = readProperty("edit.menu.reopen");
 
-        dlgSolveTitle = CnfUtil.readProperty(properties, "edit.dialog.solve");
-        dlgInvalidTitle = CnfUtil.readProperty(properties, "edit.dialog.invalid");
-        dlgDuplicateTitle = CnfUtil.readProperty(properties, "edit.dialog.duplicate");
-        dlgReopenTitle = CnfUtil.readProperty(properties, "edit.dialog.reopen");
+        dlgSolveTitle = readProperty("edit.dialog.solve");
+        dlgInvalidTitle = readProperty("edit.dialog.invalid");
+        dlgDuplicateTitle = readProperty("edit.dialog.duplicate");
+        dlgReopenTitle = readProperty("edit.dialog.reopen");
     }
 
     public String getBtnCancel() {

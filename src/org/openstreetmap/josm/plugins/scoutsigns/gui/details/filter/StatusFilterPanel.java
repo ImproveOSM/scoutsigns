@@ -22,8 +22,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
+import com.telenav.josm.common.gui.GuiBuilder;
 
 
 /**
@@ -66,22 +65,24 @@ class StatusFilterPanel extends JPanel {
 
 
     private void addComponents() {
-        cboxOpen = Builder.buildRadioButton(Status.OPEN.toString().toLowerCase(), FontUtil.PLAIN_12, getBackground());
+        cboxOpen = GuiBuilder.buildRadioButton(Status.OPEN.toString().toLowerCase(), null,
+                getFont().deriveFont(GuiBuilder.FONT_SIZE_12), getBackground(), false);
         btnGroup.add(cboxOpen);
         add(cboxOpen, CB_OPEN);
 
-        cboxSolved =
-                Builder.buildRadioButton(Status.SOLVED.toString().toLowerCase(), FontUtil.PLAIN_12, getBackground());
+        cboxSolved = GuiBuilder.buildRadioButton(Status.SOLVED.toString().toLowerCase(), null,
+                getFont().deriveFont(GuiBuilder.FONT_SIZE_12), getBackground(), false);
         btnGroup.add(cboxSolved);
         add(cboxSolved, CB_SOLVED);
 
-        cboxInvalid =
-                Builder.buildRadioButton(Status.INVALID.toString().toLowerCase(), FontUtil.PLAIN_12, getBackground());
+        cboxInvalid = GuiBuilder.buildRadioButton(Status.INVALID.toString().toLowerCase(), null,
+                getFont().deriveFont(GuiBuilder.FONT_SIZE_12), getBackground(), false);
         btnGroup.add(cboxInvalid);
         add(cboxInvalid, CB_INVALID);
 
-        cboxDuplicate =
-                Builder.buildRadioButton(Status.DUPLICATE.toString().toLowerCase(), FontUtil.PLAIN_12, getBackground());
+        cboxDuplicate = GuiBuilder.buildRadioButton(Status.DUPLICATE.toString().toLowerCase(), null,
+                getFont().deriveFont(GuiBuilder.FONT_SIZE_12), getBackground(), false);
+
         btnGroup.add(cboxDuplicate);
         add(cboxDuplicate, CB_DUPL);
     }

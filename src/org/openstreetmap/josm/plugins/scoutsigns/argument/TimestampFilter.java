@@ -15,7 +15,7 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.argument;
 
-import org.openstreetmap.josm.plugins.scoutsigns.entity.ObjectUtil;
+import com.telenav.josm.common.util.EntityUtil;
 
 
 /**
@@ -50,8 +50,8 @@ public class TimestampFilter {
             result = true;
         } else if (obj instanceof TimestampFilter) {
             final TimestampFilter other = (TimestampFilter) obj;
-            result = ObjectUtil.bothNullOrEqual(from, other.getFrom());
-            result = result && ObjectUtil.bothNullOrEqual(to, other.getTo());
+            result = EntityUtil.bothNullOrEqual(from, other.getFrom());
+            result = result && EntityUtil.bothNullOrEqual(to, other.getTo());
         }
         return result;
     }
@@ -69,8 +69,8 @@ public class TimestampFilter {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ObjectUtil.hashCode(from);
-        result = prime * result + ObjectUtil.hashCode(to);
+        result = prime * result + EntityUtil.hashCode(from);
+        result = prime * result + EntityUtil.hashCode(to);
         return result;
     }
 }

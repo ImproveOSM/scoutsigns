@@ -18,7 +18,6 @@ package org.openstreetmap.josm.plugins.scoutsigns.service;
 import java.util.List;
 import java.util.Map;
 import org.openstreetmap.josm.data.coor.LatLon;
-import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.CarPosition;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
@@ -29,12 +28,13 @@ import org.openstreetmap.josm.plugins.scoutsigns.service.deserializer.CarPositio
 import org.openstreetmap.josm.plugins.scoutsigns.service.deserializer.LatLonDeserializer;
 import org.openstreetmap.josm.plugins.scoutsigns.service.deserializer.SignPositionDeserializer;
 import org.openstreetmap.josm.plugins.scoutsigns.service.entity.Root;
-import org.openstreetmap.josm.plugins.scoutsigns.util.http.HttpConnector;
-import org.openstreetmap.josm.plugins.scoutsigns.util.http.HttpException;
-import org.openstreetmap.josm.plugins.scoutsigns.util.http.HttpMethod;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.telenav.josm.common.argument.BoundingBox;
+import com.telenav.josm.common.http.ContentType;
+import com.telenav.josm.common.http.HttpConnector;
+import com.telenav.josm.common.http.HttpConnectorException;
 
 
 /**
@@ -75,8 +75,8 @@ class FcdSignService {
     private Root executeGet(final String url) throws FcdSignServiceException {
         String response = null;
         try {
-            response = new HttpConnector(url, HttpMethod.GET).read();
-        } catch (final HttpException ex) {
+            response = new HttpConnector(url).get();
+        } catch (final HttpConnectorException ex) {
             throw new FcdSignServiceException(ex);
         }
         return buildRoot(response);
@@ -85,10 +85,8 @@ class FcdSignService {
     private Root executePost(final String url, final Map<String, String> content) throws FcdSignServiceException {
         String response = null;
         try {
-            final HttpConnector connector = new HttpConnector(url, HttpMethod.POST);
-            connector.write(content);
-            response = connector.read();
-        } catch (final HttpException ex) {
+            response = new HttpConnector(url).post(content, ContentType.JSON);
+        } catch (final HttpConnectorException ex) {
             throw new FcdSignServiceException(ex);
         }
         return buildRoot(response);

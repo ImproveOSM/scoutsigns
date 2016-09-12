@@ -18,11 +18,11 @@ package org.openstreetmap.josm.plugins.scoutsigns.gui.details;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
@@ -98,19 +98,19 @@ class EditPopupMenu extends JPopupMenu {
         final IconConfig iconCnf = IconConfig.getInstance();
 
         boolean enabled = statuses.contains(Status.SOLVED);
-        final JMenuItem itemSolve = Builder.buildMenuItem(iconCnf.getSolvedIcon(), guiCnf.getTxtMenuSolve(),
+        final JMenuItem itemSolve = buildMenuItem(iconCnf.getSolvedIcon(), guiCnf.getTxtMenuSolve(),
                 tltCnf.getBtnSolved(),
                 new SelectionListener(Status.SOLVED, guiCnf.getDlgSolveTitle(), iconCnf.getSolvedIcon()), enabled);
         add(itemSolve);
 
         enabled = statuses.contains(Status.INVALID);
-        final JMenuItem itemInvalidate = Builder.buildMenuItem(iconCnf.getInvalidIcon(), guiCnf.getTxtMenuInvalid(),
+        final JMenuItem itemInvalidate = buildMenuItem(iconCnf.getInvalidIcon(), guiCnf.getTxtMenuInvalid(),
                 tltCnf.getBtnInvalid(),
                 new SelectionListener(Status.INVALID, guiCnf.getDlgInvalidTitle(), iconCnf.getInvalidIcon()), enabled);
         add(itemInvalidate);
 
         enabled = statuses.contains(Status.DUPLICATE);
-        final JMenuItem itemDuplicate = Builder.buildMenuItem(iconCnf.getDuplicateIcon(), guiCnf.getTxtMenuDuplicate(),
+        final JMenuItem itemDuplicate = buildMenuItem(iconCnf.getDuplicateIcon(), guiCnf.getTxtMenuDuplicate(),
                 tltCnf.getBtnDuplicate(),
                 new SelectionListener(Status.DUPLICATE, guiCnf.getDlgDuplicateTitle(), iconCnf.getDuplicateIcon()),
                 enabled);
@@ -118,7 +118,7 @@ class EditPopupMenu extends JPopupMenu {
 
         enabled = statuses.contains(Status.OPEN);
         final JMenuItem itemReopen =
-                Builder.buildMenuItem(iconCnf.getOpenIcon(), guiCnf.getTxtMenuReopen(), tltCnf.getBtnOpen(),
+                buildMenuItem(iconCnf.getOpenIcon(), guiCnf.getTxtMenuReopen(), tltCnf.getBtnOpen(),
                         new SelectionListener(Status.OPEN, guiCnf.getDlgReopenTitle(), iconCnf.getOpenIcon()), enabled);
         add(itemReopen);
     }
@@ -131,5 +131,16 @@ class EditPopupMenu extends JPopupMenu {
      */
     void registerStatusChangeObserver(final StatusChangeObserver observer) {
         statusChangeObserver = observer;
+    }
+
+    private JMenuItem buildMenuItem(final Icon icon, final String text, final String tooltip,
+            final MouseListener listener, final boolean enabled) {
+        final JMenuItem menuItem = new JMenuItem(text, icon);
+        menuItem.setToolTipText(tooltip);
+        if (enabled) {
+            menuItem.addMouseListener(listener);
+        }
+        menuItem.setEnabled(enabled);
+        return menuItem;
     }
 }

@@ -23,8 +23,8 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.CarPosition;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Comment;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Trip;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
+import com.telenav.josm.common.gui.GuiBuilder;
 
 
 /**
@@ -59,13 +59,14 @@ class DetailsPanel extends JTabbedPane {
         pnlCarPos = new CarPositionPanel();
         pnlComments = new CommentsPanel();
         final GuiConfig guiCnf = GuiConfig.getInstance();
-        final JScrollPane cmpRoadSign =
-                Builder.buildScrollPane(guiCnf.getPnlRoadSignTitle(), pnlRoadSign, getBackground(), DIM);
+        final JScrollPane cmpRoadSign = GuiBuilder.buildScrollPane(pnlRoadSign, guiCnf.getPnlRoadSignTitle(),
+                getBackground(), null, 100, false, DIM);
         add(cmpRoadSign);
-        final JScrollPane cmpCarLocation =
-                Builder.buildScrollPane(guiCnf.getPnlCarPosTitle(), pnlCarPos, getBackground(), DIM);
+        final JScrollPane cmpCarLocation = GuiBuilder.buildScrollPane(pnlCarPos, guiCnf.getPnlCarPosTitle(),
+                getBackground(), null, 100, false, DIM);
         add(cmpCarLocation);
-        final JScrollPane cmpTrip = Builder.buildScrollPane(guiCnf.getPnlTripTitle(), pnlTrip, getBackground(), DIM);
+        final JScrollPane cmpTrip =
+                GuiBuilder.buildScrollPane(pnlTrip, guiCnf.getPnlTripTitle(), getBackground(), null, 100, false, DIM);
         add(cmpTrip);
         add(pnlComments);
     }

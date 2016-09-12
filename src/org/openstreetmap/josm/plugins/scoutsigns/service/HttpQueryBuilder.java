@@ -16,14 +16,14 @@
 package org.openstreetmap.josm.plugins.scoutsigns.service;
 
 import java.util.List;
-import org.openstreetmap.josm.plugins.scoutsigns.argument.BoundingBox;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.TimestampFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Application;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Device;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.Config;
-import org.openstreetmap.josm.plugins.scoutsigns.util.http.HttpUtil;
+import com.telenav.josm.common.argument.BoundingBox;
+import com.telenav.josm.common.http.HttpUtil;
 
 
 /**

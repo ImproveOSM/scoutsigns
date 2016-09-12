@@ -16,12 +16,15 @@
 package org.openstreetmap.josm.plugins.scoutsigns.gui.details;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.util.Collection;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Comment;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Formatter;
+import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
+import com.telenav.josm.common.gui.BasicInfoPanel;
+import com.telenav.josm.common.gui.GuiBuilder;
 
 
 /**
@@ -30,27 +33,46 @@ import org.openstreetmap.josm.plugins.scoutsigns.gui.Formatter;
  * @author Bea
  * @version $Revision$
  */
-class CommentsPanel extends InfoPanel<Collection<Comment>> {
+class CommentsPanel extends BasicInfoPanel<Collection<Comment>> {
 
     private static final long serialVersionUID = 4341574605078192809L;
+    private static final Dimension DIM = new Dimension(150, 100);
     private static final String CONTENT_TYPE = "text/html";
-
+    private static final GuiConfig GUI_CONF = GuiConfig.getInstance();
 
     /**
      * Builds a new {@code CommentsPanel}
      */
     CommentsPanel() {
-        setName(getGuiCnf().getPnlCommentsTitle());
+        super();
+        updateData(null);
+        setName(GUI_CONF.getPnlCommentsTitle());
     }
 
 
     @Override
-    void createComponents(final Collection<Comment> comments) {
+    protected void createComponents(final Collection<Comment> comments) {
         setLayout(new BorderLayout());
         final String txt = Formatter.formatComments(comments);
-        final JTextPane txtPane = Builder.buildTextPane(txt, CONTENT_TYPE);
-        final JScrollPane cmp =
-                Builder.buildScrollPane(getGuiCnf().getPnlCommentsTitle(), txtPane, getBackground(), null);
+        final JTextPane txtPane = buildTextPane(txt, CONTENT_TYPE);
+        final JScrollPane cmp = GuiBuilder.buildScrollPane(txtPane, GUI_CONF.getPnlCommentsTitle(), getBackground(),
+                null, 100, false, DIM);
         add(cmp, BorderLayout.CENTER);
+    }
+
+    /**
+     * Builds a {@code JTextPane} with the given text and content type.
+     *
+     * @param txt the text to be displayed in the text component
+     * @param contentType the text's content type
+     * @return a {@code JTextPane}
+     */
+    private JTextPane buildTextPane(final String txt, final String contentType) {
+        final JTextPane txtPane = new JTextPane();
+        txtPane.setCaretPosition(0);
+        txtPane.setEditable(false);
+        txtPane.setContentType(contentType);
+        txtPane.setText(txt);
+        return txtPane;
     }
 }

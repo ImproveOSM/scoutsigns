@@ -21,10 +21,10 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.Builder;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.CancelAction;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
+import com.telenav.josm.common.gui.CancelAction;
+import com.telenav.josm.common.gui.GuiBuilder;
 
 
 /**
@@ -86,9 +86,9 @@ class ButtonPanel extends JPanel {
 
     private void addComponents() {
         final GuiConfig guiCnf = GuiConfig.getInstance();
-        btnReset = Builder.buildButton(new Action(), guiCnf.getBtnReset());
-        btnOk = Builder.buildButton(new Action(), guiCnf.getBtnOk());
-        btnCancel = Builder.buildButton(new CancelAction(parent), guiCnf.getBtnCancel());
+        btnReset = GuiBuilder.buildButton(new Action(), guiCnf.getBtnReset());
+        btnOk = GuiBuilder.buildButton(new Action(), guiCnf.getBtnOk());
+        btnCancel = GuiBuilder.buildButton(new CancelAction(parent), guiCnf.getBtnCancel());
         add(btnReset);
         add(btnOk);
         add(btnCancel);

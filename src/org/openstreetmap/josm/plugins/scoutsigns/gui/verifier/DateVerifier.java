@@ -17,7 +17,7 @@ package org.openstreetmap.josm.plugins.scoutsigns.gui.verifier;
 
 import java.util.Date;
 import javax.swing.JComponent;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.DateUtil;
+import com.telenav.josm.common.util.DateUtil;
 
 
 /**
