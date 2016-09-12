@@ -38,7 +38,6 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.DuplicateIdVerifier;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObservable;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
@@ -157,7 +156,8 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
 
     private void addBtnPnl() {
         lblCommentError = GuiBuilder.buildLabel(GuiConfig.getInstance().getTxtCommentInvalid(), Color.red,
-                FontUtil.BOLD_12, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP, false);
+                getFont().deriveFont(Font.BOLD), ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
+                SwingConstants.TOP, false);
 
         final JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.TRAILING));
         pnlBtn.add(GuiBuilder.buildButton(new AddCommentAction(), GuiConfig.getInstance().getBtnOk()));
@@ -170,7 +170,8 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
     }
 
     private void addComment() {
-        txtComment = GuiBuilder.buildTextArea(null, Color.white, true, getFont().deriveFont(Font.PLAIN, 12));
+        txtComment = GuiBuilder.buildTextArea(null, Color.white, true,
+                getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12));
 
         final JScrollPane scrollPane = GuiBuilder.buildScrollPane(txtComment, Color.white,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -185,12 +186,13 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
 
 
     private void addDuplicateId() {
-        txtDuplicateId = GuiBuilder.buildTextField(null, getFont().deriveFont(Font.PLAIN, 12), Color.white);
+        txtDuplicateId =
+                GuiBuilder.buildTextField(null, getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12), Color.white);
         txtDuplicateId.setBorder(BorderFactory.createLineBorder(Color.gray));
 
         final JLabel lblDuplError = GuiBuilder.buildLabel(GuiConfig.getInstance().getTxtDuplIdInvalid(), Color.red,
-                getFont().deriveFont(Font.BOLD, 12), ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
-                SwingConstants.TOP, false);
+                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12), ComponentOrientation.LEFT_TO_RIGHT,
+                SwingConstants.LEFT, SwingConstants.TOP, false);
         txtDuplicateId.setInputVerifier(new DuplicateIdVerifier(txtDuplicateId, lblDuplError));
 
         final JPanel pnlDuplicate = new JPanel(new GridLayout(1, 0, 1, 1));
@@ -199,10 +201,9 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
 
         final JPanel pnlNorth = new JPanel(new BorderLayout());
         pnlNorth.setBorder(BORDER);
-        pnlNorth.add(
-                GuiBuilder.buildLabel(GuiConfig.getInstance().getLblDupl(), getFont().deriveFont(Font.BOLD, 12),
-                        ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP),
-                BorderLayout.LINE_START);
+        pnlNorth.add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblDupl(),
+                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12), ComponentOrientation.LEFT_TO_RIGHT,
+                SwingConstants.LEFT, SwingConstants.TOP), BorderLayout.LINE_START);
 
         pnlNorth.add(pnlDuplicate, BorderLayout.CENTER);
         add(pnlNorth, BorderLayout.NORTH);
