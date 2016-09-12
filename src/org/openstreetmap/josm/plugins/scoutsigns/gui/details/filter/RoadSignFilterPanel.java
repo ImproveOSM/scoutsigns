@@ -45,7 +45,6 @@ import org.openstreetmap.josm.plugins.scoutsigns.argument.TimestampFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Application;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Device;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.FontUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.ConfidenceVerifier;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.DateVerifier;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.DuplicateIdVerifier;
@@ -69,32 +68,6 @@ class RoadSignFilterPanel extends JPanel {
     private static final Dimension PICKER_DIM = new Dimension(120, 20);
     private static final Dimension PICKER_BTN_DIM = new Dimension(20, 20);
 
-    /*
-     * Listens to from date change value events.
-     */
-    private class DateFromChangeListener implements PropertyChangeListener {
-
-        @Override
-        public void propertyChange(final PropertyChangeEvent evt) {
-            if (evt.getPropertyName().equals("date")) {
-                pickerTo.getMonthView().setLowerBound(pickerFrom.getDate());
-            }
-        }
-    }
-
-
-    /*
-     * Listens to to date change value events.
-     */
-    private class DateToChangeListener implements PropertyChangeListener {
-
-        @Override
-        public void propertyChange(final PropertyChangeEvent evt) {
-            if (evt.getPropertyName().equals("date")) {
-                pickerFrom.getMonthView().setUpperBound(pickerTo.getDate());
-            }
-        }
-    }
 
     private static final long serialVersionUID = 31048161544787922L;
     private static final Dimension TYPE_LIST_SIZE = new Dimension(300, 200);
@@ -134,7 +107,8 @@ class RoadSignFilterPanel extends JPanel {
 
 
     private void addAppFilter(final Application application) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblApp(), FontUtil.BOLD_12,
+        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblApp(),
+                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12),
                 ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_APP);
         String name = "";
         String vers = "";
@@ -142,23 +116,28 @@ class RoadSignFilterPanel extends JPanel {
             name = application.getName();
             vers = application.getVersion();
         }
-        txtAppName = GuiBuilder.buildTextField(name, getFont().deriveFont(Font.PLAIN, 12), Color.white);
+        txtAppName =
+                GuiBuilder.buildTextField(name, getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12), Color.white);
         add(txtAppName, Constraints.TXT_APP_NAME);
-        txtAppVers = GuiBuilder.buildTextField(vers, getFont().deriveFont(Font.PLAIN, 12), Color.white);
+        txtAppVers =
+                GuiBuilder.buildTextField(vers, getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12), Color.white);
         add(txtAppVers, Constraints.TXT_APP_VERS);
     }
 
     private void addConfidenceFilter(final Double confidence) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblConf(), FontUtil.BOLD_12,
+        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblConf(),
+                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12),
                 ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_CONF);
         final String txt = confidence != null ? "" + confidence.intValue() : "";
-        txtConf = GuiBuilder.buildTextField(txt, getFont().deriveFont(Font.PLAIN, 12), Color.white);
+        txtConf =
+                GuiBuilder.buildTextField(txt, getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12), Color.white);
         txtConf.setInputVerifier(new ConfidenceVerifier(txtConf, GuiConfig.getInstance().getTxtConfInvalid()));
         add(txtConf, Constraints.TXT_CONF);
     }
 
     private void addDeviceFilter(final Device device) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblDevice(), FontUtil.BOLD_12,
+        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblDevice(),
+                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12),
                 ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_DEV);
         String name = "";
         String vers = "";
@@ -166,30 +145,33 @@ class RoadSignFilterPanel extends JPanel {
             name = device.getOsName();
             vers = device.getOsVersion();
         }
-        txtOsName = GuiBuilder.buildTextField(name, getFont().deriveFont(Font.PLAIN, 12), Color.white);
+        txtOsName = GuiBuilder.buildTextField(name, FontUtil.PLAIN_12, Color.white);
         add(txtOsName, Constraints.TXT_OS_NAME);
-        txtOsVers = GuiBuilder.buildTextField(vers, getFont().deriveFont(Font.PLAIN, 12), Color.white);
+        txtOsVers = GuiBuilder.buildTextField(vers, FontUtil.PLAIN_12, Color.white);
         add(txtOsVers, Constraints.TXT_OS_VERS);
     }
 
     private void addDuplicateFilter(final Long duplicate) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblDupl(), FontUtil.BOLD_12,
+        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblDupl(),
+                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12),
                 ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_DUPL);
         final String txt = duplicate != null ? duplicate.toString() : "";
-        txtDupl = GuiBuilder.buildTextField(txt, getFont().deriveFont(Font.PLAIN, 12), Color.white);
+        txtDupl = GuiBuilder.buildTextField(txt, FontUtil.PLAIN_12, Color.white);
         add(txtDupl, Constraints.TXT_DUPL);
         txtDupl.setInputVerifier(new DuplicateIdVerifier(txtDupl, GuiConfig.getInstance().getTxtDuplIdInvalid()));
     }
 
     private void addStatusFilter(final Status status) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblStatus(), FontUtil.BOLD_12,
+        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblStatus(),
+                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12),
                 ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_STATUS);
         pnlStatus = new StatusFilterPanel(status);
         add(pnlStatus, Constraints.PNL_STATUS);
     }
 
     private void addTimeIntervalFilter(final TimestampFilter tstampFilter) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblTimeInt(), FontUtil.BOLD_12,
+        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblTimeInt(),
+                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12),
                 ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_INT);
         Date lower = null;
         Date upper = null;
@@ -218,7 +200,8 @@ class RoadSignFilterPanel extends JPanel {
     }
 
     private void addTypeFilter(final List<String> selectedTypes) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblType(), FontUtil.BOLD_12,
+        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblType(),
+                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12),
                 ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_TYPE);
         listTypes = buildList(Config.getInstance().getSignTypes(), new TypeListCellRenderer(), selectedTypes);
 
@@ -235,7 +218,7 @@ class RoadSignFilterPanel extends JPanel {
             model.addElement(elem);
         }
         final JList<T> list = new JList<>(model);
-        list.setFont(getFont().deriveFont(Font.PLAIN, 12));
+        list.setFont(FontUtil.PLAIN_12);
         list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         list.setVisibleRowCount(-1);
         list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -259,9 +242,10 @@ class RoadSignFilterPanel extends JPanel {
     }
 
     private void addUsernameFilter(final String username) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblUsername(), FontUtil.BOLD_12,
+        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblUsername(),
+                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12),
                 ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_USERNAME);
-        txtUsername = GuiBuilder.buildTextField(username, getFont().deriveFont(Font.PLAIN, 12), Color.white);
+        txtUsername = GuiBuilder.buildTextField(username, FontUtil.PLAIN_12, Color.white);
         add(txtUsername, Constraints.TXT_USERNAME);
     }
 
@@ -357,5 +341,32 @@ class RoadSignFilterPanel extends JPanel {
                     username);
         }
         return filter;
+    }
+
+    /*
+     * Listens to from date change value events.
+     */
+    private class DateFromChangeListener implements PropertyChangeListener {
+
+        @Override
+        public void propertyChange(final PropertyChangeEvent evt) {
+            if (evt.getPropertyName().equals("date")) {
+                pickerTo.getMonthView().setLowerBound(pickerFrom.getDate());
+            }
+        }
+    }
+
+
+    /*
+     * Listens to to date change value events.
+     */
+    private class DateToChangeListener implements PropertyChangeListener {
+
+        @Override
+        public void propertyChange(final PropertyChangeEvent evt) {
+            if (evt.getPropertyName().equals("date")) {
+                pickerFrom.getMonthView().setUpperBound(pickerTo.getDate());
+            }
+        }
     }
 }

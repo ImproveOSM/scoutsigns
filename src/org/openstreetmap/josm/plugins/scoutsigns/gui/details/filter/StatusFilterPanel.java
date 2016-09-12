@@ -15,8 +15,6 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -67,39 +65,26 @@ class StatusFilterPanel extends JPanel {
 
 
     private void addComponents() {
-        cboxOpen = buildRadioButton(Status.OPEN.toString().toLowerCase(), getFont().deriveFont(Font.PLAIN, 12),
-                getBackground());
+        cboxOpen = GuiBuilder.buildRadioButton(Status.OPEN.toString().toLowerCase(), null,
+                getFont().deriveFont(GuiBuilder.FONT_SIZE_12), getBackground(), false);
         btnGroup.add(cboxOpen);
         add(cboxOpen, CB_OPEN);
 
-        cboxSolved = buildRadioButton(Status.SOLVED.toString().toLowerCase(), getFont().deriveFont(Font.PLAIN, 12),
-                getBackground());
+        cboxSolved = GuiBuilder.buildRadioButton(Status.SOLVED.toString().toLowerCase(), null,
+                getFont().deriveFont(GuiBuilder.FONT_SIZE_12), getBackground(), false);
         btnGroup.add(cboxSolved);
         add(cboxSolved, CB_SOLVED);
 
-        cboxInvalid = buildRadioButton(Status.INVALID.toString().toLowerCase(), getFont().deriveFont(Font.PLAIN, 12),
-                getBackground());
+        cboxInvalid = GuiBuilder.buildRadioButton(Status.INVALID.toString().toLowerCase(), null,
+                getFont().deriveFont(GuiBuilder.FONT_SIZE_12), getBackground(), false);
         btnGroup.add(cboxInvalid);
         add(cboxInvalid, CB_INVALID);
 
-        cboxDuplicate = buildRadioButton(Status.DUPLICATE.toString().toLowerCase(),
-                getFont().deriveFont(Font.PLAIN, 12), getBackground());
+        cboxDuplicate = GuiBuilder.buildRadioButton(Status.DUPLICATE.toString().toLowerCase(), null,
+                getFont().deriveFont(GuiBuilder.FONT_SIZE_12), getBackground(), false);
+
         btnGroup.add(cboxDuplicate);
         add(cboxDuplicate, CB_DUPL);
-    }
-
-    /**
-     * Builds a {@code JRadioButton} with the given arguments.
-     *
-     * @param text the text to be displayed
-     * @param font the font to be used
-     * @param bgColor the background color
-     * @return a {@code JRadioButton}
-     */
-    public static JRadioButton buildRadioButton(final String text, final Font font, final Color bgColor) {
-        final JRadioButton radioButton = GuiBuilder.buildRadioButton(text, font, false);
-        radioButton.setBackground(bgColor);
-        return radioButton;
     }
 
     private void selectElement(final Status selection) {
