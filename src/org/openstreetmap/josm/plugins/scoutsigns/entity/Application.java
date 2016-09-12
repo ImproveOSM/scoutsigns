@@ -15,6 +15,7 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.entity;
 
+import com.telenav.josm.common.util.EntityUtil;
 
 /**
  * Defines the application business entity.
@@ -47,8 +48,8 @@ public class Application {
             result = true;
         } else if (obj instanceof Application) {
             final Application other = (Application) obj;
-            result = ObjectUtil.bothNullOrEqual(name, other.getName());
-            result = result && ObjectUtil.bothNullOrEqual(version, other.getVersion());
+            result = EntityUtil.bothNullOrEqual(name, other.getName());
+            result = result && EntityUtil.bothNullOrEqual(version, other.getVersion());
         }
         return result;
     }
@@ -65,8 +66,8 @@ public class Application {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ObjectUtil.hashCode(name);
-        result = prime * result + ObjectUtil.hashCode(version);
+        result = prime * result + EntityUtil.hashCode(name);
+        result = prime * result + EntityUtil.hashCode(version);
         return result;
     }
 

@@ -16,6 +16,7 @@
 package org.openstreetmap.josm.plugins.scoutsigns.entity;
 
 import org.openstreetmap.josm.data.coor.LatLon;
+import com.telenav.josm.common.util.EntityUtil;
 
 
 /**
@@ -50,8 +51,8 @@ public class SignPosition {
         } else if (obj instanceof SignPosition) {
             final SignPosition other = (SignPosition) obj;
 
-            result = ObjectUtil.bothNullOrEqual(height, other.getHeight());
-            result = result && ObjectUtil.bothNullOrEqual(position, other.getPosition());
+            result = EntityUtil.bothNullOrEqual(height, other.getHeight());
+            result = result && EntityUtil.bothNullOrEqual(position, other.getPosition());
         }
         return result;
     }
@@ -69,8 +70,8 @@ public class SignPosition {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ObjectUtil.hashCode(height);
-        result = prime * result + ObjectUtil.hashCode(position);
+        result = prime * result + EntityUtil.hashCode(height);
+        result = prime * result + EntityUtil.hashCode(position);
         return result;
     }
 }

@@ -15,6 +15,7 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.entity;
 
+import com.telenav.josm.common.util.EntityUtil;
 
 /**
  * Defines the device business entity. Represents information about the used device.
@@ -47,8 +48,8 @@ public class Device {
             result = true;
         } else if (obj instanceof Device) {
             final Device other = (Device) obj;
-            result = ObjectUtil.bothNullOrEqual(osName, other.getOsName());
-            result = result && ObjectUtil.bothNullOrEqual(osVersion, other.getOsVersion());
+            result = EntityUtil.bothNullOrEqual(osName, other.getOsName());
+            result = result && EntityUtil.bothNullOrEqual(osVersion, other.getOsVersion());
         }
         return result;
     }
@@ -65,8 +66,8 @@ public class Device {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ObjectUtil.hashCode(osName);
-        result = prime * result + ObjectUtil.hashCode(osVersion);
+        result = prime * result + EntityUtil.hashCode(osName);
+        result = prime * result + EntityUtil.hashCode(osVersion);
         return result;
     }
 

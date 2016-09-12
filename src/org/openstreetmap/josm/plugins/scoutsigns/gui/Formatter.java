@@ -15,11 +15,12 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.gui;
 
-import java.text.DecimalFormat;
 import java.util.Collection;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Comment;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
+import com.telenav.josm.common.formatter.DecFormat;
+import com.telenav.josm.common.formatter.EntityFormatter;
 import com.telenav.josm.common.util.DateUtil;
 
 
@@ -30,29 +31,6 @@ import com.telenav.josm.common.util.DateUtil;
  * @version $Revision$
  */
 public final class Formatter {
-
-    /**
-     * Defines the decimal formats.
-     *
-     * @author Beata
-     * @version $Revision$
-     */
-    public enum DecFormat {
-        SHORT("0.00"), LONG("0.000000");
-
-        private String value;
-
-
-        private DecFormat(final String value) {
-            this.value = value;
-        }
-
-
-        public String getValue() {
-            return value;
-        }
-    }
-
 
     /**
      * Formats the given collection of {@code Comment}s using html tags.
@@ -71,17 +49,6 @@ public final class Formatter {
     }
 
     /**
-     * Formats the given decimal value, using the specified format.
-     *
-     * @param value the value to be formated
-     * @param format specifies the format
-     * @return a string containing the given value
-     */
-    public static String formatDecimal(final double value, final DecFormat format) {
-        return new DecimalFormat(format.getValue()).format(value);
-    }
-
-    /**
      * Formats the given {@code LatLon} object. Returns a string of the following format: (lat, lon).
      *
      * @param point a {@code LatLon} to be formatted
@@ -89,9 +56,9 @@ public final class Formatter {
      */
     public static String formatLatLon(final LatLon point) {
         final StringBuilder sb = new StringBuilder();
-        sb.append("(").append(formatDecimal(point.lat(), DecFormat.LONG));
+        sb.append("(").append(EntityFormatter.formatDouble(point.lat(), false, DecFormat.LONG));
         sb.append("; ");
-        sb.append(formatDecimal(point.lon(), DecFormat.LONG)).append(")");
+        sb.append(EntityFormatter.formatDouble(point.lon(), false, DecFormat.LONG)).append(")");
         return sb.toString();
     }
 

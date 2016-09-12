@@ -25,8 +25,9 @@ import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.Formatter;
-import org.openstreetmap.josm.plugins.scoutsigns.gui.Formatter.DecFormat;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
+import com.telenav.josm.common.formatter.DecFormat;
+import com.telenav.josm.common.formatter.EntityFormatter;
 import com.telenav.josm.common.gui.BasicInfoPanel;
 import com.telenav.josm.common.gui.GuiBuilder;
 import com.telenav.josm.common.util.DateUtil;
@@ -104,7 +105,7 @@ class RoadSignPanel extends BasicInfoPanel<RoadSign> {
             add(GuiBuilder.buildLabel(GUI_CONF.getLblHeight(), getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12),
                     ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP,
                     new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
-            final String heightStr = Formatter.formatDecimal(height, DecFormat.SHORT) + " m";
+            final String heightStr = EntityFormatter.formatDouble(height, false, DecFormat.SHORT) + " m";
             final int widthVal = Main.map.mapView.getGraphics()
                     .getFontMetrics(getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12)).stringWidth(heightStr);
             add(GuiBuilder.buildLabel(heightStr, getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12),

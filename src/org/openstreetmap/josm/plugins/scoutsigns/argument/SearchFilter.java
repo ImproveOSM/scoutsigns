@@ -18,8 +18,8 @@ package org.openstreetmap.josm.plugins.scoutsigns.argument;
 import java.util.List;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Application;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Device;
-import org.openstreetmap.josm.plugins.scoutsigns.entity.ObjectUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
+import com.telenav.josm.common.util.EntityUtil;
 
 
 /**
@@ -86,14 +86,14 @@ public class SearchFilter {
             result = true;
         } else if (obj instanceof SearchFilter) {
             final SearchFilter other = (SearchFilter) obj;
-            result = result && ObjectUtil.bothNullOrEqual(timestampFilter, other.getTimestampFilter());
-            result = result && ObjectUtil.bothNullOrEqual(status, other.getStatus());
-            result = result && ObjectUtil.bothNullOrEqual(types, other.getTypes());
-            result = result && ObjectUtil.bothNullOrEqual(duplicateOf, other.getDuplicateOf());
-            result = result && ObjectUtil.bothNullOrEqual(confidence, other.getConfidence());
-            result = result && ObjectUtil.bothNullOrEqual(app, other.getApp());
-            result = result && ObjectUtil.bothNullOrEqual(device, other.getDevice());
-            result = result && ObjectUtil.bothNullOrEqual(username, other.getUsername());
+            result = result && EntityUtil.bothNullOrEqual(timestampFilter, other.getTimestampFilter());
+            result = result && EntityUtil.bothNullOrEqual(status, other.getStatus());
+            result = result && EntityUtil.bothNullOrEqual(types, other.getTypes());
+            result = result && EntityUtil.bothNullOrEqual(duplicateOf, other.getDuplicateOf());
+            result = result && EntityUtil.bothNullOrEqual(confidence, other.getConfidence());
+            result = result && EntityUtil.bothNullOrEqual(app, other.getApp());
+            result = result && EntityUtil.bothNullOrEqual(device, other.getDevice());
+            result = result && EntityUtil.bothNullOrEqual(username, other.getUsername());
         }
         return result;
     }
@@ -135,14 +135,14 @@ public class SearchFilter {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ObjectUtil.hashCode(app);
-        result = prime * result + ObjectUtil.hashCode(device);
-        result = prime * result + ObjectUtil.hashCode(duplicateOf);
-        result = prime * result + ObjectUtil.hashCode(confidence);
-        result = prime * result + ObjectUtil.hashCode(status);
-        result = prime * result + ObjectUtil.hashCode(timestampFilter);
-        result = prime * result + ObjectUtil.hashCode(types);
-        result = prime * result + ObjectUtil.hashCode(username);
+        result = prime * result + EntityUtil.hashCode(app);
+        result = prime * result + EntityUtil.hashCode(device);
+        result = prime * result + EntityUtil.hashCode(duplicateOf);
+        result = prime * result + EntityUtil.hashCode(confidence);
+        result = prime * result + EntityUtil.hashCode(status);
+        result = prime * result + EntityUtil.hashCode(timestampFilter);
+        result = prime * result + EntityUtil.hashCode(types);
+        result = prime * result + EntityUtil.hashCode(username);
         return result;
     }
 }
