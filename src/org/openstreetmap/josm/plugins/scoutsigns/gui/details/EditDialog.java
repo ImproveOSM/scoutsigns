@@ -56,56 +56,6 @@ import com.telenav.josm.common.gui.ModalDialog;
  */
 class EditDialog extends ModalDialog implements StatusChangeObservable {
 
-    /*
-     * Creates a new comment for the selected road sign. A comment is created only if the comment component contains a
-     * text.
-     */
-    private class AddCommentAction extends AbstractAction {
-
-        private static final long serialVersionUID = -5351629052918137710L;
-
-        @Override
-        public void actionPerformed(final ActionEvent event) {
-            // if input is valid load username & create comment
-            if (validInput()) {
-                final Long duplicateId =
-                        (status == Status.DUPLICATE) ? Long.parseLong(txtDuplicateId.getText().trim()) : null;
-
-                        if (lblCommentError.isVisible()) {
-                            lblCommentError.setVisible(false);
-                        }
-                        dispose();
-
-                        // load username
-                        final String username = PrefManager.getInstance().loadOsmUsername();
-                        if (username.isEmpty()) {
-                            final String nemUsername =
-                                    JOptionPane.showInputDialog(Main.parent, GuiConfig.getInstance().getTxtUsernameWarning(),
-                                            GuiConfig.getInstance().getDlgWarningTitle(), JOptionPane.WARNING_MESSAGE);
-                            if (nemUsername != null && !nemUsername.isEmpty()) {
-                                PrefManager.getInstance().saveOsmUsername(nemUsername);
-                                notifyObserver(nemUsername, txtComment.getText().trim(), status, duplicateId);
-                            }
-                        } else {
-                            notifyObserver(username, txtComment.getText().trim(), status, duplicateId);
-                        }
-            }
-        }
-
-        private boolean validInput() {
-            boolean valid = true;
-            if (status == Status.DUPLICATE && !txtDuplicateId.getInputVerifier().verify(txtDuplicateId)) {
-                valid = false;
-            }
-
-            if (txtComment.getText().trim().isEmpty()) {
-                lblCommentError.setVisible(true);
-                valid = false;
-            }
-            return valid;
-        }
-    }
-
     private static final long serialVersionUID = 4145954527837092488L;
 
     /* minimum dimension */
@@ -156,8 +106,8 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
 
     private void addBtnPnl() {
         lblCommentError = GuiBuilder.buildLabel(GuiConfig.getInstance().getTxtCommentInvalid(), Color.red,
-                getFont().deriveFont(Font.BOLD), ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
-                SwingConstants.TOP, false);
+                Main.map.mapView.getGraphics().getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12),
+                ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP, false);
 
         final JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.TRAILING));
         pnlBtn.add(GuiBuilder.buildButton(new AddCommentAction(), GuiConfig.getInstance().getBtnOk()));
@@ -171,7 +121,7 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
 
     private void addComment() {
         txtComment = GuiBuilder.buildTextArea(null, Color.white, true,
-                getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12));
+                Main.map.mapView.getGraphics().getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12));
 
         final JScrollPane scrollPane = GuiBuilder.buildScrollPane(txtComment, Color.white,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -186,13 +136,13 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
 
 
     private void addDuplicateId() {
-        txtDuplicateId =
-                GuiBuilder.buildTextField(null, getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12), Color.white);
+        txtDuplicateId = GuiBuilder.buildTextField(null,
+                Main.map.mapView.getGraphics().getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12), Color.white);
         txtDuplicateId.setBorder(BorderFactory.createLineBorder(Color.gray));
 
         final JLabel lblDuplError = GuiBuilder.buildLabel(GuiConfig.getInstance().getTxtDuplIdInvalid(), Color.red,
-                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12), ComponentOrientation.LEFT_TO_RIGHT,
-                SwingConstants.LEFT, SwingConstants.TOP, false);
+                Main.map.mapView.getGraphics().getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12),
+                ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP, false);
         txtDuplicateId.setInputVerifier(new DuplicateIdVerifier(txtDuplicateId, lblDuplError));
 
         final JPanel pnlDuplicate = new JPanel(new GridLayout(1, 0, 1, 1));
@@ -207,5 +157,56 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
 
         pnlNorth.add(pnlDuplicate, BorderLayout.CENTER);
         add(pnlNorth, BorderLayout.NORTH);
+    }
+
+
+    /*
+     * Creates a new comment for the selected road sign. A comment is created only if the comment component contains a
+     * text.
+     */
+    private class AddCommentAction extends AbstractAction {
+
+        private static final long serialVersionUID = -5351629052918137710L;
+
+        @Override
+        public void actionPerformed(final ActionEvent event) {
+            // if input is valid load username & create comment
+            if (validInput()) {
+                final Long duplicateId =
+                        (status == Status.DUPLICATE) ? Long.parseLong(txtDuplicateId.getText().trim()) : null;
+
+                        if (lblCommentError.isVisible()) {
+                            lblCommentError.setVisible(false);
+                        }
+                        dispose();
+
+                        // load username
+                        final String username = PrefManager.getInstance().loadOsmUsername();
+                        if (username.isEmpty()) {
+                            final String nemUsername =
+                                    JOptionPane.showInputDialog(Main.parent, GuiConfig.getInstance().getTxtUsernameWarning(),
+                                            GuiConfig.getInstance().getDlgWarningTitle(), JOptionPane.WARNING_MESSAGE);
+                            if (nemUsername != null && !nemUsername.isEmpty()) {
+                                PrefManager.getInstance().saveOsmUsername(nemUsername);
+                                notifyObserver(nemUsername, txtComment.getText().trim(), status, duplicateId);
+                            }
+                        } else {
+                            notifyObserver(username, txtComment.getText().trim(), status, duplicateId);
+                        }
+            }
+        }
+
+        private boolean validInput() {
+            boolean valid = true;
+            if (status == Status.DUPLICATE && !txtDuplicateId.getInputVerifier().verify(txtDuplicateId)) {
+                valid = false;
+            }
+
+            if (txtComment.getText().trim().isEmpty()) {
+                lblCommentError.setVisible(true);
+                valid = false;
+            }
+            return valid;
+        }
     }
 }

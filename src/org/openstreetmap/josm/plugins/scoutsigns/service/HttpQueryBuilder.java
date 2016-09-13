@@ -214,7 +214,9 @@ class HttpQueryBuilder {
     String build(final String method) {
         final StringBuilder url = new StringBuilder(Config.getInstance().getServiceUrl());
         url.append(method).append(QUESTIONM);
-        url.append(query);
+        if (query != null && query.length() > 0) {
+            url.append(query);
+        }
         return url.toString();
     }
 }

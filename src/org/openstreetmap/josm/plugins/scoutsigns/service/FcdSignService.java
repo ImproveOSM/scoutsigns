@@ -59,45 +59,6 @@ class FcdSignService {
         this.gson = builder.create();
     }
 
-
-    private Root buildRoot(final String response) throws FcdSignServiceException {
-        Root root = new Root();
-        if (response != null) {
-            try {
-                root = gson.fromJson(response, Root.class);
-            } catch (final JsonSyntaxException ex) {
-                throw new FcdSignServiceException(ex);
-            }
-        }
-        return root;
-    }
-
-    private Root executeGet(final String url) throws FcdSignServiceException {
-        String response = null;
-        try {
-            response = new HttpConnector(url).get();
-        } catch (final HttpConnectorException ex) {
-            throw new FcdSignServiceException(ex);
-        }
-        return buildRoot(response);
-    }
-
-    private Root executePost(final String url, final Map<String, String> content) throws FcdSignServiceException {
-        String response = null;
-        try {
-            response = new HttpConnector(url).post(content, ContentType.JSON);
-        } catch (final HttpConnectorException ex) {
-            throw new FcdSignServiceException(ex);
-        }
-        return buildRoot(response);
-    }
-
-    private void verifyStatus(final Root root) throws FcdSignServiceException {
-        if (root.getStatus() != null && root.getStatus().isErrorCode()) {
-            throw new FcdSignServiceException(root.getStatus().getApiMessage());
-        }
-    }
-
     /**
      * Adds a comment to the specified road sign. If the status is not null, then also the road sign's status is
      * modified.
@@ -165,8 +126,7 @@ class FcdSignService {
      * @return a list of {@code RoadSignCluster}s
      * @throws FcdSignServiceException if an error occurred during the FcdSignService method execution
      */
-    List<RoadSignCluster> searchClusters(final BoundingBox bbox, final int zoom)
-            throws FcdSignServiceException {
+    List<RoadSignCluster> searchClusters(final BoundingBox bbox, final int zoom) throws FcdSignServiceException {
         final String url = new HttpQueryBuilder(bbox, zoom).build(Constants.SEARCH_SIGNS);
         final Root root = executeGet(url);
         verifyStatus(root);
@@ -188,5 +148,44 @@ class FcdSignService {
         final Root root = executeGet(url);
         verifyStatus(root);
         return root.getRoadSigns();
+    }
+
+
+    private Root buildRoot(final String response) throws FcdSignServiceException {
+        Root root = new Root();
+        if (response != null) {
+            try {
+                root = gson.fromJson(response, Root.class);
+            } catch (final JsonSyntaxException ex) {
+                throw new FcdSignServiceException(ex);
+            }
+        }
+        return root;
+    }
+
+    private Root executeGet(final String url) throws FcdSignServiceException {
+        String response = null;
+        try {
+            response = new HttpConnector(url).get();
+        } catch (final HttpConnectorException ex) {
+            throw new FcdSignServiceException(ex);
+        }
+        return buildRoot(response);
+    }
+
+    private Root executePost(final String url, final Map<String, String> content) throws FcdSignServiceException {
+        String response = null;
+        try {
+            response = new HttpConnector(url).post(content, ContentType.X_WWW_FORM_URLENCODED);
+        } catch (final HttpConnectorException ex) {
+            throw new FcdSignServiceException(ex);
+        }
+        return buildRoot(response);
+    }
+
+    private void verifyStatus(final Root root) throws FcdSignServiceException {
+        if (root.getStatus() != null && root.getStatus().isErrorCode()) {
+            throw new FcdSignServiceException(root.getStatus().getApiMessage());
+        }
     }
 }
