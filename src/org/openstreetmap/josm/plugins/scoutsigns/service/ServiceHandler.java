@@ -74,7 +74,7 @@ public final class ServiceHandler {
      * status of the road signs are modified. This is a batch operation equivalent to calling "addComment" on each
      * individual road sign from the collection.
      *
-     * @param roadSigns the collection of road signs
+     * @param roadSigns the collection of selected road signs
      * @param username the user's OSM username
      * @param text the comment text
      * @param status the new {@code Status} to be set

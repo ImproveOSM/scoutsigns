@@ -15,6 +15,7 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns;
 
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -27,11 +28,12 @@ import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MapFrame;
-import org.openstreetmap.josm.gui.MapView;
-import org.openstreetmap.josm.gui.MapView.LayerChangeListener;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
-import org.openstreetmap.josm.gui.layer.Layer;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerAddEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerChangeListener;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerOrderChangeEvent;
+import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
@@ -61,78 +63,6 @@ import com.telenav.josm.common.argument.BoundingBox;
 public class ScoutSignsPlugin extends Plugin implements LayerChangeListener, ZoomChangeListener, MouseListener,
 PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
 
-    /*
-     * Listens to toggle dialog button actions.
-     */
-    private class ToggleButtonActionListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(final ActionEvent event) {
-            if (event.getSource() instanceof IconToggleButton) {
-                final IconToggleButton btn = (IconToggleButton) event.getSource();
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        if (btn.isSelected()) {
-                            dialog.setVisible(true);
-                            btn.setSelected(true);
-                        } else {
-                            dialog.setVisible(false);
-                            btn.setSelected(false);
-                            btn.setFocusable(false);
-                        }
-                        if (layer == null) {
-                            registerListeners();
-                            addLayer();
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-    /*
-     * Downloads the road signs from the current view, and updates the plugin with the new data.
-     */
-    private class UpdateThread implements Runnable {
-
-        @Override
-        public void run() {
-            if (Main.map != null && Main.map.mapView != null) {
-                final BoundingBox bbox = Util.buildBBox(Main.map.mapView);
-                if (bbox != null) {
-                    final int zoom = OsmUrlToBounds.getZoom(Main.map.mapView.getRealBounds());
-                    final SearchFilter filter = zoom > Config.getInstance().getMaxClusterZoom() ? searchFilter : null;
-                    final DataSet result = ServiceHandler.getInstance().search(bbox, filter, zoom);
-                    SwingUtilities.invokeLater(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            synchronized (this) {
-                                new InfoDialog().displayDialog(zoom, prevZoom);
-                                prevZoom = zoom;
-                                updateSelection(result);
-                                dialog.enableButtons(zoom);
-                                layer.setDataSet(result);
-                                Main.map.repaint();
-                            }
-                        }
-                    });
-                }
-            }
-        }
-
-        private void updateSelection(final DataSet result) {
-            if (!result.getRoadSignClusters().isEmpty()) {
-                dialog.updateData(null);
-            } else if (layer.lastSelRoadSign() != null) {
-                final RoadSign roadSign =
-                        result.getRoadSigns().contains(layer.lastSelRoadSign()) ? layer.lastSelRoadSign() : null;
-                        dialog.updateData(roadSign);
-            }
-        }
-    }
 
     private ScoutSignsLayer layer;
     private ScoutSignsDetailsDialog dialog;
@@ -156,68 +86,81 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
         searchFilter = PrefManager.getInstance().loadSearchFilter();
     }
 
-
     @Override
-    public void activeLayerChange(final Layer layer1, final Layer layer2) {
-        // this action is not supported
+    public void mapFrameInitialized(final MapFrame oldMapFrame, final MapFrame newMapFrame) {
+        if (Main.map != null && !GraphicsEnvironment.isHeadless()) {
+            dialog = new ScoutSignsDetailsDialog();
+            newMapFrame.addToggleDialog(dialog);
+            dialog.getButton().addActionListener(new ToggleButtonActionListener());
+            registerListeners();
+            layer = new ScoutSignsLayer();
+            newMapFrame.mapView.getLayerManager().addLayer(layer);
+            if (!dialog.getButton().isSelected()) {
+                dialog.getButton().doClick();
+            }
+            prevZoom = OsmUrlToBounds.getZoom(newMapFrame.mapView.getRealBounds());
+        }
     }
 
 
-    @Override
-    public void enterTripView() {
-        NavigatableComponent.removeZoomChangeListener(this);
-        layer.setTripView(true);
-        Main.map.repaint();
-    }
+    /* LayerChangeListener methods */
 
     @Override
-    public void exitTripView() {
-        layer.setTripView(false);
-        Main.worker.execute(new UpdateThread());
-        NavigatableComponent.addZoomChangeListener(this);
-    }
-
-    @Override
-    public void layerAdded(final Layer newLayer) {
-        if (newLayer instanceof ScoutSignsLayer) {
+    public void layerAdded(final LayerAddEvent event) {
+        if (event.getAddedLayer() instanceof ScoutSignsLayer) {
             zoomChanged();
         }
     }
 
     @Override
-    public void layerRemoved(final Layer currentLayer) {
-        if (currentLayer instanceof ScoutSignsLayer) {
+    public void layerOrderChanged(final LayerOrderChangeEvent event) {
+        // no logic for this method
+    }
+
+    @Override
+    public void layerRemoving(final LayerRemoveEvent event) {
+        if (event.getRemovedLayer() instanceof ScoutSignsLayer) {
             // unregister listeners
             NavigatableComponent.removeZoomChangeListener(this);
-            MapView.removeLayerChangeListener(this);
+            Main.getLayerManager().removeLayerChangeListener(this);
             Main.pref.removePreferenceChangeListener(this);
 
             if (Main.map != null) {
                 Main.map.mapView.removeMouseListener(this);
                 Main.map.remove(dialog);
-                dialog.getButton().setSelected(false);
-                dialog.setVisible(false);
-                dialog.destroy();
                 layer = null;
+                dialog.hideDialog();
             }
         }
     }
 
+
+    /* ZoomChangeListener method */
+
     @Override
-    public void mapFrameInitialized(final MapFrame oldMapFrame, final MapFrame newMapFrame) {
-        if (Main.map != null) {
-            dialog = new ScoutSignsDetailsDialog();
-            newMapFrame.addToggleDialog(dialog);
-            dialog.getButton().addActionListener(new ToggleButtonActionListener());
-            registerListeners();
-            addLayer();
-            prevZoom = OsmUrlToBounds.getZoom(newMapFrame.mapView.getRealBounds());
+    public void zoomChanged() {
+        if (layer != null && layer.isVisible()) {
+            if (zoomTimer != null && zoomTimer.isRunning()) {
+                zoomTimer.restart();
+            } else {
+                zoomTimer = new Timer(Config.getInstance().getSearchDelay(), new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(final ActionEvent e) {
+                        Main.worker.execute(new UpdateThread());
+                    }
+                });
+                zoomTimer.setRepeats(false);
+                zoomTimer.start();
+            }
         }
     }
 
+    /* MouseListener methods */
+
     @Override
     public void mouseClicked(final MouseEvent event) {
-        if (Main.map.mapView.getActiveLayer() == layer && layer.isVisible() && !layer.isTripView()
+        if (Main.getLayerManager().getActiveLayer() == layer && layer.isVisible() && !layer.isTripView()
                 && SwingUtilities.isLeftMouseButton(event)) {
             final boolean multiSelect = event.isShiftDown();
             final RoadSign roadSign = layer.nearbyRoadSign(event.getPoint(), multiSelect);
@@ -272,6 +215,8 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
         // this action is not supported
     }
 
+
+    /* PreferenceChangedListener methods */
     @Override
     public void preferenceChanged(final PreferenceChangeEvent event) {
         if (event != null && (event.getNewValue() != null && !event.getNewValue().equals(event.getOldValue()))) {
@@ -282,6 +227,8 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
         }
     }
 
+
+    /* StatusChangeObserver method */
     @Override
     public void statusChanged(final String ursername, final String text, final Status status, final Long duplicateOf) {
         final List<RoadSign> selRoadSigns = layer.getSelRoadSigns();
@@ -306,33 +253,27 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
         }
     }
 
+
+    /* TripViewObserver methods */
+
     @Override
-    public void zoomChanged() {
-        if (layer != null && layer.isVisible()) {
-            if (zoomTimer != null && zoomTimer.isRunning()) {
-                zoomTimer.restart();
-            } else {
-                zoomTimer = new Timer(Config.getInstance().getSearchDelay(), new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(final ActionEvent e) {
-                        Main.worker.execute(new UpdateThread());
-                    }
-                });
-                zoomTimer.setRepeats(false);
-                zoomTimer.start();
-            }
-        }
+    public void enterTripView() {
+        NavigatableComponent.removeZoomChangeListener(this);
+        layer.setTripView(true);
+        Main.map.repaint();
     }
 
-    private void addLayer() {
-        layer = new ScoutSignsLayer();
-        Main.main.addLayer(layer);
+    @Override
+    public void exitTripView() {
+        layer.setTripView(false);
+        Main.worker.execute(new UpdateThread());
+        NavigatableComponent.addZoomChangeListener(this);
     }
+
 
     private void registerListeners() {
         NavigatableComponent.addZoomChangeListener(this);
-        MapView.addLayerChangeListener(this);
+        Main.getLayerManager().addLayerChangeListener(this);
         Main.map.mapView.addMouseListener(this);
         Main.pref.addPreferenceChangeListener(this);
         dialog.registerStatusChangeObserver(this);
@@ -350,5 +291,81 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
                 Main.map.repaint();
             }
         });
+    }
+
+
+    /*
+     * Listens to toggle dialog button actions.
+     */
+    private class ToggleButtonActionListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(final ActionEvent event) {
+            if (event.getSource() instanceof IconToggleButton) {
+                final IconToggleButton btn = (IconToggleButton) event.getSource();
+                SwingUtilities.invokeLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if (btn.isSelected()) {
+                            dialog.setVisible(true);
+                            btn.setSelected(true);
+                        } else {
+                            dialog.setVisible(false);
+                            btn.setSelected(false);
+                            btn.setFocusable(false);
+                        }
+                        if (layer == null) {
+                            registerListeners();
+                            layer = new ScoutSignsLayer();
+                            Main.map.mapView.getLayerManager().addLayer(layer);
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+
+    /*
+     * Downloads the road signs from the current view, and updates the plugin with the new data.
+     */
+    private class UpdateThread implements Runnable {
+
+        @Override
+        public void run() {
+            if (Main.map != null && Main.map.mapView != null) {
+                final BoundingBox bbox = Util.buildBBox(Main.map.mapView);
+                if (bbox != null) {
+                    final int zoom = OsmUrlToBounds.getZoom(Main.map.mapView.getRealBounds());
+                    final SearchFilter filter = zoom > Config.getInstance().getMaxClusterZoom() ? searchFilter : null;
+                    final DataSet result = ServiceHandler.getInstance().search(bbox, filter, zoom);
+                    SwingUtilities.invokeLater(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            synchronized (this) {
+                                new InfoDialog().displayDialog(zoom, prevZoom);
+                                prevZoom = zoom;
+                                updateSelection(result);
+                                dialog.enableButtons(zoom);
+                                layer.setDataSet(result);
+                                Main.map.repaint();
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        private void updateSelection(final DataSet result) {
+            if (!result.getRoadSignClusters().isEmpty()) {
+                dialog.updateData(null);
+            } else if (layer.lastSelRoadSign() != null) {
+                final RoadSign roadSign =
+                        result.getRoadSigns().contains(layer.lastSelRoadSign()) ? layer.lastSelRoadSign() : null;
+                dialog.updateData(roadSign);
+            }
+        }
     }
 }

@@ -17,7 +17,6 @@ package org.openstreetmap.josm.plugins.scoutsigns.gui.details;
 
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Rectangle;
 import javax.swing.SwingConstants;
 import org.openstreetmap.josm.Main;
@@ -51,140 +50,12 @@ class RoadSignPanel extends BasicInfoPanel<RoadSign> {
         updateData(null);
     }
 
-    private void addConfidence(final Short confidence, final int widthLbl) {
-        if (confidence != null) {
-            add(GuiBuilder.buildLabel(GUI_CONF.getLblConf(), getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12),
-                    ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP,
-                    new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
-
-            final int widthVal = Main.map.mapView.getGraphics()
-                    .getFontMetrics(getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12))
-                    .stringWidth(confidence.toString());
-            add(GuiBuilder.buildLabel(confidence.toString(), getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12),
-                    ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP,
-                    new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
-            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
-            y = y + LINE_HEIGHT;
-        }
-    }
-
-    private void addCreated(final Long created, final int widthLbl) {
-        if (created != null) {
-            add(GuiBuilder.buildLabel(GUI_CONF.getLblCreated(),
-                    getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12), ComponentOrientation.LEFT_TO_RIGHT,
-                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
-            final String createdStr = DateUtil.formatTimestamp(created);
-            final int widthVal = Main.map.mapView.getGraphics()
-                    .getFontMetrics(getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12)).stringWidth(createdStr);
-            add(GuiBuilder.buildLabel(createdStr, getFont().deriveFont(Font.PLAIN, 12),
-                    ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP,
-                    new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
-            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
-            y = y + LINE_HEIGHT;
-        }
-    }
-
-    private void addDupl(final Long duplicateOf, final int widthLbl) {
-        if (duplicateOf != null) {
-            add(GuiBuilder.buildLabel(GUI_CONF.getLblDupl(), getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12),
-                    ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP,
-                    new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
-            final int widthVal = Main.map.mapView.getGraphics()
-                    .getFontMetrics(getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12))
-                    .stringWidth(duplicateOf.toString());
-            add(GuiBuilder.buildLabel(duplicateOf.toString(), getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12),
-                    ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP,
-                    new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
-            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
-            y = y + LINE_HEIGHT;
-        }
-    }
-
-    private void addHeight(final Double height, final int widthLbl) {
-        if (height != null) {
-            add(GuiBuilder.buildLabel(GUI_CONF.getLblHeight(), getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12),
-                    ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP,
-                    new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
-            final String heightStr = EntityFormatter.formatDouble(height, false, DecFormat.SHORT) + " m";
-            final int widthVal = Main.map.mapView.getGraphics()
-                    .getFontMetrics(getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12)).stringWidth(heightStr);
-            add(GuiBuilder.buildLabel(heightStr, getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12),
-                    ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP,
-                    new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
-            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
-            y = y + LINE_HEIGHT;
-        }
-    }
-
-    private void addId(final Long id, final int widthLbl) {
-        if (id != null) {
-            add(GuiBuilder.buildLabel(GUI_CONF.getLblId(), getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12),
-                    ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP,
-                    new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
-            final int widthVal = Main.map.mapView.getGraphics()
-                    .getFontMetrics(getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12))
-                    .stringWidth(id.toString());
-            add(GuiBuilder.buildLabel(id.toString(), getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12),
-                    ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP,
-                    new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
-            pnlWidth = pnlWidth + widthLbl + widthVal;
-            y = y + LINE_HEIGHT;
-        }
-    }
-
-    private void addPoint(final LatLon point, final int widthLbl) {
-        if (point != null) {
-            add(GuiBuilder.buildLabel(GUI_CONF.getLblPoint(), getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12),
-                    ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP,
-                    new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
-            final String pointStr = Formatter.formatLatLon(point);
-            final int widthVal = Main.map.mapView.getGraphics()
-                    .getFontMetrics(getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12)).stringWidth(pointStr);
-            add(GuiBuilder.buildLabel(pointStr, getFont().deriveFont(Font.PLAIN, 12),
-                    ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP,
-                    new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
-            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
-            y = y + LINE_HEIGHT;
-        }
-    }
-
-    private void addStatus(final Status status, final int widthLbl) {
-        if (status != null) {
-            add(GuiBuilder.buildLabel(GUI_CONF.getLblStatus(), getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12),
-                    ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP,
-                    new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
-            final int widthVal = Main.map.mapView.getGraphics()
-                    .getFontMetrics(getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12))
-                    .stringWidth(status.name());
-            add(GuiBuilder.buildLabel(status.name(), getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12),
-                    ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP,
-                    new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
-
-            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
-            y = y + LINE_HEIGHT;
-        }
-    }
-
-    private void addType(final String type, final int widthLbl) {
-        if (type != null) {
-            add(GuiBuilder.buildLabel(GUI_CONF.getLblType(), getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12),
-                    ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP,
-                    new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
-            final int widthVal = Main.map.mapView.getGraphics()
-                    .getFontMetrics(getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12)).stringWidth(type);
-            add(GuiBuilder.buildLabel(type, getFont().deriveFont(Font.PLAIN, 12), ComponentOrientation.LEFT_TO_RIGHT,
-                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
-            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
-            y = y + LINE_HEIGHT;
-        }
-    }
 
     @Override
     protected void createComponents(final RoadSign roadSign) {
         y = 0;
         pnlWidth = 0;
-        final int widthLbl = getMaxWidth(
-                Main.map.mapView.getGraphics().getFontMetrics(getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12)),
+        final int widthLbl = getMaxWidth(Main.map.mapView.getGraphics().getFontMetrics(getFontBold()),
                 GUI_CONF.getLblId(), GUI_CONF.getLblPoint(), GUI_CONF.getLblType(), GUI_CONF.getLblStatus(),
                 GUI_CONF.getLblConf(), GUI_CONF.getLblCreated(), GUI_CONF.getLblDupl());
         addId(roadSign.getId(), widthLbl);
@@ -197,5 +68,111 @@ class RoadSignPanel extends BasicInfoPanel<RoadSign> {
         addDupl(roadSign.getDuplicateOf(), widthLbl);
         final int pnlHeight = y + SPACE_Y;
         setPreferredSize(new Dimension(pnlWidth + SPACE_Y, pnlHeight));
+    }
+
+    private void addConfidence(final Short confidence, final int widthLbl) {
+        if (confidence != null) {
+            add(GuiBuilder.buildLabel(GUI_CONF.getLblConf(), getFontBold(), ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
+
+            final int widthVal =
+                    Main.map.mapView.getGraphics().getFontMetrics(getFontPlain()).stringWidth(confidence.toString());
+            add(GuiBuilder.buildLabel(confidence.toString(), getFontPlain().deriveFont(GuiBuilder.FONT_SIZE_12),
+                    ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP,
+                    new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
+            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
+            y = y + LINE_HEIGHT;
+        }
+    }
+
+    private void addCreated(final Long created, final int widthLbl) {
+        if (created != null) {
+            add(GuiBuilder.buildLabel(GUI_CONF.getLblCreated(), getFontBold(), ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
+            final String createdStr = DateUtil.formatTimestamp(created);
+            final int widthVal = Main.map.mapView.getGraphics().getFontMetrics(getFontPlain()).stringWidth(createdStr);
+            add(GuiBuilder.buildLabel(createdStr, getFontPlain(), ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
+            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
+            y = y + LINE_HEIGHT;
+        }
+    }
+
+    private void addDupl(final Long duplicateOf, final int widthLbl) {
+        if (duplicateOf != null) {
+            add(GuiBuilder.buildLabel(GUI_CONF.getLblDupl(), getFontBold(), ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
+            final int widthVal =
+                    Main.map.mapView.getGraphics().getFontMetrics(getFontPlain()).stringWidth(duplicateOf.toString());
+            add(GuiBuilder.buildLabel(duplicateOf.toString(), getFontPlain(), ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
+            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
+            y = y + LINE_HEIGHT;
+        }
+    }
+
+    private void addHeight(final Double height, final int widthLbl) {
+        if (height != null) {
+            add(GuiBuilder.buildLabel(GUI_CONF.getLblHeight(), getFontBold(), ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
+            final String heightStr = EntityFormatter.formatDouble(height, false, DecFormat.SHORT) + " m";
+            final int widthVal = Main.map.mapView.getGraphics().getFontMetrics(getFontPlain()).stringWidth(heightStr);
+            add(GuiBuilder.buildLabel(heightStr, getFontPlain(), ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
+            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
+            y = y + LINE_HEIGHT;
+        }
+    }
+
+    private void addId(final Long id, final int widthLbl) {
+        if (id != null) {
+            add(GuiBuilder.buildLabel(GUI_CONF.getLblId(), getFontBold(), ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
+            final int widthVal =
+                    Main.map.mapView.getGraphics().getFontMetrics(getFontPlain()).stringWidth(id.toString());
+            add(GuiBuilder.buildLabel(id.toString(), getFontPlain(), ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
+            pnlWidth = pnlWidth + widthLbl + widthVal;
+            y = y + LINE_HEIGHT;
+        }
+    }
+
+    private void addPoint(final LatLon point, final int widthLbl) {
+        if (point != null) {
+            add(GuiBuilder.buildLabel(GUI_CONF.getLblPoint(), getFontBold(), ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
+            final String pointStr = Formatter.formatLatLon(point);
+            final int widthVal = Main.map.mapView.getGraphics().getFontMetrics(getFontPlain()).stringWidth(pointStr);
+            add(GuiBuilder.buildLabel(pointStr, getFontPlain(), ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
+                    SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
+            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
+            y = y + LINE_HEIGHT;
+        }
+    }
+
+    private void addStatus(final Status status, final int widthLbl) {
+        if (status != null) {
+            add(GuiBuilder.buildLabel(GUI_CONF.getLblStatus(), getFontBold(), ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
+            final int widthVal =
+                    Main.map.mapView.getGraphics().getFontMetrics(getFontPlain()).stringWidth(status.name());
+            add(GuiBuilder.buildLabel(status.name(), getFontPlain(), ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
+
+            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
+            y = y + LINE_HEIGHT;
+        }
+    }
+
+    private void addType(final String type, final int widthLbl) {
+        if (type != null) {
+            add(GuiBuilder.buildLabel(GUI_CONF.getLblType(), getFontBold(), ComponentOrientation.LEFT_TO_RIGHT,
+                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
+            final int widthVal = Main.map.mapView.getGraphics().getFontMetrics(getFontPlain()).stringWidth(type);
+            add(GuiBuilder.buildLabel(type, getFontPlain(), ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
+                    SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
+            pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
+            y = y + LINE_HEIGHT;
+        }
     }
 }

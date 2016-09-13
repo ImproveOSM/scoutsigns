@@ -11,10 +11,6 @@
 	<property name="plugin.name" value="scoutsigns.jar" />
 	<property name="JOSM_lib" value="josm-tested.jar" />
 
-	<condition property="isJosmTested">
-		<equals arg1="${JOSM_lib}" arg2="josm-tested.jar" />
-	</condition>
-
 	<tstamp>
 		<format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
 	</tstamp>
@@ -55,7 +51,7 @@
 			<fileset dir="${plugin.lib.dir}" includes="**/*.jar" excludes="josm-tested.jar,josm-latest.jar" />
 			<fileset dir="${plugin.lib.dir}" includes="${JOSM_lib}" />
 		</path>
-		<javadoc destdir="${plugin.apidoc.dir}" source="1.7" classpathref="classpath" windowtitle="scoutsigns plugin API">
+		<javadoc destdir="${plugin.apidoc.dir}" source="1.8" classpathref="classpath" windowtitle="scoutsigns plugin API">
 			<link href="http://java.sun.com/javase/7/docs/api/" />
 			<packageset dir="${plugin.src.dir}">
 			</packageset>
@@ -89,9 +85,8 @@
 			</fileset>
 		</copy>
 		<jar destfile="${plugin.out.dir}/${plugin.name}" basedir="${plugin.build.dir}">
-			<zipfileset src="${plugin.lib.dir}/gson-2.2.4.jar" />
+			<zipfileset src="${plugin.lib.dir}/gson-2.6.2.jar" />
 			<zipfileset src="${plugin.lib.dir}/josm-common-1.4.jar" />
-			<zipfileset src="${plugin.lib.dir}/commons-io-2.4.jar" />
 			<zipfileset src="${plugin.lib.dir}/swingx-all-1.6.5.jar" />
 			<manifest>
 				<attribute name="Author" value="telenav" />
@@ -101,10 +96,9 @@
 				<attribute name="Plugin-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/ScoutSigns" />
 				<attribute name="Plugin-Version" value="${build-label}" />
 				<attribute name="Plugin-Icon" value="images/scoutsigns_logo_50x50.png" />
-				<attribute if:set="isJosmTested" name="Plugin-Mainversion" value="10092" />
-				<attribute unless:set="isJosmTested" name="Plugin-Mainversion" value="9759" />
-				<attribute name="9759_Plugin-Url" value="${build-label};http://developer.skobbler.com/public/scoutsigns/1.0/scoutsigns.jar"/>
-				<attribute name="10092_Plugin-Url" value="${build-label};http://developer.skobbler.com/public/scoutsigns/2.0/scoutsigns.jar"/>
+				<attribute name="Plugin-Mainversion" value="10161" />
+				<attribute name="9759_Plugin-Url" value="79;http://developer.skobbler.com/public/scoutsigns/1.0/scoutsigns.jar"/>
+				<attribute name="10161_Plugin-Url" value="${build-label};http://developer.skobbler.com/public/scoutsigns/2.0/scoutsigns.jar"/>
 			</manifest>
 		</jar>
 	</target>

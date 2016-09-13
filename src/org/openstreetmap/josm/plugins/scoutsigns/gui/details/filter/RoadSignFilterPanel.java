@@ -107,75 +107,63 @@ class RoadSignFilterPanel extends JPanel {
 
 
     private void addAppFilter(final Application application) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblApp(),
-                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12), ComponentOrientation.LEFT_TO_RIGHT,
-                SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_APP);
+        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblApp(), getFont().deriveFont(Font.BOLD),
+                ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_APP);
         String name = "";
         String vers = "";
         if (application != null) {
             name = application.getName();
             vers = application.getVersion();
         }
-        txtAppName =
-                GuiBuilder.buildTextField(name, getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12), Color.white);
+        txtAppName = GuiBuilder.buildTextField(name, getFont().deriveFont(Font.PLAIN), Color.white);
         add(txtAppName, Constraints.TXT_APP_NAME);
-        txtAppVers =
-                GuiBuilder.buildTextField(vers, getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12), Color.white);
+        txtAppVers = GuiBuilder.buildTextField(vers, getFont().deriveFont(Font.PLAIN), Color.white);
         add(txtAppVers, Constraints.TXT_APP_VERS);
     }
 
     private void addConfidenceFilter(final Double confidence) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblConf(),
-                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12), ComponentOrientation.LEFT_TO_RIGHT,
-                SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_CONF);
+        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblConf(), getFont().deriveFont(Font.BOLD),
+                ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_CONF);
         final String txt = confidence != null ? "" + confidence.intValue() : "";
-        txtConf =
-                GuiBuilder.buildTextField(txt, getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12), Color.white);
+        txtConf = GuiBuilder.buildTextField(txt, getFont().deriveFont(Font.PLAIN), Color.white);
         txtConf.setInputVerifier(new ConfidenceVerifier(txtConf, GuiConfig.getInstance().getTxtConfInvalid()));
         add(txtConf, Constraints.TXT_CONF);
     }
 
     private void addDeviceFilter(final Device device) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblDevice(),
-                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12), ComponentOrientation.LEFT_TO_RIGHT,
-                SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_DEV);
+        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblDevice(), getFont().deriveFont(Font.BOLD),
+                ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_DEV);
         String name = "";
         String vers = "";
         if (device != null) {
             name = device.getOsName();
             vers = device.getOsVersion();
         }
-        txtOsName =
-                GuiBuilder.buildTextField(name, getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12), Color.white);
+        txtOsName = GuiBuilder.buildTextField(name, getFont().deriveFont(Font.PLAIN), Color.white);
         add(txtOsName, Constraints.TXT_OS_NAME);
-        txtOsVers =
-                GuiBuilder.buildTextField(vers, getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12), Color.white);
+        txtOsVers = GuiBuilder.buildTextField(vers, getFont().deriveFont(Font.PLAIN), Color.white);
         add(txtOsVers, Constraints.TXT_OS_VERS);
     }
 
     private void addDuplicateFilter(final Long duplicate) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblDupl(),
-                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12), ComponentOrientation.LEFT_TO_RIGHT,
-                SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_DUPL);
+        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblDupl(), getFont().deriveFont(Font.BOLD),
+                ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_DUPL);
         final String txt = duplicate != null ? duplicate.toString() : "";
-        txtDupl =
-                GuiBuilder.buildTextField(txt, getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12), Color.white);
+        txtDupl = GuiBuilder.buildTextField(txt, getFont().deriveFont(Font.PLAIN), Color.white);
         add(txtDupl, Constraints.TXT_DUPL);
         txtDupl.setInputVerifier(new DuplicateIdVerifier(txtDupl, GuiConfig.getInstance().getTxtDuplIdInvalid()));
     }
 
     private void addStatusFilter(final Status status) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblStatus(),
-                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12), ComponentOrientation.LEFT_TO_RIGHT,
-                SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_STATUS);
+        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblStatus(), getFont().deriveFont(Font.BOLD),
+                ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_STATUS);
         pnlStatus = new StatusFilterPanel(status);
         add(pnlStatus, Constraints.PNL_STATUS);
     }
 
     private void addTimeIntervalFilter(final TimestampFilter tstampFilter) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblTimeInt(),
-                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12), ComponentOrientation.LEFT_TO_RIGHT,
-                SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_INT);
+        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblTimeInt(), getFont().deriveFont(Font.BOLD),
+                ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_INT);
         Date lower = null;
         Date upper = null;
         Long from = null;
@@ -203,9 +191,8 @@ class RoadSignFilterPanel extends JPanel {
     }
 
     private void addTypeFilter(final List<String> selectedTypes) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblType(),
-                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12), ComponentOrientation.LEFT_TO_RIGHT,
-                SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_TYPE);
+        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblType(), getFont().deriveFont(Font.BOLD),
+                ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_TYPE);
         listTypes = buildList(Config.getInstance().getSignTypes(), new TypeListCellRenderer(), selectedTypes);
 
         cmpTypes = GuiBuilder.buildScrollPane(listTypes, Color.white, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -221,7 +208,7 @@ class RoadSignFilterPanel extends JPanel {
             model.addElement(elem);
         }
         final JList<T> list = new JList<>(model);
-        list.setFont(getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12));
+        list.setFont(getFont().deriveFont(Font.PLAIN));
         list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         list.setVisibleRowCount(-1);
         list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -245,11 +232,9 @@ class RoadSignFilterPanel extends JPanel {
     }
 
     private void addUsernameFilter(final String username) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblUsername(),
-                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12), ComponentOrientation.LEFT_TO_RIGHT,
-                SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_USERNAME);
-        txtUsername = GuiBuilder.buildTextField(username, getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12),
-                Color.white);
+        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblUsername(), getFont().deriveFont(Font.BOLD),
+                ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_USERNAME);
+        txtUsername = GuiBuilder.buildTextField(username, getFont().deriveFont(Font.PLAIN), Color.white);
         add(txtUsername, Constraints.TXT_USERNAME);
     }
 

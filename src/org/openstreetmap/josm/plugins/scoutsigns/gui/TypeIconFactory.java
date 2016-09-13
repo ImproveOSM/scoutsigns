@@ -67,7 +67,6 @@ public final class TypeIconFactory {
      * Returns the icon corresponding to the given type and source. The method returns a default icon, if no icon
      * corresponds to the given arguments.
      *
-     * @param source specifies the road sign source
      * @param type specifies the road sign's type
      * @return a {@code ImageIcon} object
      */
