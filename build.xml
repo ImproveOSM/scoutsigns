@@ -52,7 +52,7 @@
 			<fileset dir="${plugin.lib.dir}" includes="${JOSM_lib}" />
 		</path>
 		<javadoc destdir="${plugin.apidoc.dir}" source="1.8" classpathref="classpath" windowtitle="scoutsigns plugin API">
-			<link href="http://java.sun.com/javase/7/docs/api/" />
+			<link href="http://docs.oracle.com/javase/8/docs/api/" />
 			<packageset dir="${plugin.src.dir}">
 			</packageset>
 		</javadoc>
