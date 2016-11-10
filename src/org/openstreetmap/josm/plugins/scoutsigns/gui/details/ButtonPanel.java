@@ -125,6 +125,7 @@ class ButtonPanel extends JPanel implements TripViewObservable {
                 remove(0);
                 add(btnBack, 0);
                 btnTrip.setEnabled(false);
+                tripView = true;
                 revalidate();
                 repaint();
                 notifyObserver(true);
@@ -143,6 +144,7 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         public void actionPerformed(final ActionEvent event) {
             remove(0);
             add(btnFilter, 0);
+            tripView = false;
             btnTrip.setEnabled(true);
             repaint();
             notifyObserver(false);
@@ -170,6 +172,7 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     private final JButton btnBack;
     private final JButton btnTrip;
     private ImageFrame imgFrame;
+    private boolean tripView = false;
 
     /* the list of statuses that a road sign/ set of road signs might have */
     private List<Status> statuses = new ArrayList<>(Status.VALUES_LIST);
@@ -228,7 +231,12 @@ class ButtonPanel extends JPanel implements TripViewObservable {
             enableActions = true;
         }
         btnImage.setEnabled(enableActions);
-        btnTrip.setEnabled(enableActions);
+
+        if (tripView) {
+            btnTrip.setEnabled(false);
+        } else {
+            btnTrip.setEnabled(enableActions);
+        }
         btnComment.setEnabled(enableActions);
         btnMoreAction.setEnabled(enableActions);
     }
@@ -268,8 +276,7 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     void setRoadSign(final RoadSign roadSign) {
         this.roadSign = roadSign;
 
-        // restore possible statuses & enable/disable selected road sign related
-        // actions
+        // restore possible statuses & enable/disable selected road sign related actions
         if (statuses.size() != Status.VALUES_LIST.size()) {
             statuses = new ArrayList<>(Status.VALUES_LIST);
         }
