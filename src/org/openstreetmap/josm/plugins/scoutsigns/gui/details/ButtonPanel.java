@@ -231,7 +231,6 @@ class ButtonPanel extends JPanel implements TripViewObservable {
             enableActions = true;
         }
         btnImage.setEnabled(enableActions);
-
         if (tripView) {
             btnTrip.setEnabled(false);
         } else {

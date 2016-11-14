@@ -247,6 +247,8 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
                         signId = selRoadSigns.get(0).getId();
                         ServiceHandler.getInstance().addComment(signId, ursername, text, status, duplicateOf);
                     }
+                    //TODO: check if status == filter status
+                    // if not cleanup details panel & display initial buttons
                     retrieveSign(signId);
                 }
             });
