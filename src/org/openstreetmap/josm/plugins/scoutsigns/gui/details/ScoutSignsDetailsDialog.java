@@ -73,8 +73,8 @@ public class ScoutSignsDetailsDialog extends ToggleDialog {
      *
      * @param zoom the current zoom level.
      */
-    public void enableButtons(final int zoom) {
-        pnlBtn.enableButtons(zoom);
+    public void enableButtons(final int zoom, final boolean tripView) {
+        pnlBtn.enableButtons(zoom, tripView);
     }
 
     /**

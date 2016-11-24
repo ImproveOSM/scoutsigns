@@ -142,14 +142,18 @@ class ButtonPanel extends JPanel implements TripViewObservable {
 
         @Override
         public void actionPerformed(final ActionEvent event) {
-            remove(0);
-            add(btnFilter, 0);
-            tripView = false;
+            handleExitTrip();
             btnTrip.setEnabled(true);
             repaint();
             notifyObserver(false);
         }
 
+    }
+
+    public void handleExitTrip() {
+        remove(0);
+        add(btnFilter, 0);
+        tripView = false;
     }
 
     private static final long serialVersionUID = -853684446082269916L;
@@ -187,8 +191,8 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         // create components
         final IconConfig iconCnf = IconConfig.getInstance();
         final TltConfig tltCnf = TltConfig.getInstance();
-        btnFilter =
-                GuiBuilder.buildButton(new DisplayFilterDialog(), iconCnf.getFilterIcon(), tltCnf.getBtnFilter(), false);
+        btnFilter = GuiBuilder.buildButton(new DisplayFilterDialog(), iconCnf.getFilterIcon(), tltCnf.getBtnFilter(),
+                false);
         btnBack = GuiBuilder.buildButton(new ExitTrip(), iconCnf.getBackIcon(), tltCnf.getBtnBack(), true);
         btnTrip = GuiBuilder.buildButton(new DisplayTrip(), iconCnf.getTripIcon(), tltCnf.getBtnTrip(), true);
         btnImage = GuiBuilder.buildButton(new DisplayImageFrame(), iconCnf.getPhotoIcon(), tltCnf.getBtnPhoto(), true);
@@ -241,14 +245,18 @@ class ButtonPanel extends JPanel implements TripViewObservable {
     }
 
     /**
-     * Enables or disabled action buttons based on the given zoom level.
+     * Enables or disabled action buttons based on the given zoom level and trip view.
      *
      * @param zoom the current zoom level.
      */
-    void enableButtons(final int zoom) {
+    void enableButtons(final int zoom, final boolean isTripView) {
         if (zoom > Config.getInstance().getMaxClusterZoom()) {
-            btnFilter.setEnabled(true);
+            if (!isTripView) {
+                setRoadSign(null);
+                handleExitTrip();
+            }
             enableRoadSignActions();
+            btnFilter.setEnabled(true);
         } else {
             btnFilter.setEnabled(false);
             btnImage.setEnabled(false);

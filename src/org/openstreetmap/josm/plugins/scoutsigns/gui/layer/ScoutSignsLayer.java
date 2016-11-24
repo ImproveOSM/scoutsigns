@@ -157,7 +157,6 @@ public class ScoutSignsLayer extends Layer {
      * @param dataSet a {@code DataSet} containing road signs from the current view
      */
     public void setDataSet(final DataSet dataSet) {
-        this.dataSet = dataSet;
         if (!selRoadSigns.isEmpty() && dataSet.getRoadSigns() != null) {
             for (final RoadSign elem : dataSet.getRoadSigns()) {
                 if (!this.dataSet.getRoadSigns().contains(elem)) {
@@ -165,6 +164,7 @@ public class ScoutSignsLayer extends Layer {
                 }
             }
         }
+        this.dataSet = dataSet;
     }
 
     public void setTripView(final boolean tripView) {
