@@ -247,7 +247,18 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
                         signId = selRoadSigns.get(0).getId();
                         ServiceHandler.getInstance().addComment(signId, ursername, text, status, duplicateOf);
                     }
-                    retrieveSign(signId);
+                    for (final RoadSign roadSign:selRoadSigns){
+                        if (!roadSign.getStatus().equals(status)) {
+                            if (layer.isTripView()) {
+                                exitTripView();
+                            } else {
+                                Main.worker.execute(new UpdateThread());
+                            }
+                            break;
+                        }
+                    }
+
+                    //retrieveSign(signId);
                 }
             });
         }
@@ -348,7 +359,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
                                 new InfoDialog().displayDialog(zoom, prevZoom);
                                 prevZoom = zoom;
                                 updateSelection(result);
-                                dialog.enableButtons(zoom);
+                                dialog.enableButtons(zoom, layer.isTripView());
                                 layer.setDataSet(result);
                                 Main.map.repaint();
                             }
@@ -364,7 +375,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
             } else if (layer.lastSelRoadSign() != null) {
                 final RoadSign roadSign =
                         result.getRoadSigns().contains(layer.lastSelRoadSign()) ? layer.lastSelRoadSign() : null;
-                dialog.updateData(roadSign);
+                        dialog.updateData(roadSign);
             }
         }
     }

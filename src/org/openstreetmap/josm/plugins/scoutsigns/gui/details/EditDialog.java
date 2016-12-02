@@ -66,9 +66,7 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
     private StatusChangeObserver observer;
     private JLabel lblCommentError;
     private JTextField txtDuplicateId;
-
     private JTextArea txtComment;
-
 
     private final Status status;
 
