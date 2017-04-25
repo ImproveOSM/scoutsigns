@@ -44,7 +44,7 @@ public class ConfidenceVerifier extends AbstractVerifier {
     @Override
     protected boolean validate(final String value) {
         boolean valid = true;
-        if (!value.isEmpty()) {
+        if (value != null && !value.isEmpty()) {
             try {
                 final Short shortValue = Short.parseShort(value);
                 valid = shortValue >= MIN_VAL && shortValue <= MAX_VAL;

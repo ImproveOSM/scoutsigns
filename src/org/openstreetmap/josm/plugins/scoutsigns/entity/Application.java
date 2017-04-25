@@ -15,7 +15,7 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.entity;
 
-import com.telenav.josm.common.util.EntityUtil;
+import com.telenav.josm.common.entity.EntityUtil;
 
 /**
  * Defines the application business entity.

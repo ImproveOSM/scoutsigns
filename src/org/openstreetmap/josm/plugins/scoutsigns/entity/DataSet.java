@@ -45,8 +45,8 @@ public class DataSet {
      * @param roadSignClusters a lit of {@code RoadSignCluster}s.
      */
     public DataSet(final List<RoadSign> roadSigns, final List<RoadSignCluster> roadSignClusters) {
-        this.roadSigns = roadSigns != null ? roadSigns : new ArrayList<RoadSign>();
-        this.roadSignClusters = roadSignClusters != null ? roadSignClusters : new ArrayList<RoadSignCluster>();
+        this.roadSigns = roadSigns != null ? roadSigns : new ArrayList<>();
+        this.roadSignClusters = roadSignClusters != null ? roadSignClusters : new ArrayList<>();
     }
 
 

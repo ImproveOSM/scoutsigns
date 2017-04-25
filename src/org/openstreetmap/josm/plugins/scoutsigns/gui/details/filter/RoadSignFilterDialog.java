@@ -17,11 +17,19 @@ package org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import javax.swing.UIManager;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.util.GuiSizesHelper;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
+import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
+import com.telenav.josm.common.gui.CancelAction;
+import com.telenav.josm.common.gui.GuiBuilder;
 import com.telenav.josm.common.gui.ModalDialog;
 
 
@@ -35,8 +43,7 @@ public class RoadSignFilterDialog extends ModalDialog {
 
     private static final long serialVersionUID = 7883099145424623783L;
 
-    private static final Dimension DIM = new Dimension(410, 398);
-    private static final Dimension DIM_NIMBUS = new Dimension(410, 410);
+    private static final Dimension DIM = new Dimension(460, 410);
     private RoadSignFilterPanel pnlFilter;
 
 
@@ -45,7 +52,7 @@ public class RoadSignFilterDialog extends ModalDialog {
      */
     public RoadSignFilterDialog() {
         super(GuiConfig.getInstance().getDlgFilterTitle(), IconConfig.getInstance().getFilterIcon().getImage(),
-                UIManager.getLookAndFeel().getName().contains("Nimbus") ? DIM_NIMBUS : DIM);
+                GuiSizesHelper.getDimensionDpiAdjusted(DIM));
         setLocationRelativeTo(Main.map.mapView);
         createComponents();
     }
@@ -55,7 +62,12 @@ public class RoadSignFilterDialog extends ModalDialog {
     protected void createComponents() {
         pnlFilter = new RoadSignFilterPanel();
         add(pnlFilter, BorderLayout.CENTER);
-        add(new ButtonPanel(this), BorderLayout.SOUTH);
+        final JButton btnReset = GuiBuilder.buildButton(new ResetAction(), GuiConfig.getInstance().getBtnReset());
+        final JButton btnOk = GuiBuilder.buildButton(new OkAction(), GuiConfig.getInstance().getBtnOk());
+        final JButton btnCancel =
+                GuiBuilder.buildButton(new CancelAction(this), GuiConfig.getInstance().getBtnCancel());
+        final JPanel pnlButton = GuiBuilder.buildFlowLayoutPanel(FlowLayout.RIGHT, btnReset, btnOk, btnCancel);
+        add(pnlButton, BorderLayout.SOUTH);
     }
 
     /**
@@ -72,5 +84,39 @@ public class RoadSignFilterDialog extends ModalDialog {
      */
     SearchFilter selectedFilters() {
         return pnlFilter.selectedFilters();
+    }
+
+
+    private final class ResetAction extends AbstractAction {
+
+        private static final long serialVersionUID = -5471397013943973646L;
+
+        @Override
+        public void actionPerformed(final ActionEvent event) {
+            pnlFilter.resetFilters();
+        }
+    }
+
+
+    private final class OkAction extends AbstractAction {
+
+
+        private static final long serialVersionUID = -1157361468543031995L;
+
+        @Override
+        public void actionPerformed(final ActionEvent event) {
+            final PrefManager prefManager = PrefManager.getInstance();
+            final SearchFilter newFilter = pnlFilter.selectedFilters();
+            if (newFilter != null) {
+                final SearchFilter oldFilter = prefManager.loadSearchFilter();
+                if (oldFilter.equals(newFilter)) {
+                    prefManager.saveFiltersChangedFlag(false);
+                } else {
+                    prefManager.saveSearchFilter(newFilter);
+                    prefManager.saveFiltersChangedFlag(true);
+                }
+                dispose();
+            }
+        }
     }
 }

@@ -15,7 +15,7 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.argument;
 
-import com.telenav.josm.common.util.EntityUtil;
+import com.telenav.josm.common.entity.EntityUtil;
 
 
 /**
@@ -63,7 +63,6 @@ public class TimestampFilter {
     public Long getTo() {
         return to;
     }
-
 
     @Override
     public int hashCode() {

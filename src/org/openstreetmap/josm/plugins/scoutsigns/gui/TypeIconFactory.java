@@ -52,7 +52,7 @@ public final class TypeIconFactory {
     private TypeIconFactory() {
         final Config serviceCnf = Config.getInstance();
 
-        map = new LinkedHashMap<String, ImageIcon>();
+        map = new LinkedHashMap<>();
         for (final String type : serviceCnf.getSignTypes()) {
             final ImageIcon icon = loadIcon(type);
             if (icon != null) {

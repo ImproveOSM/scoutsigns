@@ -30,6 +30,8 @@ import javax.xml.bind.DatatypeConverter;
  */
 public final class ImageUtil {
 
+    private ImageUtil() {}
+
     /**
      * Builds an image from the given base64 encoded text.
      *
@@ -48,7 +50,4 @@ public final class ImageUtil {
         }
         return image;
     }
-
-
-    private ImageUtil() {}
 }

@@ -68,6 +68,11 @@ class ImageFrame extends JFrame {
         update(roadSign);
     }
 
+    void update(final RoadSign roadSign) {
+        this.roadSign = roadSign;
+        updateComponents();
+        pack();
+    }
 
     private void updateComponents() {
         if (roadSign.getImage() == null) {
@@ -84,12 +89,5 @@ class ImageFrame extends JFrame {
         setPreferredSize(DIM);
         pnlImage.removeAll();
         pnlImage.add(lblImage, BorderLayout.CENTER);
-    }
-
-
-    void update(final RoadSign roadSign) {
-        this.roadSign = roadSign;
-        updateComponents();
-        pack();
     }
 }

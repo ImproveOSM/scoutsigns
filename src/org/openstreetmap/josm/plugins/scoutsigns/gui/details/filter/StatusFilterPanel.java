@@ -48,7 +48,7 @@ class StatusFilterPanel extends JPanel {
     private JRadioButton cboxSolved;
     private JRadioButton cboxInvalid;
     private JRadioButton cboxDuplicate;
-    private final ButtonGroup btnGroup;
+    private ButtonGroup btnGroup;
 
 
     /**
@@ -58,33 +58,25 @@ class StatusFilterPanel extends JPanel {
      */
     StatusFilterPanel(final Status selection) {
         super(new GridBagLayout());
-        btnGroup = new ButtonGroup();
         addComponents();
         selectElement(selection);
     }
 
 
     private void addComponents() {
-        cboxOpen = GuiBuilder.buildRadioButton(Status.OPEN.toString().toLowerCase(), null,
-                getFont().deriveFont(GuiBuilder.FONT_SIZE_12), getBackground(), false);
-        btnGroup.add(cboxOpen);
+        cboxOpen = GuiBuilder.buildRadioButton(Status.OPEN.toString().toLowerCase(), GuiBuilder.FONT_SIZE_12,
+                getBackground(), false);
         add(cboxOpen, CB_OPEN);
-
-        cboxSolved = GuiBuilder.buildRadioButton(Status.SOLVED.toString().toLowerCase(), null,
-                getFont().deriveFont(GuiBuilder.FONT_SIZE_12), getBackground(), false);
-        btnGroup.add(cboxSolved);
+        cboxSolved = GuiBuilder.buildRadioButton(Status.SOLVED.toString().toLowerCase(), GuiBuilder.FONT_SIZE_12,
+                getBackground(), false);
         add(cboxSolved, CB_SOLVED);
-
-        cboxInvalid = GuiBuilder.buildRadioButton(Status.INVALID.toString().toLowerCase(), null,
-                getFont().deriveFont(GuiBuilder.FONT_SIZE_12), getBackground(), false);
-        btnGroup.add(cboxInvalid);
+        cboxInvalid = GuiBuilder.buildRadioButton(Status.INVALID.toString().toLowerCase(), GuiBuilder.FONT_SIZE_12,
+                getBackground(), false);
         add(cboxInvalid, CB_INVALID);
-
-        cboxDuplicate = GuiBuilder.buildRadioButton(Status.DUPLICATE.toString().toLowerCase(), null,
-                getFont().deriveFont(GuiBuilder.FONT_SIZE_12), getBackground(), false);
-
-        btnGroup.add(cboxDuplicate);
+        cboxDuplicate = GuiBuilder.buildRadioButton(Status.DUPLICATE.toString().toLowerCase(), GuiBuilder.FONT_SIZE_12,
+                getBackground(), false);
         add(cboxDuplicate, CB_DUPL);
+        btnGroup = GuiBuilder.buildRadioButtonGroup(cboxOpen, cboxSolved, cboxInvalid, cboxDuplicate);
     }
 
     private void selectElement(final Status selection) {
