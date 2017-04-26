@@ -52,6 +52,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.pref.Keys;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
 import org.openstreetmap.josm.tools.OsmUrlToBounds;
 import com.telenav.josm.common.argument.BoundingBox;
+import com.telenav.josm.common.thread.ThreadPool;
 
 
 /**
@@ -100,6 +101,14 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
             }
             prevZoom = OsmUrlToBounds.getZoom(newMapFrame.mapView.getRealBounds());
         }
+        if (oldMapFrame != null && newMapFrame == null) {
+            // clean-up
+            try {
+                ThreadPool.getInstance().shutdown();
+            } catch (final InterruptedException e) {
+                Main.error(e, "Could not shutdown thead pool.");
+            }
+        }
     }
 
 
@@ -143,13 +152,8 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
             if (zoomTimer != null && zoomTimer.isRunning()) {
                 zoomTimer.restart();
             } else {
-                zoomTimer = new Timer(Config.getInstance().getSearchDelay(), new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(final ActionEvent e) {
-                        Main.worker.execute(new UpdateThread());
-                    }
-                });
+                zoomTimer = new Timer(Config.getInstance().getSearchDelay(),
+                        event -> ThreadPool.getInstance().execute(new UpdateThread()));
                 zoomTimer.setRepeats(false);
                 zoomTimer.start();
             }
@@ -169,12 +173,8 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
                 // a road sign was selected
                 if (roadSign.getId() != null) {
                     final Long id = roadSign.getId();
-                    Main.worker.execute(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            retrieveSign(id);
-                        }
+                    ThreadPool.getInstance().execute(() -> {
+                        retrieveSign(id);
                     });
                 } else {
                     dialog.updateData(roadSign);
@@ -183,13 +183,9 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
             } else if (!multiSelect) {
                 // un-select previously selected road sign
 
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        dialog.updateData(null);
-                        Main.map.repaint();
-                    }
+                SwingUtilities.invokeLater(() -> {
+                    dialog.updateData(null);
+                    Main.map.repaint();
                 });
             }
         }
@@ -222,7 +218,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
         if (event != null && (event.getNewValue() != null && !event.getNewValue().equals(event.getOldValue()))) {
             if (event.getKey().equals(Keys.FILTERS_CHANGED)) {
                 searchFilter = PrefManager.getInstance().loadSearchFilter();
-                Main.worker.execute(new UpdateThread());
+                ThreadPool.getInstance().execute(new UpdateThread());
             }
         }
     }
@@ -233,32 +229,26 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
     public void statusChanged(final String ursername, final String text, final Status status, final Long duplicateOf) {
         final List<RoadSign> selRoadSigns = layer.getSelRoadSigns();
         if (!selRoadSigns.isEmpty()) {
-            Main.worker.execute(new Runnable() {
+            ThreadPool.getInstance().execute(() -> {
+                Long signId;
+                if (selRoadSigns.size() > 1) {
+                    ServiceHandler.getInstance().addComments(selRoadSigns, ursername, text, status, duplicateOf);
 
-                @Override
-                public void run() {
-                    Long signId;
-                    if (selRoadSigns.size() > 1) {
-                        ServiceHandler.getInstance().addComments(selRoadSigns, ursername, text, status, duplicateOf);
-
-                        // update details of last road sign
-                        signId = selRoadSigns.get(selRoadSigns.size() - 1).getId();
-                    } else {
-                        signId = selRoadSigns.get(0).getId();
-                        ServiceHandler.getInstance().addComment(signId, ursername, text, status, duplicateOf);
-                    }
-                    for (final RoadSign roadSign:selRoadSigns){
-                        if (!roadSign.getStatus().equals(status)) {
-                            if (layer.isTripView()) {
-                                exitTripView();
-                            } else {
-                                Main.worker.execute(new UpdateThread());
-                            }
-                            break;
+                    // update details of last road sign
+                    signId = selRoadSigns.get(selRoadSigns.size() - 1).getId();
+                } else {
+                    signId = selRoadSigns.get(0).getId();
+                    ServiceHandler.getInstance().addComment(signId, ursername, text, status, duplicateOf);
+                }
+                for (final RoadSign roadSign : selRoadSigns) {
+                    if (!roadSign.getStatus().equals(status)) {
+                        if (layer.isTripView()) {
+                            exitTripView();
+                        } else {
+                            ThreadPool.getInstance().execute(new UpdateThread());
                         }
+                        break;
                     }
-
-                    //retrieveSign(signId);
                 }
             });
         }
@@ -277,7 +267,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
     @Override
     public void exitTripView() {
         layer.setTripView(false);
-        Main.worker.execute(new UpdateThread());
+        ThreadPool.getInstance().execute(new UpdateThread());
         NavigatableComponent.addZoomChangeListener(this);
     }
 
@@ -293,14 +283,10 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
 
     private void retrieveSign(final Long signId) {
         final RoadSign roadSign = ServiceHandler.getInstance().retrieveSign(signId);
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                dialog.updateData(roadSign);
-                layer.updateSelRoadSign(roadSign);
-                Main.map.repaint();
-            }
+        SwingUtilities.invokeLater(() -> {
+            dialog.updateData(roadSign);
+            layer.updateSelRoadSign(roadSign);
+            Main.map.repaint();
         });
     }
 
@@ -314,23 +300,19 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
         public void actionPerformed(final ActionEvent event) {
             if (event.getSource() instanceof IconToggleButton) {
                 final IconToggleButton btn = (IconToggleButton) event.getSource();
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        if (btn.isSelected()) {
-                            dialog.setVisible(true);
-                            btn.setSelected(true);
-                        } else {
-                            dialog.setVisible(false);
-                            btn.setSelected(false);
-                            btn.setFocusable(false);
-                        }
-                        if (layer == null) {
-                            registerListeners();
-                            layer = new ScoutSignsLayer();
-                            Main.map.mapView.getLayerManager().addLayer(layer);
-                        }
+                SwingUtilities.invokeLater(() -> {
+                    if (btn.isSelected()) {
+                        dialog.setVisible(true);
+                        btn.setSelected(true);
+                    } else {
+                        dialog.setVisible(false);
+                        btn.setSelected(false);
+                        btn.setFocusable(false);
+                    }
+                    if (layer == null) {
+                        registerListeners();
+                        layer = new ScoutSignsLayer();
+                        Main.map.mapView.getLayerManager().addLayer(layer);
                     }
                 });
             }
@@ -351,19 +333,14 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
                     final int zoom = OsmUrlToBounds.getZoom(Main.map.mapView.getRealBounds());
                     final SearchFilter filter = zoom > Config.getInstance().getMaxClusterZoom() ? searchFilter : null;
                     final DataSet result = ServiceHandler.getInstance().search(bbox, filter, zoom);
-                    SwingUtilities.invokeLater(new Runnable() {
+                    SwingUtilities.invokeLater(() -> {
+                        new InfoDialog().displayDialog(zoom, prevZoom);
+                        prevZoom = zoom;
+                        updateSelection(result);
+                        dialog.enableButtons(zoom, layer.isTripView());
+                        layer.setDataSet(result);
+                        Main.map.repaint();
 
-                        @Override
-                        public void run() {
-                            synchronized (this) {
-                                new InfoDialog().displayDialog(zoom, prevZoom);
-                                prevZoom = zoom;
-                                updateSelection(result);
-                                dialog.enableButtons(zoom, layer.isTripView());
-                                layer.setDataSet(result);
-                                Main.map.repaint();
-                            }
-                        }
                     });
                 }
             }

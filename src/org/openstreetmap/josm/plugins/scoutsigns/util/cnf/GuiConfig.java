@@ -31,9 +31,6 @@ public final class GuiConfig extends BaseConfig {
 
     private static final GuiConfig INSTANCE = new GuiConfig();
 
-    public static GuiConfig getInstance() {
-        return INSTANCE;
-    }
 
     private final String dlgDetailsTitle;
     /* details panel tab titles */
@@ -175,6 +172,11 @@ public final class GuiConfig extends BaseConfig {
         dlgInvalidTitle = readProperty("edit.dialog.invalid");
         dlgDuplicateTitle = readProperty("edit.dialog.duplicate");
         dlgReopenTitle = readProperty("edit.dialog.reopen");
+    }
+
+
+    public static GuiConfig getInstance() {
+        return INSTANCE;
     }
 
     public String getBtnCancel() {

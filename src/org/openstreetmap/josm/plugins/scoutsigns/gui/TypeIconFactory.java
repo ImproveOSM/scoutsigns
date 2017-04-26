@@ -36,15 +36,6 @@ public final class TypeIconFactory {
 
     private static final TypeIconFactory UNIQUE_INSTANCE = new TypeIconFactory();
 
-    /**
-     * Returns the unique instance of the {@code TypeIconFactory}.
-     *
-     * @return a {@code TypeIconFactory}
-     */
-    public static TypeIconFactory getInstance() {
-        return UNIQUE_INSTANCE;
-    }
-
     private final ImageIcon defaultIcon;
     private final Map<String, ImageIcon> map;
 
@@ -62,6 +53,16 @@ public final class TypeIconFactory {
 
         defaultIcon = loadIcon(IconConfig.getInstance().getDefaultTypeIconName());
     }
+
+    /**
+     * Returns the unique instance of the {@code TypeIconFactory}.
+     *
+     * @return a {@code TypeIconFactory}
+     */
+    public static TypeIconFactory getInstance() {
+        return UNIQUE_INSTANCE;
+    }
+
 
     /**
      * Returns the icon corresponding to the given type and source. The method returns a default icon, if no icon

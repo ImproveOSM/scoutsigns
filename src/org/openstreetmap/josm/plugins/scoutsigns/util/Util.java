@@ -36,6 +36,8 @@ public final class Util {
 
     private static final double POZ_DIST = 15.0;
 
+    private Util() {}
+
     /**
      * Computes the bounding box of the currently visible {@code MapView}.
      *
@@ -45,8 +47,8 @@ public final class Util {
     public static BoundingBox buildBBox(final MapView mapView) {
         final Bounds bounds =
                 new Bounds(mapView.getLatLon(0, mapView.getHeight()), mapView.getLatLon(mapView.getWidth(), 0));
-        return new BoundingBox(bounds.getMax().lat(), bounds.getMin().lat(), bounds.getMax().lon(), bounds.getMin()
-                .lon());
+        return new BoundingBox(bounds.getMax().lat(), bounds.getMin().lat(), bounds.getMax().lon(),
+                bounds.getMin().lon());
     }
 
     /**
@@ -76,5 +78,4 @@ public final class Util {
         return new Point2D.Double(fromPoint.getX(), fromPoint.getY()).distance(toPoint);
     }
 
-    private Util() {}
 }

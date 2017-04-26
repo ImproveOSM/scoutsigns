@@ -121,7 +121,7 @@ class RoadSignFilterPanel extends JPanel {
     private void addConfidenceFilter(final Double confidence) {
         add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblConf(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
                 SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_CONF);
-        final String txt = confidence != null ? "" + confidence.intValue() : "";
+        final String txt = confidence != null ? Integer.toString(confidence.intValue()) : "";
         txtConf = GuiBuilder.buildTextField(txt, Font.PLAIN, Color.white, null);
         txtConf.setInputVerifier(new ConfidenceVerifier(txtConf, GuiConfig.getInstance().getTxtConfInvalid()));
         add(txtConf, Constraints.TXT_CONF);
@@ -201,7 +201,7 @@ class RoadSignFilterPanel extends JPanel {
         pickerTo.setDate(null);
         pnlStatus.clearSelection();
         txtDupl.setText("");
-        txtConf.setText("" + SearchFilter.DEF_CONFIDENCE.intValue());
+        txtConf.setText(Integer.toString(SearchFilter.DEF_CONFIDENCE.intValue()));
         txtUsername.setText("");
         txtAppName.setText("");
         txtAppVers.setText("");

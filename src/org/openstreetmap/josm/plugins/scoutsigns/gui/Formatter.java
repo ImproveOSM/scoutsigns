@@ -31,6 +31,8 @@ import com.telenav.josm.common.formatter.EntityFormatter;
  */
 public final class Formatter {
 
+    private Formatter() {}
+
     /**
      * Formats the given {@code LatLon} object. Returns a string of the following format: (lat, lon).
      *
@@ -65,7 +67,4 @@ public final class Formatter {
         sb.append("</body></html>");
         return sb.toString();
     }
-
-
-    private Formatter() {}
 }

@@ -31,10 +31,6 @@ public final class TltConfig extends BaseConfig {
 
     private static final TltConfig INSTANCE = new TltConfig();
 
-    public static TltConfig getInstance() {
-        return INSTANCE;
-    }
-
     private final String pluginTlt;
 
     private final String layerInfo;
@@ -67,6 +63,11 @@ public final class TltConfig extends BaseConfig {
         btnSolved = readProperty("btn.solved");
         btnDuplicate = readProperty("btn.duplicate");
         btnOpen = readProperty("btn.open");
+    }
+
+
+    public static TltConfig getInstance() {
+        return INSTANCE;
     }
 
     public String getBtnBack() {

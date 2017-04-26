@@ -35,9 +35,6 @@ public final class IconConfig extends BaseConfig {
     /** The unique instance of the object */
     private static final IconConfig INSTANCE = new IconConfig();
 
-    public static IconConfig getInstance() {
-        return INSTANCE;
-    }
 
     private final String shcName;
 
@@ -87,6 +84,11 @@ public final class IconConfig extends BaseConfig {
         defaultTypeIconName = readProperty("sign.types.def");
 
         calendarIcon = getIcon("calendar.icon");
+    }
+
+
+    public static IconConfig getInstance() {
+        return INSTANCE;
     }
 
     public Icon getBackIcon() {
