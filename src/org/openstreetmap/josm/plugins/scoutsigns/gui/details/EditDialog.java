@@ -44,8 +44,11 @@ import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
 import com.telenav.josm.common.gui.CancelAction;
-import com.telenav.josm.common.gui.GuiBuilder;
 import com.telenav.josm.common.gui.ModalDialog;
+import com.telenav.josm.common.gui.builder.ButtonBuilder;
+import com.telenav.josm.common.gui.builder.ContainerBuilder;
+import com.telenav.josm.common.gui.builder.LabelBuilder;
+import com.telenav.josm.common.gui.builder.TextComponentBuilder;
 
 
 /**
@@ -103,45 +106,42 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
     }
 
     private void addBtnPnl() {
-        lblCommentError = GuiBuilder.buildLabel(GuiConfig.getInstance().getTxtCommentInvalid(), Color.red, Font.BOLD,
-                GuiBuilder.FONT_SIZE_12, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP,
-                false);
-        final JPanel pnlBtn = GuiBuilder.buildFlowLayoutPanel(FlowLayout.TRAILING,
-                GuiBuilder.buildButton(new AddCommentAction(), GuiConfig.getInstance().getBtnOk()),
-                GuiBuilder.buildButton(new CancelAction(this), GuiConfig.getInstance().getBtnCancel()));
-        final JPanel pnlSouth = GuiBuilder.buildBorderLayoutPanel(lblCommentError, pnlBtn, null);
+        lblCommentError = LabelBuilder.build(GuiConfig.getInstance().getTxtCommentInvalid(), Font.BOLD, Color.red,
+                ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP, false);
+        final JPanel pnlBtn = ContainerBuilder.buildFlowLayoutPanel(FlowLayout.TRAILING,
+                ButtonBuilder.build(new AddCommentAction(), GuiConfig.getInstance().getBtnOk()),
+                ButtonBuilder.build(new CancelAction(this), GuiConfig.getInstance().getBtnCancel()));
+        final JPanel pnlSouth = ContainerBuilder.buildBorderLayoutPanel(lblCommentError, pnlBtn, null);
         add(pnlSouth, BorderLayout.SOUTH);
     }
 
     private void addComment() {
-        txtComment = GuiBuilder.buildTextArea(null, null, Color.WHITE, Font.PLAIN, GuiBuilder.FONT_SIZE_12, true);
-        final JScrollPane scrollPane = GuiBuilder.buildScrollPane(txtComment, Color.white,
+        txtComment = TextComponentBuilder.buildTextArea(Color.WHITE, Font.PLAIN, true);
+        final JScrollPane scrollPane = ContainerBuilder.buildScrollPane(txtComment, Color.white,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.gray));
 
-        final JPanel pnlComment = GuiBuilder.buildBorderLayoutPanel(null, scrollPane, null, BORDER);
+        final JPanel pnlComment = ContainerBuilder.buildBorderLayoutPanel(null, scrollPane, null, BORDER);
         pnlComment.setVerifyInputWhenFocusTarget(true);
         add(pnlComment, BorderLayout.CENTER);
     }
 
 
     private void addDuplicateId() {
-        txtDuplicateId = GuiBuilder.buildTextField(null, Font.PLAIN, GuiBuilder.FONT_SIZE_12, Color.white,
+        txtDuplicateId = TextComponentBuilder.buildTextField(null, Font.PLAIN, Color.white,
                 BorderFactory.createLineBorder(Color.gray));
 
-        final JLabel lblDuplError = GuiBuilder.buildLabel(GuiConfig.getInstance().getTxtDuplIdInvalid(), Color.red,
-                Font.PLAIN, GuiBuilder.FONT_SIZE_12, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
-                SwingConstants.TOP, false);
+        final JLabel lblDuplError = LabelBuilder.build(GuiConfig.getInstance().getTxtDuplIdInvalid(), Font.PLAIN,
+                Color.red, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP, false);
         txtDuplicateId.setInputVerifier(new DuplicateIdVerifier(txtDuplicateId, lblDuplError));
 
         final JPanel pnlDuplicate = new JPanel(new GridLayout(1, 0, 1, 1));
         pnlDuplicate.add(txtDuplicateId);
         pnlDuplicate.add(lblDuplError);
 
-        final JLabel lblDupl = GuiBuilder.buildLabel(GuiConfig.getInstance().getLblDupl(), getBackground(), Font.BOLD,
-                GuiBuilder.FONT_SIZE_12, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP,
-                true);
-        final JPanel pnlNorth = GuiBuilder.buildBorderLayoutPanel(lblDupl, null, BORDER);
+        final JLabel lblDupl = LabelBuilder.build(GuiConfig.getInstance().getLblDupl(), Font.BOLD, getBackground(),
+                ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP, true);
+        final JPanel pnlNorth = ContainerBuilder.buildBorderLayoutPanel(lblDupl, null, BORDER);
         pnlNorth.add(pnlDuplicate, BorderLayout.CENTER);
         add(pnlNorth, BorderLayout.NORTH);
     }

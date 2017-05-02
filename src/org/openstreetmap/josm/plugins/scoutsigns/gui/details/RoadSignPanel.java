@@ -29,7 +29,7 @@ import com.telenav.josm.common.formatter.DateFormatter;
 import com.telenav.josm.common.formatter.DecimalPattern;
 import com.telenav.josm.common.formatter.EntityFormatter;
 import com.telenav.josm.common.gui.BasicInfoPanel;
-import com.telenav.josm.common.gui.GuiBuilder;
+import com.telenav.josm.common.gui.builder.LabelBuilder;
 
 
 /**
@@ -72,11 +72,11 @@ class RoadSignPanel extends BasicInfoPanel<RoadSign> {
 
     private void addConfidence(final Short confidence, final int widthLbl) {
         if (confidence != null) {
-            add(GuiBuilder.buildLabel(GUI_CONF.getLblConf(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
+            add(LabelBuilder.build(GUI_CONF.getLblConf(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
                     SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
 
             final int widthVal = getFontMetrics(getFont().deriveFont(Font.PLAIN)).stringWidth(confidence.toString());
-            add(GuiBuilder.buildLabel(confidence.toString(), Font.PLAIN, ComponentOrientation.LEFT_TO_RIGHT,
+            add(LabelBuilder.build(confidence.toString(), Font.PLAIN, ComponentOrientation.LEFT_TO_RIGHT,
                     SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
             pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
             y = y + LINE_HEIGHT;
@@ -85,11 +85,11 @@ class RoadSignPanel extends BasicInfoPanel<RoadSign> {
 
     private void addCreated(final Long created, final int widthLbl) {
         if (created != null) {
-            add(GuiBuilder.buildLabel(GUI_CONF.getLblCreated(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
+            add(LabelBuilder.build(GUI_CONF.getLblCreated(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
                     SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
             final String createdStr = DateFormatter.formatTimestamp(created);
             final int widthVal = getFontMetrics(getFont().deriveFont(Font.PLAIN)).stringWidth(createdStr);
-            add(GuiBuilder.buildLabel(createdStr, Font.PLAIN, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
+            add(LabelBuilder.build(createdStr, Font.PLAIN, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
                     SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
             pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
             y = y + LINE_HEIGHT;
@@ -98,10 +98,10 @@ class RoadSignPanel extends BasicInfoPanel<RoadSign> {
 
     private void addDupl(final Long duplicateOf, final int widthLbl) {
         if (duplicateOf != null) {
-            add(GuiBuilder.buildLabel(GUI_CONF.getLblDupl(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
+            add(LabelBuilder.build(GUI_CONF.getLblDupl(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
                     SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
             final int widthVal = getFontMetrics(getFont().deriveFont(Font.PLAIN)).stringWidth(duplicateOf.toString());
-            add(GuiBuilder.buildLabel(duplicateOf.toString(), Font.PLAIN, ComponentOrientation.LEFT_TO_RIGHT,
+            add(LabelBuilder.build(duplicateOf.toString(), Font.PLAIN, ComponentOrientation.LEFT_TO_RIGHT,
                     SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
             pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
             y = y + LINE_HEIGHT;
@@ -110,11 +110,11 @@ class RoadSignPanel extends BasicInfoPanel<RoadSign> {
 
     private void addHeight(final Double height, final int widthLbl) {
         if (height != null) {
-            add(GuiBuilder.buildLabel(GUI_CONF.getLblHeight(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
+            add(LabelBuilder.build(GUI_CONF.getLblHeight(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
                     SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
             final String heightStr = EntityFormatter.formatDouble(height, false, DecimalPattern.SHORT) + " m";
             final int widthVal = getFontMetrics(getFont().deriveFont(Font.PLAIN)).stringWidth(heightStr);
-            add(GuiBuilder.buildLabel(heightStr, Font.PLAIN, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
+            add(LabelBuilder.build(heightStr, Font.PLAIN, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
                     SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
             pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
             y = y + LINE_HEIGHT;
@@ -123,11 +123,11 @@ class RoadSignPanel extends BasicInfoPanel<RoadSign> {
 
     private void addId(final Long id, final int widthLbl) {
         if (id != null) {
-            add(GuiBuilder.buildLabel(GUI_CONF.getLblId(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
+            add(LabelBuilder.build(GUI_CONF.getLblId(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
                     SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
             final int widthVal = getFontMetrics(getFont().deriveFont(Font.PLAIN)).stringWidth(id.toString());
-            add(GuiBuilder.buildLabel(id.toString(), Font.PLAIN, ComponentOrientation.LEFT_TO_RIGHT,
-                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
+            add(LabelBuilder.build(id.toString(), Font.PLAIN, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
+                    SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
             pnlWidth = pnlWidth + widthLbl + widthVal;
             y = y + LINE_HEIGHT;
         }
@@ -135,11 +135,11 @@ class RoadSignPanel extends BasicInfoPanel<RoadSign> {
 
     private void addPoint(final LatLon point, final int widthLbl) {
         if (point != null) {
-            add(GuiBuilder.buildLabel(GUI_CONF.getLblPoint(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
+            add(LabelBuilder.build(GUI_CONF.getLblPoint(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
                     SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
             final String pointStr = Formatter.formatLatLon(point);
             final int widthVal = getFontMetrics(getFont().deriveFont(Font.PLAIN)).stringWidth(pointStr);
-            add(GuiBuilder.buildLabel(pointStr, Font.PLAIN, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
+            add(LabelBuilder.build(pointStr, Font.PLAIN, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
                     SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
             pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
             y = y + LINE_HEIGHT;
@@ -148,11 +148,11 @@ class RoadSignPanel extends BasicInfoPanel<RoadSign> {
 
     private void addStatus(final Status status, final int widthLbl) {
         if (status != null) {
-            add(GuiBuilder.buildLabel(GUI_CONF.getLblStatus(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
+            add(LabelBuilder.build(GUI_CONF.getLblStatus(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
                     SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
             final int widthVal = getFontMetrics(getFont().deriveFont(Font.PLAIN)).stringWidth(status.name());
-            add(GuiBuilder.buildLabel(status.name(), Font.PLAIN, ComponentOrientation.LEFT_TO_RIGHT,
-                    SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
+            add(LabelBuilder.build(status.name(), Font.PLAIN, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
+                    SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
 
             pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
             y = y + LINE_HEIGHT;
@@ -161,10 +161,10 @@ class RoadSignPanel extends BasicInfoPanel<RoadSign> {
 
     private void addType(final String type, final int widthLbl) {
         if (type != null) {
-            add(GuiBuilder.buildLabel(GUI_CONF.getLblType(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
+            add(LabelBuilder.build(GUI_CONF.getLblType(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
                     SwingConstants.LEFT, SwingConstants.TOP, new Rectangle(RECT_X, y, widthLbl, LINE_HEIGHT)));
             final int widthVal = getFontMetrics(getFont().deriveFont(Font.PLAIN)).stringWidth(type);
-            add(GuiBuilder.buildLabel(type, Font.PLAIN, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
+            add(LabelBuilder.build(type, Font.PLAIN, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT,
                     SwingConstants.TOP, new Rectangle(widthLbl, y, widthVal, LINE_HEIGHT)));
             pnlWidth = Math.max(pnlWidth, widthLbl + widthVal);
             y = y + LINE_HEIGHT;

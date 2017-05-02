@@ -42,8 +42,12 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.Config;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
 import com.telenav.josm.common.formatter.DateFormatter;
-import com.telenav.josm.common.gui.AbstractDateVerifier;
-import com.telenav.josm.common.gui.GuiBuilder;
+import com.telenav.josm.common.gui.builder.ContainerBuilder;
+import com.telenav.josm.common.gui.builder.DatePickerBuilder;
+import com.telenav.josm.common.gui.builder.LabelBuilder;
+import com.telenav.josm.common.gui.builder.ListBuilder;
+import com.telenav.josm.common.gui.builder.TextComponentBuilder;
+import com.telenav.josm.common.gui.verifier.AbstractDateVerifier;
 
 
 /**
@@ -92,67 +96,67 @@ class RoadSignFilterPanel extends JPanel {
     }
 
     private void addTimeIntervalFilter(final TimestampFilter tstampFilter) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblTimeInt(), Font.BOLD,
-                ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_INT);
+        add(LabelBuilder.build(GuiConfig.getInstance().getLblTimeInt(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
+                SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_INT);
 
         final Date fromDate = tstampFilter.getFrom() != null ? new Date(tstampFilter.getFrom()) : null;
         final Date toDate = tstampFilter.getTo() != null ? new Date(tstampFilter.getTo()) : null;
 
-        pickerFrom = GuiBuilder.buildDatePicker(fromDate, null, toDate, new DateFromChangeListener(), PICKER_DIM);
+        pickerFrom = DatePickerBuilder.build(fromDate, null, toDate, new DateFromChangeListener(), PICKER_DIM);
         pickerFrom.getEditor().addKeyListener(new DateVerifier(pickerFrom));
         add(pickerFrom, Constraints.CBB_START);
 
-        pickerTo = GuiBuilder.buildDatePicker(toDate, fromDate, null, new DateToChangeListener(), PICKER_DIM);
+        pickerTo = DatePickerBuilder.build(toDate, fromDate, null, new DateToChangeListener(), PICKER_DIM);
         pickerTo.getEditor().addKeyListener(new DateVerifier(pickerTo));
         add(pickerTo, Constraints.CBB_END);
     }
 
     private void addTypeFilter(final List<String> selectedTypes) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblType(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
+        add(LabelBuilder.build(GuiConfig.getInstance().getLblType(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
                 SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_TYPE);
-        listTypes = GuiBuilder.buildList(Config.getInstance().getSignTypes(), selectedTypes, new TypeListCellRenderer(),
+        listTypes = ListBuilder.build(Config.getInstance().getSignTypes(), selectedTypes, new TypeListCellRenderer(),
                 Font.PLAIN);
-        cmpTypes = GuiBuilder.buildScrollPane(listTypes, Color.white, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        cmpTypes = ContainerBuilder.buildScrollPane(listTypes, Color.white,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         cmpTypes.getViewport().setViewSize(TYPE_LIST_SIZE);
         add(cmpTypes, Constraints.LIST_TYPE);
     }
 
     private void addConfidenceFilter(final Double confidence) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblConf(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
+        add(LabelBuilder.build(GuiConfig.getInstance().getLblConf(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
                 SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_CONF);
         final String txt = confidence != null ? Integer.toString(confidence.intValue()) : "";
-        txtConf = GuiBuilder.buildTextField(txt, Font.PLAIN, Color.white, null);
+        txtConf = TextComponentBuilder.buildTextField(txt, Font.PLAIN, Color.white);
         txtConf.setInputVerifier(new ConfidenceVerifier(txtConf, GuiConfig.getInstance().getTxtConfInvalid()));
         add(txtConf, Constraints.TXT_CONF);
     }
 
     private void addStatusFilter(final Status status) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblStatus(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
+        add(LabelBuilder.build(GuiConfig.getInstance().getLblStatus(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
                 SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_STATUS);
         pnlStatus = new StatusFilterPanel(status);
         add(pnlStatus, Constraints.PNL_STATUS);
     }
 
     private void addDuplicateFilter(final Long duplicate) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblDupl(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
+        add(LabelBuilder.build(GuiConfig.getInstance().getLblDupl(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
                 SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_DUPL);
         final String txt = duplicate != null ? duplicate.toString() : "";
-        txtDupl = GuiBuilder.buildTextField(txt, Font.PLAIN, Color.white, null);
+        txtDupl = TextComponentBuilder.buildTextField(txt, Font.PLAIN, Color.white);
         txtDupl.setInputVerifier(new DuplicateIdVerifier(txtDupl, GuiConfig.getInstance().getTxtDuplIdInvalid()));
         add(txtDupl, Constraints.TXT_DUPL);
         txtDupl.setInputVerifier(new DuplicateIdVerifier(txtDupl, GuiConfig.getInstance().getTxtDuplIdInvalid()));
     }
 
     private void addUsernameFilter(final String username) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblUsername(), Font.BOLD,
-                ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_USERNAME);
-        txtUsername = GuiBuilder.buildTextField(username, Font.PLAIN, Color.white, null);
+        add(LabelBuilder.build(GuiConfig.getInstance().getLblUsername(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
+                SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_USERNAME);
+        txtUsername = TextComponentBuilder.buildTextField(username, Font.PLAIN, Color.white);
         add(txtUsername, Constraints.TXT_USERNAME);
     }
 
     private void addAppFilter(final Application application) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblApp(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
+        add(LabelBuilder.build(GuiConfig.getInstance().getLblApp(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
                 SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_APP);
         String name = "";
         String vers = "";
@@ -160,14 +164,14 @@ class RoadSignFilterPanel extends JPanel {
             name = application.getName();
             vers = application.getVersion();
         }
-        txtAppName = GuiBuilder.buildTextField(name, Font.PLAIN, Color.white, null);
+        txtAppName = TextComponentBuilder.buildTextField(name, Font.PLAIN, Color.white);
         add(txtAppName, Constraints.TXT_APP_NAME);
-        txtAppVers = GuiBuilder.buildTextField(vers, Font.PLAIN, Color.white, null);
+        txtAppVers = TextComponentBuilder.buildTextField(vers, Font.PLAIN, Color.white);
         add(txtAppVers, Constraints.TXT_APP_VERS);
     }
 
     private void addDeviceFilter(final Device device) {
-        add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblDevice(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
+        add(LabelBuilder.build(GuiConfig.getInstance().getLblDevice(), Font.BOLD, ComponentOrientation.LEFT_TO_RIGHT,
                 SwingConstants.LEFT, SwingConstants.TOP), Constraints.LBL_DEV);
         String name = "";
         String vers = "";
@@ -175,9 +179,9 @@ class RoadSignFilterPanel extends JPanel {
             name = device.getOsName();
             vers = device.getOsVersion();
         }
-        txtOsName = GuiBuilder.buildTextField(name, Font.PLAIN, Color.white, null);
+        txtOsName = TextComponentBuilder.buildTextField(name, Font.PLAIN, Color.white);
         add(txtOsName, Constraints.TXT_OS_NAME);
-        txtOsVers = GuiBuilder.buildTextField(vers, Font.PLAIN, Color.white, null);
+        txtOsVers = TextComponentBuilder.buildTextField(vers, Font.PLAIN, Color.white);
         add(txtOsVers, Constraints.TXT_OS_VERS);
     }
 

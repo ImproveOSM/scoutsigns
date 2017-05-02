@@ -15,6 +15,7 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter;
 
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -22,7 +23,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
-import com.telenav.josm.common.gui.GuiBuilder;
+import com.telenav.josm.common.gui.builder.ButtonBuilder;
 
 
 /**
@@ -64,19 +65,16 @@ class StatusFilterPanel extends JPanel {
 
 
     private void addComponents() {
-        cboxOpen = GuiBuilder.buildRadioButton(Status.OPEN.toString().toLowerCase(), GuiBuilder.FONT_SIZE_12,
-                getBackground(), false);
+        cboxOpen = ButtonBuilder.build(Status.OPEN.toString().toLowerCase(), Font.PLAIN, getBackground(), false);
         add(cboxOpen, CB_OPEN);
-        cboxSolved = GuiBuilder.buildRadioButton(Status.SOLVED.toString().toLowerCase(), GuiBuilder.FONT_SIZE_12,
-                getBackground(), false);
+        cboxSolved = ButtonBuilder.build(Status.SOLVED.toString().toLowerCase(), Font.PLAIN, getBackground(), false);
         add(cboxSolved, CB_SOLVED);
-        cboxInvalid = GuiBuilder.buildRadioButton(Status.INVALID.toString().toLowerCase(), GuiBuilder.FONT_SIZE_12,
-                getBackground(), false);
+        cboxInvalid = ButtonBuilder.build(Status.INVALID.toString().toLowerCase(), Font.PLAIN, getBackground(), false);
         add(cboxInvalid, CB_INVALID);
-        cboxDuplicate = GuiBuilder.buildRadioButton(Status.DUPLICATE.toString().toLowerCase(), GuiBuilder.FONT_SIZE_12,
-                getBackground(), false);
+        cboxDuplicate =
+                ButtonBuilder.build(Status.DUPLICATE.toString().toLowerCase(), Font.PLAIN, getBackground(), false);
         add(cboxDuplicate, CB_DUPL);
-        btnGroup = GuiBuilder.buildRadioButtonGroup(cboxOpen, cboxSolved, cboxInvalid, cboxDuplicate);
+        btnGroup = ButtonBuilder.build(cboxOpen, cboxSolved, cboxInvalid, cboxDuplicate);
     }
 
     private void selectElement(final Status selection) {

@@ -35,7 +35,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.Config;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltConfig;
-import com.telenav.josm.common.gui.GuiBuilder;
+import com.telenav.josm.common.gui.builder.ButtonBuilder;
 
 
 /**
@@ -82,14 +82,14 @@ class ButtonPanel extends JPanel implements TripViewObservable {
         // create components
         final IconConfig iconCnf = IconConfig.getInstance();
         final TltConfig tltCnf = TltConfig.getInstance();
-        btnFilter = GuiBuilder.buildButton(new DisplayFilterDialog(), iconCnf.getFilterIcon(), tltCnf.getBtnFilter(),
-                false);
-        btnBack = GuiBuilder.buildButton(new ExitTrip(), iconCnf.getBackIcon(), tltCnf.getBtnBack(), true);
-        btnTrip = GuiBuilder.buildButton(new DisplayTrip(), iconCnf.getTripIcon(), tltCnf.getBtnTrip(), true);
-        btnImage = GuiBuilder.buildButton(new DisplayImageFrame(), iconCnf.getPhotoIcon(), tltCnf.getBtnPhoto(), true);
-        btnComment = GuiBuilder.buildButton(new DisplayCommentDialog(), iconCnf.getCommentIcon(),
-                tltCnf.getBtnComment(), true);
-        btnMoreAction = GuiBuilder.buildButton(new DisplayEditMenu(), iconCnf.getMoreActionIcon(),
+        btnFilter =
+                ButtonBuilder.build(new DisplayFilterDialog(), iconCnf.getFilterIcon(), tltCnf.getBtnFilter(), false);
+        btnBack = ButtonBuilder.build(new ExitTrip(), iconCnf.getBackIcon(), tltCnf.getBtnBack(), true);
+        btnTrip = ButtonBuilder.build(new DisplayTrip(), iconCnf.getTripIcon(), tltCnf.getBtnTrip(), true);
+        btnImage = ButtonBuilder.build(new DisplayImageFrame(), iconCnf.getPhotoIcon(), tltCnf.getBtnPhoto(), true);
+        btnComment =
+                ButtonBuilder.build(new DisplayCommentDialog(), iconCnf.getCommentIcon(), tltCnf.getBtnComment(), true);
+        btnMoreAction = ButtonBuilder.build(new DisplayEditMenu(), iconCnf.getMoreActionIcon(),
                 tltCnf.getBtnMoreAction(), true);
 
         // disable actions

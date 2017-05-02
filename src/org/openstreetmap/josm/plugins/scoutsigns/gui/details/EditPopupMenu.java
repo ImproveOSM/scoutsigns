@@ -26,7 +26,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.TltConfig;
-import com.telenav.josm.common.gui.GuiBuilder;
+import com.telenav.josm.common.gui.builder.MenuBuilder;
 
 
 /**
@@ -55,27 +55,27 @@ class EditPopupMenu extends JPopupMenu {
         final IconConfig iconCnf = IconConfig.getInstance();
 
         boolean enabled = statuses.contains(Status.SOLVED);
-        final JMenuItem itemSolve = GuiBuilder.buildMenuItem(iconCnf.getSolvedIcon(), guiCnf.getTxtMenuSolve(),
+        final JMenuItem itemSolve = MenuBuilder.build(iconCnf.getSolvedIcon(), guiCnf.getTxtMenuSolve(),
                 tltCnf.getBtnSolved(),
                 new SelectionListener(Status.SOLVED, guiCnf.getDlgSolveTitle(), iconCnf.getSolvedIcon()), enabled);
         add(itemSolve);
 
         enabled = statuses.contains(Status.INVALID);
-        final JMenuItem itemInvalidate = GuiBuilder.buildMenuItem(iconCnf.getInvalidIcon(), guiCnf.getTxtMenuInvalid(),
+        final JMenuItem itemInvalidate = MenuBuilder.build(iconCnf.getInvalidIcon(), guiCnf.getTxtMenuInvalid(),
                 tltCnf.getBtnInvalid(),
                 new SelectionListener(Status.INVALID, guiCnf.getDlgInvalidTitle(), iconCnf.getInvalidIcon()), enabled);
         add(itemInvalidate);
 
         enabled = statuses.contains(Status.DUPLICATE);
-        final JMenuItem itemDuplicate = GuiBuilder.buildMenuItem(iconCnf.getDuplicateIcon(),
-                guiCnf.getTxtMenuDuplicate(), tltCnf.getBtnDuplicate(),
+        final JMenuItem itemDuplicate =
+                MenuBuilder.build(iconCnf.getDuplicateIcon(), guiCnf.getTxtMenuDuplicate(), tltCnf.getBtnDuplicate(),
                 new SelectionListener(Status.DUPLICATE, guiCnf.getDlgDuplicateTitle(), iconCnf.getDuplicateIcon()),
                 enabled);
         add(itemDuplicate);
 
         enabled = statuses.contains(Status.OPEN);
         final JMenuItem itemReopen =
-                GuiBuilder.buildMenuItem(iconCnf.getOpenIcon(), guiCnf.getTxtMenuReopen(), tltCnf.getBtnOpen(),
+                MenuBuilder.build(iconCnf.getOpenIcon(), guiCnf.getTxtMenuReopen(), tltCnf.getBtnOpen(),
                         new SelectionListener(Status.OPEN, guiCnf.getDlgReopenTitle(), iconCnf.getOpenIcon()), enabled);
         add(itemReopen);
     }

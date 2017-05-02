@@ -24,7 +24,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.entity.Comment;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Trip;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
-import com.telenav.josm.common.gui.GuiBuilder;
+import com.telenav.josm.common.gui.builder.ContainerBuilder;
 
 
 /**
@@ -39,6 +39,7 @@ class DetailsPanel extends JTabbedPane {
 
     /** the preferred dimension of the panel components */
     private static final Dimension DIM = new Dimension(150, 100);
+    private static final int SCROLL_BAR_UNIT = 100;
 
     /* panel components */
     private final RoadSignPanel pnlRoadSign;
@@ -59,14 +60,14 @@ class DetailsPanel extends JTabbedPane {
         pnlCarPos = new CarPositionPanel();
         pnlComments = new CommentsPanel();
         final GuiConfig guiCnf = GuiConfig.getInstance();
-        final JScrollPane cmpRoadSign = GuiBuilder.buildScrollPane(pnlRoadSign, guiCnf.getPnlRoadSignTitle(),
-                getBackground(), null, 100, false, DIM);
+        final JScrollPane cmpRoadSign = ContainerBuilder.buildScrollPane(pnlRoadSign, guiCnf.getPnlRoadSignTitle(),
+                getBackground(), null, SCROLL_BAR_UNIT, false, DIM);
         add(cmpRoadSign);
-        final JScrollPane cmpCarLocation = GuiBuilder.buildScrollPane(pnlCarPos, guiCnf.getPnlCarPosTitle(),
-                getBackground(), null, 100, false, DIM);
+        final JScrollPane cmpCarLocation = ContainerBuilder.buildScrollPane(pnlCarPos, guiCnf.getPnlCarPosTitle(),
+                getBackground(), null, SCROLL_BAR_UNIT, false, DIM);
         add(cmpCarLocation);
-        final JScrollPane cmpTrip =
-                GuiBuilder.buildScrollPane(pnlTrip, guiCnf.getPnlTripTitle(), getBackground(), null, 100, false, DIM);
+        final JScrollPane cmpTrip = ContainerBuilder.buildScrollPane(pnlTrip, guiCnf.getPnlTripTitle(), getBackground(),
+                null, 100, false, DIM);
         add(cmpTrip);
         add(pnlComments);
     }

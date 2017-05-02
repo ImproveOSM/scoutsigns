@@ -22,7 +22,7 @@ import javax.swing.JScrollPane;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Comment;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
 import com.telenav.josm.common.gui.BasicInfoPanel;
-import com.telenav.josm.common.gui.GuiBuilder;
+import com.telenav.josm.common.gui.builder.ContainerBuilder;
 
 
 /**
@@ -35,6 +35,7 @@ class CommentsPanel extends BasicInfoPanel<Collection<Comment>> {
 
     private static final long serialVersionUID = 4341574605078192809L;
     private static final Dimension DIM = new Dimension(150, 100);
+    private static final int SCROLL_BAR_UNIT = 100;
 
 
     /**
@@ -49,8 +50,8 @@ class CommentsPanel extends BasicInfoPanel<Collection<Comment>> {
     public void createComponents(final Collection<Comment> comments) {
         setLayout(new BorderLayout());
         final CommentsList commentsList = new CommentsList(comments.toArray(new Comment[0]));
-        final JScrollPane cmp = GuiBuilder.buildScrollPane(commentsList, GuiConfig.getInstance().getPnlCommentsTitle(),
-                getBackground(), null, 100, false, DIM);
+        final JScrollPane cmp = ContainerBuilder.buildScrollPane(commentsList,
+                GuiConfig.getInstance().getPnlCommentsTitle(), getBackground(), null, SCROLL_BAR_UNIT, false, DIM);
         add(cmp, BorderLayout.CENTER);
     }
 }
