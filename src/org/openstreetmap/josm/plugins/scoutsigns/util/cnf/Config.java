@@ -37,14 +37,6 @@ public final class Config extends BaseConfig {
     /** The unique instance of the object */
     private static final Config UNIQUE_INSTANCE = new Config();
 
-    /**
-     * Returns the unique instance of the {@code ServiceCnf} object
-     *
-     * @return a {@code ServiceCnf} object
-     */
-    public static Config getInstance() {
-        return UNIQUE_INSTANCE;
-    }
 
     private final String serviceUrl;
     private int searchDelay;
@@ -74,6 +66,15 @@ public final class Config extends BaseConfig {
         signTypes = readPropertiesList("types");
     }
 
+
+    /**
+     * Returns the unique instance of the {@code ServiceCnf} object
+     *
+     * @return a {@code ServiceCnf} object
+     */
+    public static Config getInstance() {
+        return UNIQUE_INSTANCE;
+    }
 
     public int getMaxClusterZoom() {
         return maxClusterZoom;

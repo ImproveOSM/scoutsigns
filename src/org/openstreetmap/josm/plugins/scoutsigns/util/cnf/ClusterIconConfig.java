@@ -19,8 +19,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import javax.swing.ImageIcon;
 import org.openstreetmap.josm.tools.ImageProvider;
-import org.openstreetmap.josm.tools.Pair;
 import com.telenav.josm.common.cnf.BaseConfig;
+import com.telenav.josm.common.entity.Pair;
 
 
 /**
@@ -81,6 +81,6 @@ public final class ClusterIconConfig extends BaseConfig {
         final String[] values = value.split(";");
         final ImageIcon icon = new ImageProvider(values[0]).get();
         final Float transparency = new Float(values[1]);
-        return new Pair<ImageIcon, Float>(icon, transparency);
+        return new Pair<>(icon, transparency);
     }
 }

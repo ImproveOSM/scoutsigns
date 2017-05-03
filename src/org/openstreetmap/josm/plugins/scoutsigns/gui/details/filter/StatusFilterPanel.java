@@ -15,6 +15,7 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.gui.details.filter;
 
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -22,7 +23,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
-import com.telenav.josm.common.gui.GuiBuilder;
+import com.telenav.josm.common.gui.builder.ButtonBuilder;
 
 
 /**
@@ -48,7 +49,7 @@ class StatusFilterPanel extends JPanel {
     private JRadioButton cboxSolved;
     private JRadioButton cboxInvalid;
     private JRadioButton cboxDuplicate;
-    private final ButtonGroup btnGroup;
+    private ButtonGroup btnGroup;
 
 
     /**
@@ -58,33 +59,22 @@ class StatusFilterPanel extends JPanel {
      */
     StatusFilterPanel(final Status selection) {
         super(new GridBagLayout());
-        btnGroup = new ButtonGroup();
         addComponents();
         selectElement(selection);
     }
 
 
     private void addComponents() {
-        cboxOpen = GuiBuilder.buildRadioButton(Status.OPEN.toString().toLowerCase(), null,
-                getFont().deriveFont(GuiBuilder.FONT_SIZE_12), getBackground(), false);
-        btnGroup.add(cboxOpen);
+        cboxOpen = ButtonBuilder.build(Status.OPEN.toString().toLowerCase(), Font.PLAIN, getBackground(), false);
         add(cboxOpen, CB_OPEN);
-
-        cboxSolved = GuiBuilder.buildRadioButton(Status.SOLVED.toString().toLowerCase(), null,
-                getFont().deriveFont(GuiBuilder.FONT_SIZE_12), getBackground(), false);
-        btnGroup.add(cboxSolved);
+        cboxSolved = ButtonBuilder.build(Status.SOLVED.toString().toLowerCase(), Font.PLAIN, getBackground(), false);
         add(cboxSolved, CB_SOLVED);
-
-        cboxInvalid = GuiBuilder.buildRadioButton(Status.INVALID.toString().toLowerCase(), null,
-                getFont().deriveFont(GuiBuilder.FONT_SIZE_12), getBackground(), false);
-        btnGroup.add(cboxInvalid);
+        cboxInvalid = ButtonBuilder.build(Status.INVALID.toString().toLowerCase(), Font.PLAIN, getBackground(), false);
         add(cboxInvalid, CB_INVALID);
-
-        cboxDuplicate = GuiBuilder.buildRadioButton(Status.DUPLICATE.toString().toLowerCase(), null,
-                getFont().deriveFont(GuiBuilder.FONT_SIZE_12), getBackground(), false);
-
-        btnGroup.add(cboxDuplicate);
+        cboxDuplicate =
+                ButtonBuilder.build(Status.DUPLICATE.toString().toLowerCase(), Font.PLAIN, getBackground(), false);
         add(cboxDuplicate, CB_DUPL);
+        btnGroup = ButtonBuilder.build(cboxOpen, cboxSolved, cboxInvalid, cboxDuplicate);
     }
 
     private void selectElement(final Status selection) {

@@ -30,6 +30,8 @@ import javax.xml.bind.DatatypeConverter;
  */
 public final class ImageUtil {
 
+    private ImageUtil() {}
+
     /**
      * Builds an image from the given base64 encoded text.
      *
@@ -42,13 +44,9 @@ public final class ImageUtil {
     public static BufferedImage base64ToImage(final String data, final int width, final int height) throws IOException {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
         final byte[] decodedData = DatatypeConverter.parseBase64Binary(data);
-        // Base64.decodeBase64(data);
         try (ByteArrayInputStream bis = new ByteArrayInputStream(decodedData)) {
             image = ImageIO.read(bis);
         }
         return image;
     }
-
-
-    private ImageUtil() {}
 }

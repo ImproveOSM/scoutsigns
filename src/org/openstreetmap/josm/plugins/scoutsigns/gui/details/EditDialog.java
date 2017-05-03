@@ -44,8 +44,11 @@ import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObserver;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
 import com.telenav.josm.common.gui.CancelAction;
-import com.telenav.josm.common.gui.GuiBuilder;
 import com.telenav.josm.common.gui.ModalDialog;
+import com.telenav.josm.common.gui.builder.ButtonBuilder;
+import com.telenav.josm.common.gui.builder.ContainerBuilder;
+import com.telenav.josm.common.gui.builder.LabelBuilder;
+import com.telenav.josm.common.gui.builder.TextComponentBuilder;
 
 
 /**
@@ -103,56 +106,42 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
     }
 
     private void addBtnPnl() {
-        lblCommentError = GuiBuilder.buildLabel(GuiConfig.getInstance().getTxtCommentInvalid(), Color.red,
-                Main.map.mapView.getGraphics().getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12),
+        lblCommentError = LabelBuilder.build(GuiConfig.getInstance().getTxtCommentInvalid(), Font.BOLD, Color.red,
                 ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP, false);
-
-        final JPanel pnlBtn = new JPanel(new FlowLayout(FlowLayout.TRAILING));
-        pnlBtn.add(GuiBuilder.buildButton(new AddCommentAction(), GuiConfig.getInstance().getBtnOk()));
-        pnlBtn.add(GuiBuilder.buildButton(new CancelAction(this), GuiConfig.getInstance().getBtnCancel()));
-
-        final JPanel pnlSouth = new JPanel(new BorderLayout());
-        pnlSouth.add(lblCommentError, BorderLayout.LINE_START);
-        pnlSouth.add(pnlBtn, BorderLayout.LINE_END);
+        final JPanel pnlBtn = ContainerBuilder.buildFlowLayoutPanel(FlowLayout.TRAILING,
+                ButtonBuilder.build(new AddCommentAction(), GuiConfig.getInstance().getBtnOk()),
+                ButtonBuilder.build(new CancelAction(this), GuiConfig.getInstance().getBtnCancel()));
+        final JPanel pnlSouth = ContainerBuilder.buildBorderLayoutPanel(lblCommentError, pnlBtn, null);
         add(pnlSouth, BorderLayout.SOUTH);
     }
 
     private void addComment() {
-        txtComment = GuiBuilder.buildTextArea(null, Color.white, true,
-                Main.map.mapView.getGraphics().getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12));
-
-        final JScrollPane scrollPane = GuiBuilder.buildScrollPane(txtComment, Color.white,
+        txtComment = TextComponentBuilder.buildTextArea(Color.WHITE, Font.PLAIN, true);
+        final JScrollPane scrollPane = ContainerBuilder.buildScrollPane(txtComment, Color.white,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.gray));
 
-        final JPanel pnlComment = new JPanel(new BorderLayout());
-        pnlComment.setBorder(BORDER);
-        pnlComment.add(scrollPane, BorderLayout.CENTER);
+        final JPanel pnlComment = ContainerBuilder.buildBorderLayoutPanel(null, scrollPane, null, BORDER);
         pnlComment.setVerifyInputWhenFocusTarget(true);
         add(pnlComment, BorderLayout.CENTER);
     }
 
 
     private void addDuplicateId() {
-        txtDuplicateId = GuiBuilder.buildTextField(null,
-                Main.map.mapView.getGraphics().getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12), Color.white);
-        txtDuplicateId.setBorder(BorderFactory.createLineBorder(Color.gray));
+        txtDuplicateId = TextComponentBuilder.buildTextField(null, Font.PLAIN, Color.white,
+                BorderFactory.createLineBorder(Color.gray));
 
-        final JLabel lblDuplError = GuiBuilder.buildLabel(GuiConfig.getInstance().getTxtDuplIdInvalid(), Color.red,
-                Main.map.mapView.getGraphics().getFont().deriveFont(Font.PLAIN, GuiBuilder.FONT_SIZE_12),
-                ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP, false);
+        final JLabel lblDuplError = LabelBuilder.build(GuiConfig.getInstance().getTxtDuplIdInvalid(), Font.PLAIN,
+                Color.red, ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP, false);
         txtDuplicateId.setInputVerifier(new DuplicateIdVerifier(txtDuplicateId, lblDuplError));
 
         final JPanel pnlDuplicate = new JPanel(new GridLayout(1, 0, 1, 1));
         pnlDuplicate.add(txtDuplicateId);
         pnlDuplicate.add(lblDuplError);
 
-        final JPanel pnlNorth = new JPanel(new BorderLayout());
-        pnlNorth.setBorder(BORDER);
-        pnlNorth.add(GuiBuilder.buildLabel(GuiConfig.getInstance().getLblDupl(),
-                getFont().deriveFont(Font.BOLD, GuiBuilder.FONT_SIZE_12), ComponentOrientation.LEFT_TO_RIGHT,
-                SwingConstants.LEFT, SwingConstants.TOP), BorderLayout.LINE_START);
-
+        final JLabel lblDupl = LabelBuilder.build(GuiConfig.getInstance().getLblDupl(), Font.BOLD, getBackground(),
+                ComponentOrientation.LEFT_TO_RIGHT, SwingConstants.LEFT, SwingConstants.TOP, true);
+        final JPanel pnlNorth = ContainerBuilder.buildBorderLayoutPanel(lblDupl, null, BORDER);
         pnlNorth.add(pnlDuplicate, BorderLayout.CENTER);
         add(pnlNorth, BorderLayout.NORTH);
     }
@@ -173,24 +162,24 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
                 final Long duplicateId =
                         (status == Status.DUPLICATE) ? Long.parseLong(txtDuplicateId.getText().trim()) : null;
 
-                        if (lblCommentError.isVisible()) {
-                            lblCommentError.setVisible(false);
-                        }
-                        dispose();
+                if (lblCommentError.isVisible()) {
+                    lblCommentError.setVisible(false);
+                }
+                dispose();
 
-                        // load username
-                        final String username = PrefManager.getInstance().loadOsmUsername();
-                        if (username.isEmpty()) {
-                            final String nemUsername =
-                                    JOptionPane.showInputDialog(Main.parent, GuiConfig.getInstance().getTxtUsernameWarning(),
-                                            GuiConfig.getInstance().getDlgWarningTitle(), JOptionPane.WARNING_MESSAGE);
-                            if (nemUsername != null && !nemUsername.isEmpty()) {
-                                PrefManager.getInstance().saveOsmUsername(nemUsername);
-                                notifyObserver(nemUsername, txtComment.getText().trim(), status, duplicateId);
-                            }
-                        } else {
-                            notifyObserver(username, txtComment.getText().trim(), status, duplicateId);
-                        }
+                // load username
+                final String username = PrefManager.getInstance().loadOsmUsername();
+                if (username.isEmpty()) {
+                    final String nemUsername =
+                            JOptionPane.showInputDialog(Main.parent, GuiConfig.getInstance().getTxtUsernameWarning(),
+                                    GuiConfig.getInstance().getDlgWarningTitle(), JOptionPane.WARNING_MESSAGE);
+                    if (nemUsername != null && !nemUsername.isEmpty()) {
+                        PrefManager.getInstance().saveOsmUsername(nemUsername);
+                        notifyObserver(nemUsername, txtComment.getText().trim(), status, duplicateId);
+                    }
+                } else {
+                    notifyObserver(username, txtComment.getText().trim(), status, duplicateId);
+                }
             }
         }
 

@@ -59,7 +59,7 @@ public class DuplicateIdVerifier extends AbstractVerifier {
     @Override
     boolean validate(final String value) {
         boolean valid = !required;
-        if (!value.isEmpty()) {
+        if (value != null && !value.isEmpty()) {
             try {
                 final Long longValue = Long.parseLong(value);
                 valid = longValue > MIN_VAL;

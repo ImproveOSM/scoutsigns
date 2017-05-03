@@ -72,6 +72,7 @@ public class ScoutSignsDetailsDialog extends ToggleDialog {
      * Enables button panel action buttons based on the given zoom level.
      *
      * @param zoom the current zoom level.
+     * @param tripView specifies if a trip is displayed or not
      */
     public void enableButtons(final int zoom, final boolean tripView) {
         pnlBtn.enableButtons(zoom, tripView);

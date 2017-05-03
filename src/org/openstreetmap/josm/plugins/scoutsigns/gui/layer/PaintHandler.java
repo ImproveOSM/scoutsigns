@@ -20,20 +20,20 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
-import java.awt.image.ImageObserver;
 import java.util.List;
 import javax.swing.ImageIcon;
+import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSignCluster;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.TypeIconFactory;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.ClusterIconConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
-import org.openstreetmap.josm.tools.Pair;
+import com.telenav.josm.common.entity.Coordinate;
+import com.telenav.josm.common.entity.Pair;
+import com.telenav.josm.common.gui.PaintManager;
+import com.telenav.josm.common.util.GeometryUtil;
 
 
 /**
@@ -48,74 +48,13 @@ class PaintHandler {
 
     // trip view related constants
     private static final int ARROW_FREQ = 2;
-    private static final double RADIUS = 15.0;
-    private static final float ARROW_WIDTH = 6f;
-    private static final BasicStroke LINE_STROKE = new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
-    private static final BasicStroke ARROW_STROKE = new BasicStroke(2f);
+    private static final int RADIUS = 15;
+    private static final BasicStroke LINE_STROKE = new BasicStroke(2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
     private static final Composite POS_COMP = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.60f);
     private static final int HEADING = 180;
-    private static final double PHI = Math.toRadians(55);
 
     private final TypeIconFactory iconFactory = TypeIconFactory.getInstance();
 
-
-    private void drawArrow(final Graphics2D g2D, final Point tip, final Point tail) {
-        final double theta = Math.atan2((tip.getY() - tail.getY()), (tip.getX() - tail.getX()));
-        double rho = theta + PHI;
-        g2D.setStroke(ARROW_STROKE);
-        for (int j = 0; j < 2; j++) {
-            g2D.draw(new Line2D.Double(tip.getX(), tip.getY(), tip.getX() - ARROW_WIDTH * Math.cos(rho),
-                    tip.getY() - ARROW_WIDTH * Math.sin(rho)));
-            rho = theta - PHI;
-        }
-    }
-
-    private void drawCircle(final Graphics2D g2D, final Point point, final Color color, final Double radius) {
-        final Ellipse2D.Double circle =
-                new Ellipse2D.Double(point.x - radius / 2, point.y - radius / 2, radius, radius);
-        g2D.setColor(color);
-        g2D.fill(circle);
-        g2D.draw(circle);
-    }
-
-    private void drawIcon(final Graphics2D g2D, final ImageIcon icon, final Point p) {
-        g2D.drawImage(icon.getImage(), p.x - (icon.getIconWidth() / 2), p.y - (icon.getIconHeight() / 2),
-                new ImageObserver() {
-
-            @Override
-            public boolean imageUpdate(final Image img, final int infoflags, final int x, final int y,
-                    final int width, final int height) {
-                return false;
-            }
-        });
-    }
-
-
-    private void drawLine(final Graphics2D g2D, final Point start, final Point end, final boolean forward,
-            final boolean drawArrow) {
-        g2D.setColor(Color.black);
-        g2D.setStroke(LINE_STROKE);
-        // draw line
-        g2D.draw(new Line2D.Double(start.getX(), start.getY(), end.getX(), end.getY()));
-        if (drawArrow) {
-            final Point midPoint = new Point((start.x + end.x) / 2, (start.y + end.y) / 2);
-            if (forward) {
-                drawArrow(g2D, midPoint, end);
-            } else {
-                drawArrow(g2D, midPoint, start);
-            }
-        }
-    }
-
-    private void drawRoadSign(final Graphics2D g2D, final MapView mv, final RoadSign roadSign, final boolean selected) {
-        final Point point = mv.getPoint(roadSign.getSignPos().getPosition());
-        if (mv.contains(point)) {
-            if (selected) {
-                drawIcon(g2D, IconConfig.getInstance().getSelRoadSignBgIcon(), point);
-            }
-            drawIcon(g2D, iconFactory.getIcon(roadSign.getType()), point);
-        }
-    }
 
     /**
      * Draws the given road signs clusters to the map. A road sign cluster is represented by an icon and the road sign
@@ -129,8 +68,8 @@ class PaintHandler {
         for (final RoadSignCluster cluster : clusterList) {
             final Point point = mv.getPoint(cluster.getPosition());
             final Pair<ImageIcon, Float> pair = ClusterIconConfig.getInstance().getIcon(cluster.getCount());
-            g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pair.b));
-            drawIcon(g2D, pair.a, point);
+            g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pair.getSecond()));
+            PaintManager.drawIcon(g2D, pair.getFirst(), point);
         }
         g2D.setComposite(COMP);
     }
@@ -152,6 +91,16 @@ class PaintHandler {
         }
     }
 
+    private void drawRoadSign(final Graphics2D g2D, final MapView mv, final RoadSign roadSign, final boolean selected) {
+        final Point point = mv.getPoint(roadSign.getSignPos().getPosition());
+        if (mv.contains(point)) {
+            if (selected) {
+                PaintManager.drawIcon(g2D, IconConfig.getInstance().getSelRoadSignBgIcon(), point);
+            }
+            PaintManager.drawIcon(g2D, iconFactory.getIcon(roadSign.getType()), point);
+        }
+    }
+
     /**
      * Draws the given road sign along with the trip data (nearby positions) to the map.
      *
@@ -160,25 +109,53 @@ class PaintHandler {
      * @param roadSign the {@code RoadSign} to be drawn
      */
     void drawTripData(final Graphics2D g2D, final MapView mv, final RoadSign roadSign) {
-        // draw road sign
-        drawRoadSign(g2D, mv, roadSign, true);
-
         // draw positions
         g2D.setComposite(POS_COMP);
         if (roadSign.getNearbyPos() != null) {
-            Point prevPoint = mv.getPoint(roadSign.getNearbyPos().get(0));
+            LatLon prevLatLon = roadSign.getNearbyPos().get(0);
             for (int i = 1; i < roadSign.getNearbyPos().size(); i++) {
-                final Point point = mv.getPoint(roadSign.getNearbyPos().get(i));
-                final Boolean direction = roadSign.getCarPos().getHeading() < HEADING;
-                if (!prevPoint.equals(point)) {
-                    final boolean drawArrow = i % ARROW_FREQ == 0;
-                    drawLine(g2D, prevPoint, point, direction, drawArrow);
+                g2D.setColor(Color.black);
+                g2D.setStroke(LINE_STROKE);
+                final LatLon latLon = roadSign.getNearbyPos().get(i);
+                if (!prevLatLon.equals(latLon) && !prevLatLon.equals(roadSign.getCarPos().getPosition())) {
+                    if (i % ARROW_FREQ == 0) {
+                        if (roadSign.getCarPos().getHeading() < HEADING) {
+                            // forward
+                            final Pair<Pair<Point, Point>, Pair<Point, Point>> arrowGeometry =
+                                    getArrowGeometry(mv, prevLatLon, latLon, 2);
+                            PaintManager.drawDirectedLine(g2D, new Pair<>(mv.getPoint(prevLatLon), mv.getPoint(latLon)),
+                                    arrowGeometry);
+                        } else {
+                            final Pair<Pair<Point, Point>, Pair<Point, Point>> arrowGeometry =
+                                    getArrowGeometry(mv, latLon, prevLatLon, 2);
+                            PaintManager.drawDirectedLine(g2D, new Pair<>(mv.getPoint(prevLatLon), mv.getPoint(latLon)),
+                                    arrowGeometry);
+                        }
+                    } else {
+                        PaintManager.drawLine(g2D, new Pair<>(mv.getPoint(prevLatLon), mv.getPoint(latLon)));
+                    }
                 }
-                drawCircle(g2D, prevPoint, Color.red, RADIUS);
-                prevPoint = point;
+                PaintManager.drawCircle(g2D, mv.getPoint(latLon), Color.red, RADIUS);
+                prevLatLon = latLon;
             }
-            drawCircle(g2D, prevPoint, Color.red, RADIUS);
+            PaintManager.drawCircle(g2D, mv.getPoint(prevLatLon), Color.red, RADIUS);
         }
         g2D.setComposite(COMP);
+        // draw road sign
+        drawRoadSign(g2D, mv, roadSign, true);
+
+    }
+
+    private Pair<Pair<Point, Point>, Pair<Point, Point>> getArrowGeometry(final MapView mapView, final LatLon start,
+            final LatLon end, final double length) {
+        final LatLon midPoint = new LatLon((start.lat() + end.lat()) / 2, (start.lon() + end.lon()) / 2);
+        final double bearing = Math.toDegrees(start.bearing(midPoint));
+        final Pair<Coordinate, Coordinate> arrowEndCoordinates =
+                GeometryUtil.arrowEndPoints(new Coordinate(midPoint.lat(), midPoint.lon()), bearing, -length);
+        final Pair<Point, Point> arrowLine1 = new Pair<>(mapView.getPoint(midPoint), mapView.getPoint(
+                new LatLon(arrowEndCoordinates.getFirst().getLat(), arrowEndCoordinates.getFirst().getLon())));
+        final Pair<Point, Point> arrowLine2 = new Pair<>(mapView.getPoint(midPoint), mapView.getPoint(
+                new LatLon(arrowEndCoordinates.getSecond().getLat(), arrowEndCoordinates.getSecond().getLon())));
+        return new Pair<>(arrowLine1, arrowLine2);
     }
 }

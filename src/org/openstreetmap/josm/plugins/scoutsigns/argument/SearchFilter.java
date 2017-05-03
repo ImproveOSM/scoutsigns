@@ -19,7 +19,7 @@ import java.util.List;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Application;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Device;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
-import com.telenav.josm.common.util.EntityUtil;
+import com.telenav.josm.common.entity.EntityUtil;
 
 
 /**

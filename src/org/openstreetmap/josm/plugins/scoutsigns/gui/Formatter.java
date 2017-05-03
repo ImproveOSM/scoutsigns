@@ -15,13 +15,12 @@
  */
 package org.openstreetmap.josm.plugins.scoutsigns.gui;
 
-import java.util.Collection;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Comment;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
-import com.telenav.josm.common.formatter.DecFormat;
+import com.telenav.josm.common.formatter.DateFormatter;
+import com.telenav.josm.common.formatter.DecimalPattern;
 import com.telenav.josm.common.formatter.EntityFormatter;
-import com.telenav.josm.common.util.DateUtil;
 
 
 /**
@@ -32,21 +31,7 @@ import com.telenav.josm.common.util.DateUtil;
  */
 public final class Formatter {
 
-    /**
-     * Formats the given collection of {@code Comment}s using html tags.
-     *
-     * @param comments a collection of {@code Comment}s
-     * @return a string containing the given {@code Comment}s
-     */
-    public static String formatComments(final Collection<Comment> comments) {
-        final StringBuilder sb = new StringBuilder("<html><body><font size='3' face='times new roman'>");
-        for (final Comment comment : comments) {
-            sb.append(formatComment(comment));
-            sb.append("<br>");
-        }
-        sb.append("</font></body></html>");
-        return sb.toString();
-    }
+    private Formatter() {}
 
     /**
      * Formats the given {@code LatLon} object. Returns a string of the following format: (lat, lon).
@@ -56,15 +41,16 @@ public final class Formatter {
      */
     public static String formatLatLon(final LatLon point) {
         final StringBuilder sb = new StringBuilder();
-        sb.append("(").append(EntityFormatter.formatDouble(point.lat(), false, DecFormat.LONG));
+        sb.append("(").append(EntityFormatter.formatDouble(point.lat(), false, DecimalPattern.LONG));
         sb.append("; ");
-        sb.append(EntityFormatter.formatDouble(point.lon(), false, DecFormat.LONG)).append(")");
+        sb.append(EntityFormatter.formatDouble(point.lon(), false, DecimalPattern.LONG)).append(")");
         return sb.toString();
     }
 
-    private static String formatComment(final Comment value) {
-        final StringBuilder sb = new StringBuilder("<b>");
-        sb.append(DateUtil.formatTimestamp(value.getTstamp()));
+    public static String formatComment(final Comment value) {
+        final StringBuilder sb = new StringBuilder("<html><body>");
+        sb.append("<b>");
+        sb.append(DateFormatter.formatTimestamp(value.getTstamp()));
         sb.append(", ").append(value.getUsername());
         sb.append("</b><br>");
         if (value.getStatus() != null) {
@@ -78,9 +64,7 @@ public final class Formatter {
             sb.append("added ");
         }
         sb.append("comment: ").append(value.getText());
+        sb.append("</body></html>");
         return sb.toString();
     }
-
-
-    private Formatter() {}
 }
