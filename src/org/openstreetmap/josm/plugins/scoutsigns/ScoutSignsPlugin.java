@@ -178,14 +178,16 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
                     });
                 } else {
                     dialog.updateData(roadSign);
-                    Main.map.repaint();
+                    layer.invalidate();
+                    Main.map.mapView.repaint();
                 }
             } else if (!multiSelect) {
                 // un-select previously selected road sign
 
                 SwingUtilities.invokeLater(() -> {
                     dialog.updateData(null);
-                    Main.map.repaint();
+                    layer.invalidate();
+                    Main.map.mapView.repaint();
                 });
             }
         }
@@ -261,7 +263,8 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
     public void enterTripView() {
         NavigatableComponent.removeZoomChangeListener(this);
         layer.setTripView(true);
-        Main.map.repaint();
+        layer.invalidate();
+        Main.map.mapView.repaint();
     }
 
     @Override
@@ -286,7 +289,8 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
         SwingUtilities.invokeLater(() -> {
             dialog.updateData(roadSign);
             layer.updateSelRoadSign(roadSign);
-            Main.map.repaint();
+            layer.invalidate();
+            Main.map.mapView.repaint();
         });
     }
 
@@ -339,8 +343,8 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
                         updateSelection(result);
                         dialog.enableButtons(zoom, layer.isTripView());
                         layer.setDataSet(result);
-                        Main.map.repaint();
-
+                        layer.invalidate();
+                        Main.map.mapView.repaint();
                     });
                 }
             }
