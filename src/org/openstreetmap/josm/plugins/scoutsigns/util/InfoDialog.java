@@ -16,7 +16,7 @@
 package org.openstreetmap.josm.plugins.scoutsigns.util;
 
 import javax.swing.JOptionPane;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.Config;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
@@ -33,18 +33,18 @@ public final class InfoDialog {
      * Displays a dialog window with the corresponding message for the following situations:
      * <ul>
      * <li>user enters cluster view from previous road sign view - info regarding cluster view is displayed</li>
-     * <li>user is in cluster view - info regarding Mapillary road signs is displayeda</li>
+     * <li>user is in cluster view - info regarding Mapillary road signs is displayed</li>
      * </ul>
      *
      * @param zoom the current zoom level
-     * @param prevZoom the previous zom level
+     * @param prevZoom the previous zoom level
      */
     public synchronized void displayDialog(final int zoom, final int prevZoom) {
         if (!isDisplayed) {
             final int maxZoom = Config.getInstance().getMaxClusterZoom();
             if (!PrefManager.getInstance().loadSuppressClusterInfoFlag() && (zoom <= maxZoom && zoom < prevZoom)) {
                 isDisplayed = true;
-                final int val = JOptionPane.showOptionDialog(Main.map.mapView,
+                final int val = JOptionPane.showOptionDialog(MainApplication.getMap().mapView,
                         GuiConfig.getInstance().getInfoClusterTxt(), GuiConfig.getInstance().getInfoClusterTitle(),
                         JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
                 final boolean flag = val == JOptionPane.YES_OPTION;
