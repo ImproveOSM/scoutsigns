@@ -37,6 +37,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.DuplicateIdVerifier;
 import org.openstreetmap.josm.plugins.scoutsigns.observer.StatusChangeObservable;
@@ -79,7 +80,7 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
      */
     EditDialog(final Status status, final String title, final Image image) {
         super(title, image, DIM);
-        setLocationRelativeTo(Main.map.mapView);
+        setLocationRelativeTo(MainApplication.getMap().mapView);
         this.status = status;
         createComponents();
     }

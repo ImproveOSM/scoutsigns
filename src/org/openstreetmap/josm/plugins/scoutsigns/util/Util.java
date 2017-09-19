@@ -18,9 +18,9 @@ package org.openstreetmap.josm.plugins.scoutsigns.util;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.Collection;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Bounds;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapView;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import com.telenav.josm.common.argument.BoundingBox;
@@ -74,7 +74,7 @@ public final class Util {
     }
 
     private static double distance(final Point2D fromPoint, final LatLon toLatLon) {
-        final Point toPoint = Main.map.mapView.getPoint(toLatLon);
+        final Point toPoint = MainApplication.getMap().mapView.getPoint(toLatLon);
         return new Point2D.Double(fromPoint.getX(), fromPoint.getY()).distance(toPoint);
     }
 

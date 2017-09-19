@@ -22,7 +22,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.IconConfig;
@@ -54,7 +54,7 @@ public class RoadSignFilterDialog extends ModalDialog {
     public RoadSignFilterDialog() {
         super(GuiConfig.getInstance().getDlgFilterTitle(), IconConfig.getInstance().getFilterIcon().getImage(),
                 GuiSizesHelper.getDimensionDpiAdjusted(DIM));
-        setLocationRelativeTo(Main.map.mapView);
+        setLocationRelativeTo(MainApplication.getMap().mapView);
         createComponents();
     }
 

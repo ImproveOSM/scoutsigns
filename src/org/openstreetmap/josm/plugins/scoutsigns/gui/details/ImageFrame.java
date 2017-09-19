@@ -23,7 +23,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
 import org.openstreetmap.josm.plugins.scoutsigns.util.ImageUtil;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.GuiConfig;
@@ -52,7 +52,7 @@ class ImageFrame extends JFrame {
         setTitle(GuiConfig.getInstance().getFrmPhotoTitle());
         setIconImage(IconConfig.getInstance().getPhotoIcon().getImage());
         setResizable(true);
-        setLocationRelativeTo(Main.map);
+        setLocationRelativeTo(MainApplication.getMap());
         setAlwaysOnTop(true);
 
         // create components

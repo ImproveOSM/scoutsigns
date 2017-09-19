@@ -27,6 +27,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
 import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.gui.IconToggleButton;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.gui.NavigatableComponent;
 import org.openstreetmap.josm.gui.NavigatableComponent.ZoomChangeListener;
@@ -50,6 +51,7 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.Util;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.Config;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.Keys;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.OsmUrlToBounds;
 import com.telenav.josm.common.argument.BoundingBox;
 import com.telenav.josm.common.thread.ThreadPool;
@@ -89,7 +91,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
 
     @Override
     public void mapFrameInitialized(final MapFrame oldMapFrame, final MapFrame newMapFrame) {
-        if (Main.map != null && !GraphicsEnvironment.isHeadless()) {
+        if (MainApplication.getMap() != null && !GraphicsEnvironment.isHeadless()) {
             dialog = new ScoutSignsDetailsDialog();
             newMapFrame.addToggleDialog(dialog);
             dialog.getButton().addActionListener(new ToggleButtonActionListener());
@@ -106,7 +108,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
             try {
                 ThreadPool.getInstance().shutdown();
             } catch (final InterruptedException e) {
-                Main.error(e, "Could not shutdown thead pool.");
+                Logging.error("Could not shutdown thead pool.", e);
             }
         }
     }
@@ -131,12 +133,12 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
         if (event.getRemovedLayer() instanceof ScoutSignsLayer) {
             // unregister listeners
             NavigatableComponent.removeZoomChangeListener(this);
-            Main.getLayerManager().removeLayerChangeListener(this);
+            MainApplication.getLayerManager().removeLayerChangeListener(this);
             Main.pref.removePreferenceChangeListener(this);
 
-            if (Main.map != null) {
-                Main.map.mapView.removeMouseListener(this);
-                Main.map.remove(dialog);
+            if (MainApplication.getMap() != null) {
+                MainApplication.getMap().mapView.removeMouseListener(this);
+                MainApplication.getMap().remove(dialog);
                 layer = null;
                 dialog.hideDialog();
             }
@@ -164,7 +166,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
 
     @Override
     public void mouseClicked(final MouseEvent event) {
-        if (Main.getLayerManager().getActiveLayer() == layer && layer.isVisible() && !layer.isTripView()
+        if (MainApplication.getLayerManager().getActiveLayer() == layer && layer.isVisible() && !layer.isTripView()
                 && SwingUtilities.isLeftMouseButton(event)) {
             final boolean multiSelect = event.isShiftDown();
             final RoadSign roadSign = layer.nearbyRoadSign(event.getPoint(), multiSelect);
@@ -179,7 +181,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
                 } else {
                     dialog.updateData(roadSign);
                     layer.invalidate();
-                    Main.map.mapView.repaint();
+                    MainApplication.getMap().mapView.repaint();
                 }
             } else if (!multiSelect) {
                 // un-select previously selected road sign
@@ -187,7 +189,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
                 SwingUtilities.invokeLater(() -> {
                     dialog.updateData(null);
                     layer.invalidate();
-                    Main.map.mapView.repaint();
+                    MainApplication.getMap().mapView.repaint();
                 });
             }
         }
@@ -264,7 +266,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
         NavigatableComponent.removeZoomChangeListener(this);
         layer.setTripView(true);
         layer.invalidate();
-        Main.map.mapView.repaint();
+        MainApplication.getMap().mapView.repaint();
     }
 
     @Override
@@ -277,8 +279,8 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
 
     private void registerListeners() {
         NavigatableComponent.addZoomChangeListener(this);
-        Main.getLayerManager().addLayerChangeListener(this);
-        Main.map.mapView.addMouseListener(this);
+        MainApplication.getLayerManager().addLayerChangeListener(this);
+        MainApplication.getMap().mapView.addMouseListener(this);
         Main.pref.addPreferenceChangeListener(this);
         dialog.registerStatusChangeObserver(this);
         dialog.registerTripViewObserver(this);
@@ -290,7 +292,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
             dialog.updateData(roadSign);
             layer.updateSelRoadSign(roadSign);
             layer.invalidate();
-            Main.map.mapView.repaint();
+            MainApplication.getMap().mapView.repaint();
         });
     }
 
@@ -316,7 +318,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
                     if (layer == null) {
                         registerListeners();
                         layer = new ScoutSignsLayer();
-                        Main.map.mapView.getLayerManager().addLayer(layer);
+                        MainApplication.getMap().mapView.getLayerManager().addLayer(layer);
                     }
                 });
             }
@@ -331,10 +333,10 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
 
         @Override
         public void run() {
-            if (Main.map != null && Main.map.mapView != null) {
-                final BoundingBox bbox = Util.buildBBox(Main.map.mapView);
+            if (MainApplication.getMap() != null && MainApplication.getMap().mapView != null) {
+                final BoundingBox bbox = Util.buildBBox(MainApplication.getMap().mapView);
                 if (bbox != null) {
-                    final int zoom = OsmUrlToBounds.getZoom(Main.map.mapView.getRealBounds());
+                    final int zoom = OsmUrlToBounds.getZoom(MainApplication.getMap().mapView.getRealBounds());
                     final SearchFilter filter = zoom > Config.getInstance().getMaxClusterZoom() ? searchFilter : null;
                     final DataSet result = ServiceHandler.getInstance().search(bbox, filter, zoom);
                     SwingUtilities.invokeLater(() -> {
@@ -344,7 +346,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
                         dialog.enableButtons(zoom, layer.isTripView());
                         layer.setDataSet(result);
                         layer.invalidate();
-                        Main.map.mapView.repaint();
+                        MainApplication.getMap().mapView.repaint();
                     });
                 }
             }
