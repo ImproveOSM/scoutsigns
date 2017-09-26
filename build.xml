@@ -94,9 +94,7 @@
 				<attribute name="Plugin-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/ScoutSigns" />
 				<attribute name="Plugin-Version" value="${build-label}" />
 				<attribute name="Plugin-Icon" value="images/scoutsigns_logo_50x50.png" />
-				<attribute name="Plugin-Mainversion" value="10161" />
-				<attribute name="9759_Plugin-Url" value="79;http://developer.skobbler.com/public/scoutsigns/1.0/scoutsigns.jar" />
-				<attribute name="10161_Plugin-Url" value="${build-label};http://developer.skobbler.com/public/scoutsigns/2.0/scoutsigns.jar" />
+				<attribute name="Plugin-Mainversion" value="12712" />
 			</manifest>
 		</jar>
 	</target>
