@@ -23,9 +23,6 @@ import java.awt.event.MouseListener;
 import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import org.openstreetmap.josm.Main;
-import org.openstreetmap.josm.data.Preferences.PreferenceChangeEvent;
-import org.openstreetmap.josm.data.Preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
@@ -51,6 +48,8 @@ import org.openstreetmap.josm.plugins.scoutsigns.util.Util;
 import org.openstreetmap.josm.plugins.scoutsigns.util.cnf.Config;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.Keys;
 import org.openstreetmap.josm.plugins.scoutsigns.util.pref.PrefManager;
+import org.openstreetmap.josm.spi.preferences.PreferenceChangeEvent;
+import org.openstreetmap.josm.spi.preferences.PreferenceChangedListener;
 import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.OsmUrlToBounds;
 import com.telenav.josm.common.argument.BoundingBox;
@@ -134,7 +133,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
             // unregister listeners
             NavigatableComponent.removeZoomChangeListener(this);
             MainApplication.getLayerManager().removeLayerChangeListener(this);
-            Main.pref.removePreferenceChangeListener(this);
+            org.openstreetmap.josm.spi.preferences.Config.getPref().removePreferenceChangeListener(this);
 
             if (MainApplication.getMap() != null) {
                 MainApplication.getMap().mapView.removeMouseListener(this);
@@ -281,7 +280,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
         NavigatableComponent.addZoomChangeListener(this);
         MainApplication.getLayerManager().addLayerChangeListener(this);
         MainApplication.getMap().mapView.addMouseListener(this);
-        Main.pref.addPreferenceChangeListener(this);
+        org.openstreetmap.josm.spi.preferences.Config.getPref().addPreferenceChangeListener(this);
         dialog.registerStatusChangeObserver(this);
         dialog.registerTripViewObserver(this);
     }
