@@ -17,13 +17,13 @@ package org.openstreetmap.josm.plugins.scoutsigns.util.pref;
 
 import java.util.Collection;
 import java.util.List;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.StructUtils;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.TimestampFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Application;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Device;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
-import org.openstreetmap.josm.spi.preferences.Config;
 
 
 /**
@@ -56,7 +56,7 @@ public final class PrefManager {
      * @return a {@code String}
      */
     public String loadOsmUsername() {
-        final String username = Config.getPref().get(Keys.OSM_USERNAME);
+        final String username = Main.pref.get(Keys.OSM_USERNAME);
         return username == null ? "" : username;
     }
 
@@ -66,14 +66,14 @@ public final class PrefManager {
      * @return a {@code SearchFilter} object
      */
     public SearchFilter loadSearchFilter() {
-        final List<String> types = StructUtils.getListOfStructs(Config.getPref(), Keys.TYPE, String.class);
-        final String statusStr = Config.getPref().get(Keys.STATUS);
-        final String confidenceStr = Config.getPref().get(Keys.CONFIDENCE);
-        final String username = Config.getPref().get(Keys.FLT_USERNAME);
-        final String appName = Config.getPref().get(Keys.APP_NAME);
-        final String appVersion = Config.getPref().get(Keys.APP_VERSION);
-        final String osName = Config.getPref().get(Keys.OS_NAME);
-        final String osVersion = Config.getPref().get(Keys.OS_VERSION);
+        final List<String> types = StructUtils.getListOfStructs(Main.pref, Keys.TYPE, String.class);
+        final String statusStr = Main.pref.get(Keys.STATUS);
+        final String confidenceStr = Main.pref.get(Keys.CONFIDENCE);
+        final String username = Main.pref.get(Keys.FLT_USERNAME);
+        final String appName = Main.pref.get(Keys.APP_NAME);
+        final String appVersion = Main.pref.get(Keys.APP_VERSION);
+        final String osName = Main.pref.get(Keys.OS_NAME);
+        final String osVersion = Main.pref.get(Keys.OS_VERSION);
 
         final Long from = loadLongValue(Keys.FROM);
         final Long to = loadLongValue(Keys.TO);
@@ -100,7 +100,7 @@ public final class PrefManager {
      * @return a boolean value
      */
     public boolean loadSuppressClusterInfoFlag() {
-        final String flagVal = Config.getPref().get(Keys.CLUSTER_INFO_SUPPRESS);
+        final String flagVal = Main.pref.get(Keys.CLUSTER_INFO_SUPPRESS);
         return flagVal.isEmpty() ? false : new Boolean(flagVal);
     }
 
@@ -110,7 +110,7 @@ public final class PrefManager {
      * @return a boolean value
      */
     public boolean loadSupressErrorFlag() {
-        return Config.getPref().getBoolean(Keys.ERROR_SUPPRESS);
+        return Main.pref.getBoolean(Keys.ERROR_SUPPRESS);
     }
 
     /**
@@ -119,8 +119,8 @@ public final class PrefManager {
      * @param changed a boolean value
      */
     public void saveFiltersChangedFlag(final boolean changed) {
-        Config.getPref().put(Keys.FILTERS_CHANGED, "");
-        Config.getPref().put(Keys.FILTERS_CHANGED, "" + changed);
+        Main.pref.put(Keys.FILTERS_CHANGED, "");
+        Main.pref.put(Keys.FILTERS_CHANGED, "" + changed);
     }
 
     /**
@@ -129,7 +129,7 @@ public final class PrefManager {
      * @param username a {@code String}
      */
     public void saveOsmUsername(final String username) {
-        Config.getPref().put(Keys.OSM_USERNAME, username);
+        Main.pref.put(Keys.OSM_USERNAME, username);
     }
 
     /**
@@ -171,18 +171,17 @@ public final class PrefManager {
             }
         }
         // clear collection is no types is set
-        Config.getPref().put(Keys.FROM, from);
-        Config.getPref().put(Keys.TO, to);
-        Config.getPref().put(Keys.STATUS, status);
-
-        StructUtils.putListOfStructs(Config.getPref(), Keys.TYPE, types, String.class);
-        Config.getPref().put(Keys.DUPLICATE, duplicate);
-        Config.getPref().put(Keys.CONFIDENCE, confidence);
-        Config.getPref().put(Keys.FLT_USERNAME, username);
-        Config.getPref().put(Keys.APP_NAME, appName);
-        Config.getPref().put(Keys.APP_VERSION, appVersion);
-        Config.getPref().put(Keys.OS_NAME, osName);
-        Config.getPref().put(Keys.OS_VERSION, osVersion);
+        Main.pref.put(Keys.FROM, from);
+        Main.pref.put(Keys.TO, to);
+        Main.pref.put(Keys.STATUS, status);
+        StructUtils.putListOfStructs(Main.pref, Keys.TYPE, types, String.class);
+        Main.pref.put(Keys.DUPLICATE, duplicate);
+        Main.pref.put(Keys.CONFIDENCE, confidence);
+        Main.pref.put(Keys.FLT_USERNAME, username);
+        Main.pref.put(Keys.APP_NAME, appName);
+        Main.pref.put(Keys.APP_VERSION, appVersion);
+        Main.pref.put(Keys.OS_NAME, osName);
+        Main.pref.put(Keys.OS_VERSION, osVersion);
     }
 
     /**
@@ -192,7 +191,7 @@ public final class PrefManager {
      * @param value a boolean value
      */
     public void saveSuppressClusterInfoFlag(final boolean value) {
-        Config.getPref().putBoolean(Keys.CLUSTER_INFO_SUPPRESS, value);
+        Main.pref.putBoolean(Keys.CLUSTER_INFO_SUPPRESS, value);
     }
 
     /**
@@ -202,11 +201,11 @@ public final class PrefManager {
      * @param value a boolean value
      */
     public void saveSupressErrorFlag(final boolean value) {
-        Config.getPref().putBoolean(Keys.ERROR_SUPPRESS, value);
+        Main.pref.putBoolean(Keys.ERROR_SUPPRESS, value);
     }
 
     private Long loadLongValue(final String key) {
-        String valueStr = Config.getPref().get(key);
+        String valueStr = Main.pref.get(key);
         valueStr = valueStr.trim();
         return (valueStr != null && !valueStr.isEmpty()) ? Long.valueOf(valueStr) : null;
     }

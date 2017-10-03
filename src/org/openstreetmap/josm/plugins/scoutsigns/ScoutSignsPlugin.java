@@ -23,6 +23,7 @@ import java.awt.event.MouseListener;
 import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.IconToggleButton;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.MapFrame;
@@ -133,7 +134,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
             // unregister listeners
             NavigatableComponent.removeZoomChangeListener(this);
             MainApplication.getLayerManager().removeLayerChangeListener(this);
-            org.openstreetmap.josm.spi.preferences.Config.getPref().removePreferenceChangeListener(this);
+            Main.pref.removePreferenceChangeListener(this);
 
             if (MainApplication.getMap() != null) {
                 MainApplication.getMap().mapView.removeMouseListener(this);
@@ -280,7 +281,7 @@ PreferenceChangedListener, StatusChangeObserver, TripViewObserver {
         NavigatableComponent.addZoomChangeListener(this);
         MainApplication.getLayerManager().addLayerChangeListener(this);
         MainApplication.getMap().mapView.addMouseListener(this);
-        org.openstreetmap.josm.spi.preferences.Config.getPref().addPreferenceChangeListener(this);
+        Main.pref.addPreferenceChangeListener(this);
         dialog.registerStatusChangeObserver(this);
         dialog.registerTripViewObserver(this);
     }
