@@ -18,6 +18,7 @@ package org.openstreetmap.josm.plugins.scoutsigns.util.pref;
 import java.util.Collection;
 import java.util.List;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.data.StructUtils;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.TimestampFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Application;
@@ -65,7 +66,7 @@ public final class PrefManager {
      * @return a {@code SearchFilter} object
      */
     public SearchFilter loadSearchFilter() {
-        final List<String> types = (List<String>) Main.pref.getCollection(Keys.TYPE);
+        final List<String> types = StructUtils.getListOfStructs(Main.pref, Keys.TYPE, String.class);
         final String statusStr = Main.pref.get(Keys.STATUS);
         final String confidenceStr = Main.pref.get(Keys.CONFIDENCE);
         final String username = Main.pref.get(Keys.FLT_USERNAME);
@@ -173,7 +174,7 @@ public final class PrefManager {
         Main.pref.put(Keys.FROM, from);
         Main.pref.put(Keys.TO, to);
         Main.pref.put(Keys.STATUS, status);
-        Main.pref.putCollection(Keys.TYPE, types);
+        StructUtils.putListOfStructs(Main.pref, Keys.TYPE, types, String.class);
         Main.pref.put(Keys.DUPLICATE, duplicate);
         Main.pref.put(Keys.CONFIDENCE, confidence);
         Main.pref.put(Keys.FLT_USERNAME, username);
@@ -190,7 +191,7 @@ public final class PrefManager {
      * @param value a boolean value
      */
     public void saveSuppressClusterInfoFlag(final boolean value) {
-        Main.pref.put(Keys.CLUSTER_INFO_SUPPRESS, value);
+        Main.pref.putBoolean(Keys.CLUSTER_INFO_SUPPRESS, value);
     }
 
     /**
@@ -200,7 +201,7 @@ public final class PrefManager {
      * @param value a boolean value
      */
     public void saveSupressErrorFlag(final boolean value) {
-        Main.pref.put(Keys.ERROR_SUPPRESS, value);
+        Main.pref.putBoolean(Keys.ERROR_SUPPRESS, value);
     }
 
     private Long loadLongValue(final String key) {
