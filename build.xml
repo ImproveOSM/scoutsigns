@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="scoutsigns" xmlns:if="ant:if" xmlns:unless="ant:unless" default="dist" basedir=".">
+<project name="scoutsigns" xmlns:if="ant:if" xmlns:unless="ant:unless"
+	default="dist" basedir=".">
 
 	<property name="plugin.main.version" value="1.0" />
 	<property name="plugin.build.dir" value="${basedir}/build/classes" />
@@ -23,34 +24,33 @@
 	</target>
 
 
-	<!--
-    **********************************************************
-    ** compile - complies the source tree
-    **********************************************************
-    -->
+	<!-- ********************************************************** ** compile 
+		- complies the source tree ********************************************************** -->
 	<target name="compile" depends="init">
 		<path id="classpath">
-			<fileset dir="${plugin.lib.dir}" includes="**/*.jar" excludes="josm-tested.jar,josm-old.jar" />
+			<fileset dir="${plugin.lib.dir}" includes="**/*.jar"
+				excludes="josm-tested.jar,josm-old.jar" />
 			<fileset dir="${plugin.lib.dir}" includes="${JOSM_lib}" />
 		</path>
-		<javac srcdir="src" classpathref="classpath" debug="true" destdir="${plugin.build.dir}" includeantruntime="true" excludes="**/package-info.java">
+		<javac srcdir="src" classpathref="classpath" debug="true"
+			destdir="${plugin.build.dir}" includeantruntime="true"
+			excludes="**/package-info.java">
 			<compilerarg value="-Xlint:deprecation" />
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
 	</target>
 
-	<!--
-    **********************************************************
-    ** javadoc - creates javadocs
-    **********************************************************
-    -->
+	<!-- ********************************************************** ** javadoc 
+		- creates javadocs ********************************************************** -->
 	<target name="javadoc">
 		<mkdir dir="${plugin.apidoc.dir}" />
 		<path id="classpath">
-			<fileset dir="${plugin.lib.dir}" includes="**/*.jar" excludes="josm-tested.jar,josm-latest.jar" />
+			<fileset dir="${plugin.lib.dir}" includes="**/*.jar"
+				excludes="josm-tested.jar,josm-latest.jar" />
 			<fileset dir="${plugin.lib.dir}" includes="${JOSM_lib}" />
 		</path>
-		<javadoc destdir="${plugin.apidoc.dir}" source="1.8" classpathref="classpath" windowtitle="scoutsigns plugin API">
+		<javadoc destdir="${plugin.apidoc.dir}" source="1.8"
+			classpathref="classpath" windowtitle="scoutsigns plugin API">
 			<link href="http://docs.oracle.com/javase/8/docs/api/" />
 			<packageset dir="${plugin.src.dir}">
 			</packageset>
@@ -58,13 +58,11 @@
 
 	</target>
 
-	<!--
-    **********************************************************
-    ** dist - creates the plugin jar
-    **********************************************************
-    -->
+	<!-- ********************************************************** ** dist 
+		- creates the plugin jar ********************************************************** -->
 	<target name="dist" depends="compile">
-		<condition property="plugin.out.dir" value="${plugin.dist.dir}/${out.dir}" else="${plugin.dist.dir}">
+		<condition property="plugin.out.dir" value="${plugin.dist.dir}/${out.dir}"
+			else="${plugin.dist.dir}">
 			<isset property="out.dir" />
 		</condition>
 		<echo message="out dir: ${plugin.out.dir}" />
@@ -73,7 +71,9 @@
 		<copy todir="${plugin.build.dir}">
 			<fileset dir="resources" />
 		</copy>
-		<replaceregexp if:set="url.key" file="${plugin.build.dir}/scoutsigns.properties" match="${url.key}" replace="${service_url}" />
+		<replaceregexp if:set="url.key"
+			file="${plugin.build.dir}/scoutsigns.properties" match="${url.key}"
+			replace="${service_url}" />
 		<copy todir="${plugin.build.dir}/images">
 			<fileset dir="images" />
 		</copy>
@@ -85,13 +85,16 @@
 		</copy>
 		<jar destfile="${plugin.out.dir}/${plugin.name}" basedir="${plugin.build.dir}">
 			<zipfileset src="${plugin.lib.dir}/gson-2.5.jar" />
-			<zipfileset src="${plugin.lib.dir}/josm-common-3.4.2.jar" />
+			<zipfileset src="${plugin.lib.dir}/josm-common-3.4.3.jar" />
 			<manifest>
 				<attribute name="Author" value="telenav" />
-				<attribute name="Plugin-Class" value="org.openstreetmap.josm.plugins.scoutsigns.ScoutSignsPlugin" />
+				<attribute name="Plugin-Class"
+					value="org.openstreetmap.josm.plugins.scoutsigns.ScoutSignsPlugin" />
 				<attribute name="Plugin-Date" value="${TODAY}" />
-				<attribute name="Plugin-Description" value="The ScoutSigns plugin helps you quickly map speed limits and other information from actual road signs automatically captured by Scout users while driving." />
-				<attribute name="Plugin-Link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/ScoutSigns" />
+				<attribute name="Plugin-Description"
+					value="The ScoutSigns plugin helps you quickly map speed limits and other information from actual road signs automatically captured by Scout users while driving." />
+				<attribute name="Plugin-Link"
+					value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/ScoutSigns" />
 				<attribute name="Plugin-Version" value="${build-label}" />
 				<attribute name="Plugin-Icon" value="images/scoutsigns_logo_50x50.png" />
 				<attribute name="Plugin-Mainversion" value="12914" />
@@ -99,11 +102,8 @@
 		</jar>
 	</target>
 
-	<!--
-    **********************************************************
-    ** install - install the plugin in your local JOSM installation
-    **********************************************************
-    -->
+	<!-- ********************************************************** ** install 
+		- install the plugin in your local JOSM installation ********************************************************** -->
 	<target name="install" depends="dist">
 		<property environment="env" />
 		<condition property="josm.plugins.dir" value="${env.APPDATA}/JOSM/plugins">
