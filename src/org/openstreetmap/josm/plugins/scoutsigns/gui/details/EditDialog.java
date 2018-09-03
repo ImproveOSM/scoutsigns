@@ -36,7 +36,6 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.Status;
 import org.openstreetmap.josm.plugins.scoutsigns.gui.verifier.DuplicateIdVerifier;
@@ -163,24 +162,25 @@ class EditDialog extends ModalDialog implements StatusChangeObservable {
                 final Long duplicateId =
                         (status == Status.DUPLICATE) ? Long.parseLong(txtDuplicateId.getText().trim()) : null;
 
-                if (lblCommentError.isVisible()) {
-                    lblCommentError.setVisible(false);
-                }
-                dispose();
+                        if (lblCommentError.isVisible()) {
+                            lblCommentError.setVisible(false);
+                        }
+                        dispose();
 
-                // load username
-                final String username = PrefManager.getInstance().loadOsmUsername();
-                if (username.isEmpty()) {
-                    final String nemUsername =
-                            JOptionPane.showInputDialog(Main.parent, GuiConfig.getInstance().getTxtUsernameWarning(),
-                                    GuiConfig.getInstance().getDlgWarningTitle(), JOptionPane.WARNING_MESSAGE);
-                    if (nemUsername != null && !nemUsername.isEmpty()) {
-                        PrefManager.getInstance().saveOsmUsername(nemUsername);
-                        notifyObserver(nemUsername, txtComment.getText().trim(), status, duplicateId);
-                    }
-                } else {
-                    notifyObserver(username, txtComment.getText().trim(), status, duplicateId);
-                }
+                        // load username
+                        final String username = PrefManager.getInstance().loadOsmUsername();
+                        if (username.isEmpty()) {
+                            final String nemUsername =
+                                    JOptionPane.showInputDialog(MainApplication.getMainFrame(),
+                                    GuiConfig.getInstance().getTxtUsernameWarning(),
+                                            GuiConfig.getInstance().getDlgWarningTitle(), JOptionPane.WARNING_MESSAGE);
+                            if (nemUsername != null && !nemUsername.isEmpty()) {
+                                PrefManager.getInstance().saveOsmUsername(nemUsername);
+                                notifyObserver(nemUsername, txtComment.getText().trim(), status, duplicateId);
+                            }
+                        } else {
+                            notifyObserver(username, txtComment.getText().trim(), status, duplicateId);
+                        }
             }
         }
 

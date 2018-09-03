@@ -18,7 +18,7 @@ package org.openstreetmap.josm.plugins.scoutsigns.service;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.scoutsigns.argument.SearchFilter;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.DataSet;
 import org.openstreetmap.josm.plugins.scoutsigns.entity.RoadSign;
@@ -140,11 +140,12 @@ public final class ServiceHandler {
         if (suppress) {
             if (!PrefManager.getInstance().loadSupressErrorFlag()) {
                 PrefManager.getInstance().saveSupressErrorFlag(suppress);
-                JOptionPane.showMessageDialog(Main.parent, ex.getMessage(), "Operation failed",
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(), ex.getMessage(), "Operation failed",
                         JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(Main.parent, ex.getMessage(), "Operation failed", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), ex.getMessage(), "Operation failed",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 }
