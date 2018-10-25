@@ -19,7 +19,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.xml.bind.DatatypeConverter;
+import java.util.Base64;
 
 
 /**
@@ -43,10 +43,11 @@ public final class ImageUtil {
      */
     public static BufferedImage base64ToImage(final String data, final int width, final int height) throws IOException {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
-        final byte[] decodedData = DatatypeConverter.parseBase64Binary(data);
+        final byte[] decodedData = Base64.getDecoder().decode(data);
         try (ByteArrayInputStream bis = new ByteArrayInputStream(decodedData)) {
             image = ImageIO.read(bis);
         }
         return image;
     }
+    
 }
