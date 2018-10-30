@@ -43,11 +43,10 @@ public final class ImageUtil {
      */
     public static BufferedImage base64ToImage(final String data, final int width, final int height) throws IOException {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
-        final byte[] decodedData = Base64.getDecoder().decode(data);
+        final byte[] decodedData = Base64.getMimeDecoder().decode(data);
         try (ByteArrayInputStream bis = new ByteArrayInputStream(decodedData)) {
             image = ImageIO.read(bis);
         }
         return image;
     }
-
 }
