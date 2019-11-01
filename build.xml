@@ -88,7 +88,7 @@
 			<zipfileset src="${plugin.lib.dir}/gson-2.5.jar" />
 			<zipfileset src="${plugin.lib.dir}/josm-common-3.4.10.jar" />
 			<manifest>
-				<attribute name="Author" value="telenav" />
+				<attribute name="Author" value="GRAB" />
 				<attribute name="Plugin-Class"
 					value="org.openstreetmap.josm.plugins.scoutsigns.ScoutSignsPlugin" />
 				<attribute name="Plugin-Date" value="${TODAY}" />
